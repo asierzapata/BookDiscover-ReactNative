@@ -1,49 +1,63 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 
 /* ====================================================== */
 /*                        Scenes                          */
 /* ====================================================== */
 
-//import HomeScreen from './scenes/home_scene/home_scene'
-//import Debugger from './scenes/debugger_scene/debugger_scene'
-import Landing from './scenes/landing_scene/landing_scene'
+import Library from './scenes/library_scene/library_scene'
+import Explore from './scenes/explore_scene/explore_scene'
+import Profile from './scenes/profile_scene/profile_scene'
+
+/* ====================================================== */
+/*                    Components                          */
+/* ====================================================== */
+
+import Icon from './ui/components/icon'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-const RootStack = createStackNavigator(
+const TabBarNavigation = createBottomTabNavigator(
   {
-    Landing: Landing
+    Library: {
+      screen: Library,
+      navigationOptions: {
+        tabBarIcon: () => <Icon name='book' fontSize={20}/>
+      }
+    },
+    Explore: {
+      screen: Explore,
+      navigationOptions: {
+        tabBarIcon: () => <Icon name='compass' fontSize={20}/>
+      }
+    },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        tabBarIcon: () => <Icon name='user' fontSize={20}/>
+      }
+    }
   },
   {
-    initialRouteName: 'Landing',
-    /* The header config from HomeScreen is now here */
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+    initialRouteName: 'Library',
+    order: [
+      'Library',
+      'Explore',
+      'Profile'
+    ],
+    backBehavior: 'none',
+    tabBarOptions : {
+      activeTintColor: '#6E7B8C',
+      inactiveTintColor: '#8B95A3',
+      showLabel: false,
+    }
   }
-);
+)
 
 export default class Router extends Component {
   render() {
-    return <RootStack />
+    return <TabBarNavigation />
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
