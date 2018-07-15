@@ -7,19 +7,26 @@ import { connect } from 'react-redux'
 /* ====================================================== */
 
 import { View, Text } from 'react-native'
+
+/* ====================================================== */
+/*                        Style                           */
+/* ====================================================== */
+
+import styles from './explore_screen_style'
+
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class profileScene extends Component {
+export class ExploreScreen extends Component {
     static propTypes = {
-    
+        
     }
 
     render() {
         return (
-            <View>
-                <Text>Profile</Text>
+            <View style={styles.container}>
+                <Text>Explore</Text>
             </View>
         )
     }
@@ -33,4 +40,4 @@ const mapDispatchToProps = {
     
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(profileScene)
+export default connect(mapStateToProps, mapDispatchToProps)(ExploreScreen)

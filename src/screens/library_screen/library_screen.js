@@ -9,29 +9,35 @@ import { connect } from 'react-redux'
 import { View, Text } from 'react-native'
 
 /* ====================================================== */
+/*                        Style                           */
+/* ====================================================== */
+
+import styles from './library_screen_style'
+
+/* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class exploreScene extends Component {
+export class LibraryScreen extends Component {
     static propTypes = {
         
     }
 
     render() {
         return (
-            <View>
-                <Text>Explore</Text>
+            <View style={styles.container}>
+                <Text>Library</Text>
             </View>
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    
+
 })
 
 const mapDispatchToProps = {
-    
+
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(exploreScene)
+export default connect(mapStateToProps, mapDispatchToProps)(LibraryScreen)

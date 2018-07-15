@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import { createBottomTabNavigator } from 'react-navigation'
+import { createSwitchNavigator } from 'react-navigation'
 
 /* ====================================================== */
-/*                        Scenes                          */
+/*                       Routers                          */
 /* ====================================================== */
 
-import Library from './scenes/library_scene/library_scene'
-import Explore from './scenes/explore_scene/explore_scene'
-import Profile from './scenes/profile_scene/profile_scene'
+import AppRouter from './router/app_router'
+import AuthRouter from './router/auth_router'
+
+/* ====================================================== */
+/*                       Screens                          */
+/* ====================================================== */
+
+import AuthLoadingScreen from './screens/auth_loading_screen/auth_loading_screen'
 
 /* ====================================================== */
 /*                    Components                          */
@@ -19,45 +24,19 @@ import Icon from './ui/components/icon'
 /*                   Implementation                       */
 /* ====================================================== */
 
-const TabBarNavigation = createBottomTabNavigator(
+const MainRouter = createSwitchNavigator(
   {
-    Library: {
-      screen: Library,
-      navigationOptions: {
-        tabBarIcon: () => <Icon name='book' fontSize={20}/>
-      }
-    },
-    Explore: {
-      screen: Explore,
-      navigationOptions: {
-        tabBarIcon: () => <Icon name='compass' fontSize={20}/>
-      }
-    },
-    Profile: {
-      screen: Profile,
-      navigationOptions: {
-        tabBarIcon: () => <Icon name='user' fontSize={20}/>
-      }
-    }
+    AuthLoading: AuthLoadingScreen,
+    App: AppRouter,
+    Auth: AuthRouter,
   },
   {
-    initialRouteName: 'Library',
-    order: [
-      'Library',
-      'Explore',
-      'Profile'
-    ],
-    backBehavior: 'none',
-    tabBarOptions : {
-      activeTintColor: '#6E7B8C',
-      inactiveTintColor: '#8B95A3',
-      showLabel: false,
-    }
+    initialRouteName: 'AuthLoading',
   }
-)
+);
 
 export default class Router extends Component {
   render() {
-    return <TabBarNavigation />
+    return <MainRouter />
   }
 }
