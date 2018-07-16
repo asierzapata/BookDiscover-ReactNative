@@ -4,7 +4,7 @@ import FontAwesome, { Icons } from 'react-native-fontawesome';
 
 export default Icon = ({ name, fontSize = 12 }) => {
     return (
-        <FontAwesome style={{fontSize}}>{Icons[name]}</FontAwesome>
+        <FontAwesome style={{fontSize, textAlign: 'center'}}>{Icons[name]}</FontAwesome>
     )
 }
 
