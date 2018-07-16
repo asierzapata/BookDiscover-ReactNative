@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 /*                     Components                         */
 /* ====================================================== */
 
-import { View, Text, FlatList } from 'react-native'
+import { View, Text } from 'react-native'
+import GridView from 'react-native-super-grid';
 import Icon from '../../ui/components/icon'
 import BookItem from './components/book_item'
 
@@ -40,13 +41,14 @@ export class LibraryScreen extends Component {
                     </View>  
                 </View>
                 <View style={styles.library}>
-                    <FlatList 
-                        data={[
+                    <GridView
+                        itemDimension={75}
+                        items={[
                             {coverURL: 'https://images-na.ssl-images-amazon.com/images/I/51YN6tjUuML._SX308_BO1,204,203,200_.jpg', title: 'Ilium', key:'item1'},
                             {coverURL: 'https://images-eu.ssl-images-amazon.com/images/I/51j2N5uyuVL.jpg', title: 'Hyperion', key:'item2'},
                             {coverURL: 'https://images-eu.ssl-images-amazon.com/images/I/61SVCHydfQL._SY346_.jpg', title: 'The fall of Hyperion', key:'item3'}
                         ]}
-                        renderItem={({ item }) => <BookItem {...item}/>}
+                        renderItem={(item) => <BookItem {...item}/>}
                     />
                 </View>
             </View>
