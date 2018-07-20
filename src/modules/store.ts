@@ -1,10 +1,7 @@
-/* global IS_PRODUCTION */
-
 import { createStore, applyMiddleware } from 'redux'
 import { createLogger } from 'redux-logger'
 
 import apiMiddleware from '../middleware/api_middleware'
-
 
 import rootReducer from './root_reducer'
 
@@ -13,23 +10,22 @@ import rootReducer from './root_reducer'
 /* ====================================================== */
 
 function startStore() {
-  const initialState = {}
-  const middleware = [
-    apiMiddleware,
-    apiMiddleware,
-    createLogger()
-  ]
+    const initialState = {}
+    const middleware = [
+        apiMiddleware,
+        createLogger()
+    ]
+    
+    const middlewareStack = applyMiddleware(...middleware)
 
-  const middlewareStack = applyMiddleware(...middleware)
-
-  const store = createStore(
-    rootReducer,
-    initialState,
-    middlewareStack
-  )
-  return {
-    store,
-  }
+    const store = createStore(
+        rootReducer,
+        initialState,
+        middlewareStack
+    )
+    return {
+        store
+    }
 }
 
 const { store } = startStore()

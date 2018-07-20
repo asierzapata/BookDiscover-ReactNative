@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers, AnyAction } from 'redux'
 
 /* ====================================================== */
 /*                    Custom Reducers                     */
@@ -6,21 +6,21 @@ import { combineReducers } from 'redux'
 
 // Metadata
 // --------
-import apiMetadataReducer, { MODULE_NAME as apiMetadata } from './api_metadata/api_metada_module'
+import apiMetadataReducer, { MODULE_NAME as apiMetadata } from './api_metadata/api_metadata_module'
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
 const appReducer = combineReducers({
-  // Data
+    // Data
 
-  // Metadata
-  [apiMetadata]: apiMetadataReducer
+    // Metadata
+    [apiMetadata]: apiMetadataReducer
 })
 
-const rootReducer = (state, action) => {
-  return appReducer(state, action)
-}
+const rootReducer = (state: any, action: AnyAction) => 
+    appReducer(state, action)
+
 
 export default rootReducer

@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
+import { NavigationScreenProps } from 'react-navigation'
 
 /* ====================================================== */
 /*                     Components                         */
@@ -18,11 +19,7 @@ import styles from './explore_screen_style'
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class ExploreScreen extends Component {
-    static propTypes = {
-        
-    }
-
+export class ExploreScreen extends Component<NavigationScreenProps> {
     render() {
         return (
             <View style={styles.container}>
@@ -32,7 +29,7 @@ export class ExploreScreen extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
     
 })
 

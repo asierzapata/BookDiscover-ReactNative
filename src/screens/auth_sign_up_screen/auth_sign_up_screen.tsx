@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { 
     Text, 
@@ -8,25 +9,33 @@ import {
 } from 'react-native'
 import _ from 'lodash'
 import * as firebase from 'firebase'
+import { NavigationScreenProps } from 'react-navigation'
 
 /* ====================================================== */
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from './auth_sign_in_screen_style'
+import styles from './auth_sign_up_screen_style'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class AuthSignInScreen extends Component {
+interface ownState {
+    email: string, 
+    password: string, 
+    errorMessage: undefined | string
+}
+
+export class AuthSignUpScreen extends Component<NavigationScreenProps,ownState> {
+
     state = { 
         email: '', 
         password: '', 
         errorMessage: undefined 
     }
 
-    handleSignIn = () => {
+    handleSignUp = () => {
         const { email, password } = this.state
 
         this.setState({ errorMessage: undefined })
@@ -37,43 +46,44 @@ export class AuthSignInScreen extends Component {
         }
 
         firebase.auth()
-            .signInWithEmailAndPassword(email, password)
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(() => this.props.navigation.navigate('App'))
             .catch(error => this.setState({ errorMessage: error.message }))
+
         // TODO: Firebase
-        console.log('>>>> handleSignIn')
+        console.log('>>>>> handleSignUp')
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>Sign In</Text>
+                <Text>Sign Up</Text>
                 {this.state.errorMessage &&
                     <Text style={{ color: 'red' }}>
                         {this.state.errorMessage}
                     </Text>}
                 <TextInput
-                    style={styles.textInput}
-                    autoCapitalize="none"
                     placeholder="Email"
+                    autoCapitalize="none"
+                    style={styles.textInput}
                     onChangeText={email => this.setState({ email })}
                     value={this.state.email}
                 />
                 <TextInput
                     secureTextEntry
-                    style={styles.textInput}
-                    autoCapitalize="none"
                     placeholder="Password"
+                    autoCapitalize="none"
+                    style={styles.textInput}
                     onChangeText={password => this.setState({ password })}
                     value={this.state.password}
                 />
-                <Button title="Submit" onPress={this.handleSignIn} />
+                <Button title="Submit" onPress={this.handleSignUp} />
             </View>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
     
 })
 
@@ -81,4 +91,4 @@ const mapDispatchToProps = {
     
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthSignInScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(AuthSignUpScreen)

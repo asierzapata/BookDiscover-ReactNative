@@ -18,19 +18,19 @@ export default createBottomTabNavigator(
         Library: {
             screen: Library,
             navigationOptions: {
-            tabBarIcon: () => <Icon name='book' fontSize={20}/>
+                tabBarIcon: () => <Icon name='book' fontSize={20}/>
             }
     },
         Explore: {
             screen: Explore,
             navigationOptions: {
-            tabBarIcon: () => <Icon name='compass' fontSize={20}/>
+                tabBarIcon: () => <Icon name='compass' fontSize={20}/>
             }
     },
         Profile: {
             screen: Profile,
             navigationOptions: {
-            tabBarIcon: () => <Icon name='user' fontSize={20}/>
+                tabBarIcon: () => <Icon name='user' fontSize={20}/>
             }
         }
     },

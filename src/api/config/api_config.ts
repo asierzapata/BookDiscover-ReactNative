@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -13,6 +13,13 @@ const apiClient = axios.create({
   }
 })
 
+export interface ApiResponse {
+  headers: string,
+  status: string,
+  statusText: string,
+  data: any
+}
+
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */
@@ -20,29 +27,31 @@ const apiClient = axios.create({
 export default {
   // GET
   get,
-  post
+  post,
+  put,
+  remove
 }
 
 /* ====================================================== */
 /*                         Users                          */
 /* ====================================================== */
 
-function get(path, axiosConfig) {
+function get(path: string, axiosConfig: object) {
   return apiClient.get(path, axiosConfig).then(_parseResponse)
 }
 
-function post(path, data, axiosConfig) {
+function post(path: string, data: object, axiosConfig: object) {
   return apiClient.post(path, data, axiosConfig).then(_parseResponse)
 }
 
-function put(path, data, axiosConfig) {
+function put(path: string, data: object, axiosConfig: object) {
   return apiClient.put(path, data, axiosConfig).then(_parseResponse)
 }
 
-function remove(path, axiosConfig) {
+function remove(path: string, axiosConfig: object) {
   return apiClient.delete(path, axiosConfig).then(_parseResponse)
 }
 
-function _parseResponse({ data, headers, status, statusText }) {
+function _parseResponse({ data, headers, status, statusText }: AxiosResponse) {
   return { data, headers, status, statusText }
 }

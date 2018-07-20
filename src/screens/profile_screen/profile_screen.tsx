@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as firebase from 'firebase'
+import { NavigationScreenProps } from 'react-navigation'
 
 /* ====================================================== */
 /*                     Components                         */
@@ -23,16 +24,11 @@ import styles from './profile_screen_style'
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class ProfileScreen extends Component {
+interface ownState {
+    errorMessage: undefined | string 
+}
 
-    state = { 
-        errorMessage: undefined 
-    }
-
-    static propTypes = {
-    
-    }
-
+export class ProfileScreen extends Component<NavigationScreenProps,ownState> {
     handleLogout = () => {
         firebase.auth()
             .signOut()
@@ -54,7 +50,7 @@ export class ProfileScreen extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
     
 })
 

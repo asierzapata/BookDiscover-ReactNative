@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import {
     ActivityIndicator,
@@ -12,13 +13,14 @@ import * as firebase from 'firebase'
 /* ====================================================== */
 
 import styles from './auth_loading_screen_style'
+import { NavigationScreenProps } from 'react-navigation';
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class AuthLoadingScreen extends Component {
-    constructor(props) {
+export class AuthLoadingScreen extends Component<NavigationScreenProps> {
+    constructor(props: NavigationScreenProps) {
         super(props)
         this._checkIfUserIsLoged()
     }
@@ -39,7 +41,7 @@ export class AuthLoadingScreen extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
     
 })
 

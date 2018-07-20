@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react'
+import { Component } from 'react'
 import { createSwitchNavigator } from 'react-navigation'
 
 /* ====================================================== */
@@ -13,12 +14,6 @@ import AuthRouter from './router/auth_router'
 /* ====================================================== */
 
 import AuthLoadingScreen from './screens/auth_loading_screen/auth_loading_screen'
-
-/* ====================================================== */
-/*                    Components                          */
-/* ====================================================== */
-
-import Icon from './ui/components/icon'
 
 /* ====================================================== */
 /*                   Implementation                       */

@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { 
     Text, 
-    TextInput, 
     View, 
     Button 
 } from 'react-native'
+import { NavigationScreenProps } from 'react-navigation';
 
 /* ====================================================== */
 /*                        Style                           */
@@ -18,7 +18,7 @@ import styles from './auth_selector_screen_style'
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class AuthSelectorScreen extends Component {
+export class AuthSelectorScreen extends Component<NavigationScreenProps> {
 
     render() {
         return (
@@ -37,7 +37,7 @@ export class AuthSelectorScreen extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
     
 })
 

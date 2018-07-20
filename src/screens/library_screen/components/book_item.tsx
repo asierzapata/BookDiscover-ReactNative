@@ -2,8 +2,12 @@ import React from 'react'
 import { string } from 'prop-types'
 import { View, Image, Text } from 'react-native'
 
+interface BookItem {
+    coverURL: string,
+    title: string
+}
 
-export default BookItem = ({ coverURL, title }) => {
+const BookItem: React.SFC<BookItem> = ({ coverURL, title }) => {
     console.log(coverURL)
     return (
         <View>
@@ -16,8 +20,4 @@ export default BookItem = ({ coverURL, title }) => {
     )
 }
 
-BookItem.propTypes = {
-    coverURL: string.isRequired,
-    title: string
-}
-
+export default BookItem

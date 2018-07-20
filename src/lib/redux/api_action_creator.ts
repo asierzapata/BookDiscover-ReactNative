@@ -4,11 +4,15 @@
 
 export const API_ACTION_SEPARATOR = '--->'
 
-function apiAction(type) {
-  if (!(typeof type === 'string')) {
-    throw new Error('Expected an array of three string types.')
-  }
+export interface ApiActionNames {
+  REQUEST?: string,
+  SUCCESS?: string,
+  FAILURE?: string,
+  ALWAYS?: string,
+  NAME: string
+}
 
+function apiAction(type: string): ApiActionNames {
   return {
     REQUEST: `${type}${API_ACTION_SEPARATOR}REQUEST`,
     SUCCESS: `${type}${API_ACTION_SEPARATOR}SUCCESS`,

@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
+import { NavigationScreenProps } from 'react-navigation'
 
 /* ====================================================== */
 /*                     Components                         */
@@ -21,11 +22,11 @@ import styles from './library_screen_style'
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class LibraryScreen extends Component {
-    static propTypes = {
-        
-    }
+interface ownState {
 
+}
+
+export class LibraryScreen extends Component<NavigationScreenProps,ownState> {
     render() {
         return (
             <View style={styles.container}>
@@ -56,7 +57,7 @@ export class LibraryScreen extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = () => ({
 
 })
 
