@@ -10,6 +10,12 @@ import Explore from '../screens/explore_screen/explore_screen'
 import Profile from '../screens/profile_screen/profile_screen'
 
 /* ====================================================== */
+/*                     Components                         */
+/* ====================================================== */
+
+import Icon from '../ui/components/icon'
+
+/* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 

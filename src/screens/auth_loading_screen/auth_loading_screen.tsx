@@ -7,13 +7,13 @@ import {
     View,
 } from 'react-native';
 import * as firebase from 'firebase'
+import { NavigationScreenProps } from 'react-navigation';
 
 /* ====================================================== */
 /*                        Style                           */
 /* ====================================================== */
 
 import styles from './auth_loading_screen_style'
-import { NavigationScreenProps } from 'react-navigation';
 
 /* ====================================================== */
 /*                   Implementation                       */
