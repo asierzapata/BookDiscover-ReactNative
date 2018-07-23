@@ -20,6 +20,11 @@ export interface ApiResponse {
   data: any
 }
 
+export interface ApiError {
+  code: number,
+  message: string
+}
+
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */

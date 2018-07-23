@@ -1,4 +1,4 @@
-import ClientApi from '../api/api'
+import ClientApi, { ApiObject } from '../api/api'
 import { Dispatch, MiddlewareAPI } from 'redux';
 import { BaseAction, AsyncAction, AsyncBreakdownAction } from '../modules/actions_interfaces';
 import { ApiResponse } from '../api/config/api_config';
@@ -9,7 +9,7 @@ import { ApiActionNames } from '../lib/redux/api_action_creator';
 /* ====================================================== */
 
 export interface AsyncConfigObject {
-    api: object,
+    api: ApiObject,
     dispatch: Dispatch
 }
 
@@ -38,7 +38,7 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
                 resolve(response) 
             })
             .catch(err => {
-                // If it's an error from Firebase returned by Axios
+                // If it's an error from API
                 if (err.code) {
                     next(firebaseFailure({ type: { NAME: type.FAILURE! }, err, meta }))
                     next(
