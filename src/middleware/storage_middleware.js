@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native'
+import CacheSystem from '../lib/cache/cache_system'
 
 const action_names = [
   'CLEAR_ALL',
@@ -102,20 +102,20 @@ const middleware = store => next => action => {
   next(action) // Pass all actions through.
   switch (action.type) {
     case types.CLEAR_ALL: {
-      AsyncStorage.clear().then(
+      CacheSystem.clearAllCachedData().then(
         () => store.dispatch(actions.clearAllSucceeded()),
         errorReason => store.dispatch(actions.clearAllFailed(errorReason)),
       )
     }
     case types.GET_ALL_KEYS: {
-      AsyncStorage.getAllKeys().then(
+      CacheSystem.getAllCachedDataKeys().then(
         keys => store.dispatch(actions.getAllKeysSucceeded(keys)),
         errorReason => store.dispatch(actions.getAllKeysFailed(errorReason)),
       )
       break
     }
     case types.GET_ITEM: {
-      AsyncStorage.getItem(action.key).then(
+      CacheSystem.getCachedDataByKey(action.key).then(
         value => store.dispatch(actions.getItemSucceeded(action.key, value)),
         errorReason =>
           store.dispatch(actions.getItemFailed(action.key, errorReason)),
@@ -123,16 +123,16 @@ const middleware = store => next => action => {
       break
     }
     case types.REMOVE_ITEM: {
-      AsyncStorage.removeItem(action.key).then(
-        value => store.dispatch(actions.removeItemSucceeded(action.key)),
+      CacheSystem.removeCachedDataByKey(action.key).then(
+        () => store.dispatch(actions.removeItemSucceeded(action.key)),
         errorReason =>
           store.dispatch(actions.removeItemFailed(action.key, errorReason)),
       )
       break
     }
     case types.SET_ITEM: {
-      AsyncStorage.setItem(action.key, action.value).then(
-        value =>
+      CacheSystem.setCachedDataByKey(action.key, action.value).then(
+        () =>
           store.dispatch(actions.setItemSucceeded(action.key, action.value)),
         errorReason =>
           store.dispatch(
