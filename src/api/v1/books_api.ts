@@ -36,14 +36,14 @@ function getBookInfo({ ISBN }: { ISBN: string }) {
                 } else {
                     reject({ 
                         code: 404, 
-                        error: ApiErrors.NOT_FOUND
+                        message: ApiErrors.NOT_FOUND
                     })
                 }
             })
             .catch((error) => {
                 reject({ 
                     code: 500, 
-                    error: ApiErrors.NOT_FOUND
+                    message: ApiErrors.NOT_FOUND
                 })
             })
     })

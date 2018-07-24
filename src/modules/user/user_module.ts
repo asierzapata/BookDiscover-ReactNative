@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
 import _ from 'lodash'
 import apiAction from '../../lib/redux/api_action_creator';
-import { AsyncAction } from '../actions_interfaces';
+import { AsyncAction, AsyncBreakdownAction } from '../actions_interfaces';
 import { getRequestStatus } from '../api_metadata/api_metadata_module'
+import selectorCreatorFactory from '../../lib/redux/selectors';
 
 /* ====================================================== */
 /*                         Module                         */
@@ -27,3 +28,28 @@ export function fetchUserInfo(): AsyncAction {
         meta : {}
     }
 }
+
+/* ====================================================== */
+/*                        Reducers                        */
+/* ====================================================== */
+
+function user(state = {}, { type, payload, meta } : AsyncBreakdownAction) {
+    switch(type.NAME) {
+        case FETCH_USER_INFO.SUCCESS:
+            return payload
+        default:
+            return state
+    }
+}
+
+export default combineReducers({
+	user
+})
+
+/* ====================================================== */
+/*                       Selectors                        */
+/* ====================================================== */
+
+const createSelector = selectorCreatorFactory(MODULE_NAME)
+
+// -----------

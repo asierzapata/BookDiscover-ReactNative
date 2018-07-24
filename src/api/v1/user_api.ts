@@ -42,7 +42,7 @@ function getUserBooks() {
                 } else {
                     reject({ 
                         code: 404, 
-                        error: ApiErrors.NOT_FOUND
+                        message: ApiErrors.NOT_FOUND
                     })
                 }
             })
@@ -62,7 +62,7 @@ function getUserInfo() {
         }
         reject({ 
             code: 404, 
-            error: ApiErrors.USER_NOT_LOGGED_IN
+            message: ApiErrors.USER_NOT_LOGGED_IN
         })
     })
 }
