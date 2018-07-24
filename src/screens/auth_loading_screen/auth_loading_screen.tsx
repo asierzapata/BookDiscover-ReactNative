@@ -22,10 +22,10 @@ import styles from './auth_loading_screen_style'
 export class AuthLoadingScreen extends Component<NavigationScreenProps> {
     constructor(props: NavigationScreenProps) {
         super(props)
-        this._checkIfUserIsLoged()
+        this._checkIfUserIsLogged()
     }
 
-    _checkIfUserIsLoged = () => {
+    _checkIfUserIsLogged = () => {
         firebase.auth().onAuthStateChanged(user => {
             this.props.navigation.navigate(user ? 'App' : 'Auth')
         })

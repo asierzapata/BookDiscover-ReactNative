@@ -4,7 +4,7 @@ import { Component } from 'react'
 import { Provider } from 'react-redux'
 import { reduxStore } from './modules/store'
 import Router from './router'
-import firebaseConfig from '../config'
+import firebaseConfig from './config'
 import * as firebase from 'firebase'
 import { Font } from 'expo'
 
