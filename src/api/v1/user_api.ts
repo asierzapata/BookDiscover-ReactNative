@@ -10,12 +10,14 @@ import { ApiResponse, ApiError } from '../config/api_config';
 
 export default {
     getUserBooks,
-    getUserInfo
+    getUserInfo,
+    logoutUser
 }
 
 export interface UserApiObject {
     getUserBooks: () => Promise<ApiResponse>,
-    getUserInfo: () => Promise<ApiResponse>
+    getUserInfo: () => Promise<ApiResponse>,
+    logoutUser: () => Promise<ApiResponse>
 }
 
 /* ====================================================== */
@@ -64,6 +66,27 @@ function getUserInfo() {
             code: 404, 
             message: ApiErrors.USER_NOT_LOGGED_IN
         })
+    })
+}
+
+function logoutUser() {
+    return new Promise((resolve, reject) => {
+        firebase.auth()
+            .signOut()
+            .then(() => 
+                resolve({ 
+                    headers: '',
+                    status: '200',
+                    statusText: '',
+                    data: ''
+                })
+            )
+            .catch(error => 
+                reject({ 
+                    code: 404, 
+                    message: error.message
+                })
+            )
     })
 }
 
