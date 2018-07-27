@@ -16,7 +16,7 @@ import BookItem from './components/book_item'
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from './library_screen_style'
+import styles, { bookWidth } from './library_screen_style'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -43,7 +43,7 @@ export class LibraryScreen extends Component<NavigationScreenProps,ownState> {
                 </View>
                 <View style={styles.library}>
                     <GridView
-                        itemDimension={75}
+                        itemDimension={bookWidth}
                         items={[
                             {coverURL: 'https://images-na.ssl-images-amazon.com/images/I/51YN6tjUuML._SX308_BO1,204,203,200_.jpg', title: 'Ilium', key:'item1'},
                             {coverURL: 'https://images-eu.ssl-images-amazon.com/images/I/51j2N5uyuVL.jpg', title: 'Hyperion', key:'item2'},

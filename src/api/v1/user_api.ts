@@ -8,16 +8,18 @@ import { ApiResponse, ApiError } from '../config/api_config';
 /*                   Implementation                       */
 /* ====================================================== */
 
-export default {
+const api: UserApiObject = {
     getUserBooks,
     getUserInfo,
     logoutUser
 }
 
+export default api 
+
 export interface UserApiObject {
-    getUserBooks: () => Promise<ApiResponse>,
-    getUserInfo: () => Promise<ApiResponse>,
-    logoutUser: () => Promise<ApiResponse>
+    getUserBooks: () => Promise<{}>,
+    getUserInfo: () => Promise<{}>,
+    logoutUser: () => Promise<{}>
 }
 
 /* ====================================================== */

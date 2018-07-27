@@ -7,12 +7,14 @@ import { ApiResponse, ApiError } from '../config/api_config';
 /*                   Implementation                       */
 /* ====================================================== */
 
-export default {
+const api: BookApiObject = {
     getBookInfo
 }
 
+export default api
+
 export interface BookApiObject {
-    getBookInfo: ({ ISBN }: { ISBN: string }) => Promise<ApiResponse>
+    getBookInfo: ({ ISBN }: { ISBN: string }) => Promise<{}>
 }
 
 /* ====================================================== */
@@ -23,7 +25,7 @@ function getBookInfo({ ISBN }: { ISBN: string }) {
     // TODO: value which implementation we want ffor the books:
     //      1 - Vanilla HTTP request directly to amazon or related service
     //      2 - Proxy through firestore where, if we don't find it, trigger the fetch locally and subsequent save
-    return new Promise((reject,resolve) => {
+    return new Promise((resolve,reject) => {
         firebase.firestore().collection(ApiConstants.BOOKS_COLLECTION).doc(ISBN).get()
             .then((document) => {
                 if (document.exists) {

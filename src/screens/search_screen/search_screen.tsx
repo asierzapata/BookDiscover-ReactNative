@@ -8,7 +8,9 @@ import { NavigationScreenProps } from 'react-navigation'
 /* ====================================================== */
 
 import { 
-    View
+    View, 
+    TextInput,
+    Button
 } from 'react-native'
 
 /* ====================================================== */
@@ -22,14 +24,43 @@ import styles from './search_screen_style'
 /* ====================================================== */
 
 interface ownState {
-    errorMessage: undefined | string 
+    searchQuery: string,
+    errorMessage?: string 
 }
 
-export class ProfileScreen extends Component<NavigationScreenProps,ownState> {
+export class SearchScreen extends Component<NavigationScreenProps,ownState> {
+
+    constructor(props: NavigationScreenProps) {
+        super(props)
+        this.state = {
+            searchQuery: '',
+            errorMessage: undefined
+        }
+    }
+
+    handleCancel = () => {
+        this.props.navigation.navigate('Library')
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                
+                <View style={styles.topBar}>
+                    <TextInput 
+                        style={styles.textInput}
+                        autoCapitalize="sentences"
+                        placeholder="Search"
+                        onChangeText={searchQuery => this.setState({ searchQuery })}
+                        value={this.state.searchQuery}
+                    />
+                    <Button 
+                        title="Cancel" 
+                        onPress={this.handleCancel} 
+                    />
+                </View>
+                <View style={styles.body}>
+                    This is the search
+                </View>
             </View>
         )
     }
@@ -43,4 +74,4 @@ const mapDispatchToProps = {
     
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen)

@@ -1,4 +1,9 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
+
+const { height, width } = Dimensions.get('window')
+
+export const bookHeight = height * 1/4
+export const bookWidth = width * 1/4
 
 export default StyleSheet.create({
     container: {
@@ -29,5 +34,10 @@ export default StyleSheet.create({
     },
     title: {
         fontSize: 17
+    },
+    book: {
+        height: bookHeight,
+        width: bookWidth,
+        alignItems: 'center'
     }
 })

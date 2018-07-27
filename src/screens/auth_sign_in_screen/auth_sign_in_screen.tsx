@@ -24,10 +24,19 @@ import styles from './auth_sign_in_screen_style'
 interface ownState {
     email: string, 
     password: string, 
-    errorMessage: undefined | string
+    errorMessage?: string
 }
 
 export class AuthSignInScreen extends Component<NavigationScreenProps,ownState> {
+
+    constructor(props: NavigationScreenProps) {
+        super(props)
+        this.state = {
+            email: '',
+            password: '',
+            errorMessage: undefined
+        }
+    }
 
     handleSignIn = () => {
         const { email, password } = this.state

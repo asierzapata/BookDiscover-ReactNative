@@ -1,6 +1,7 @@
 import React from 'react'
-import { string } from 'prop-types'
-import { View, Image, Text } from 'react-native'
+import { View, Image } from 'react-native'
+
+import styles from '../library_screen_style'
 
 interface BookItem {
     coverURL: string,
@@ -8,14 +9,12 @@ interface BookItem {
 }
 
 const BookItem: React.SFC<BookItem> = ({ coverURL, title }) => {
-    console.log(coverURL)
     return (
         <View>
             <Image
-                style={{width: 75, height: 125}}
+                style={styles.book}
                 source={{uri: coverURL}}
             />
-            <Text>{title}</Text>
         </View>
     )
 }

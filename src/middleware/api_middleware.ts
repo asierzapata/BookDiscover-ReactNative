@@ -34,7 +34,7 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
             .then(response => {
                 console.log('>>>>> Call api', response)
                 next(successAction({ type: { NAME: type.SUCCESS! }, response, meta }))
-                next(alwaysAction({ type: { NAME: type.ALWAYS! }, meta: { ...meta, ..._extractResponseMetadata(response) } }))
+                next(alwaysAction({ type: { NAME: type.ALWAYS! }, meta: { ...meta, ..._extractResponseMetadata(response as ApiResponse) } }))
                 resolve(response) 
             })
             .catch(err => {
