@@ -4,11 +4,10 @@ import { View, Image } from 'react-native'
 import styles from '../library_screen_style'
 
 interface BookItem {
-    coverURL: string,
-    title: string
+    coverURL: string
 }
 
-const BookItem: React.SFC<BookItem> = ({ coverURL, title }) => {
+const BookItem: React.SFC<BookItem> = ({ coverURL }) => {
     return (
         <View>
             <Image

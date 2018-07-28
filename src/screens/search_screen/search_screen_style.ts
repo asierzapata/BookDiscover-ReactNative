@@ -7,7 +7,9 @@ export default StyleSheet.create({
     },
     topBar: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     body: {
         flex: 6

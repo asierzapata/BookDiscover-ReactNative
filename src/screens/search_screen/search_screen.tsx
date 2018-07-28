@@ -12,6 +12,7 @@ import {
     TextInput,
     Button
 } from 'react-native'
+import ViewWrapper from '../../ui/components/view_wrapper';
 
 /* ====================================================== */
 /*                        Style                           */
@@ -44,7 +45,7 @@ export class SearchScreen extends Component<NavigationScreenProps,ownState> {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ViewWrapper style={styles.container}>
                 <View style={styles.topBar}>
                     <TextInput 
                         style={styles.textInput}
@@ -61,7 +62,7 @@ export class SearchScreen extends Component<NavigationScreenProps,ownState> {
                 <View style={styles.body}>
                     This is the search
                 </View>
-            </View>
+            </ViewWrapper>
         )
     }
 }
