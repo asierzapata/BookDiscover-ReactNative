@@ -1,5 +1,7 @@
 import _ from 'lodash'
 import * as firebase from 'firebase'
+import '@firebase/firestore'
+// import '@firebase/auth'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
 import { ApiResponse, ApiError } from '../config/api_config';
@@ -44,9 +46,11 @@ function getUserBooks() {
                         data: document.data()
                     })
                 } else {
-                    reject({ 
-                        code: 404, 
-                        message: ApiErrors.NOT_FOUND
+                    resolve({
+                        headers: '',
+                        status: '200',
+                        statusText: '',
+                        data: []
                     })
                 }
             })
