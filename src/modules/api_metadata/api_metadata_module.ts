@@ -10,8 +10,16 @@ import _ from 'lodash'
 export const MODULE_NAME = 'apiMetadata'
 
 /* ====================================================== */
-/*                        Actions                         */
+/*                       Interfaces                       */
 /* ====================================================== */
+
+export interface AsyncActionStatus {
+    isLoading: boolean,
+    isLoaded: boolean,
+    error: string,
+    status: number,
+    statusText: string
+}
 
 /* ====================================================== */
 /*                        Reducers                        */

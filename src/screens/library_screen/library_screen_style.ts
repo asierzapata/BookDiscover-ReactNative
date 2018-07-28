@@ -1,11 +1,6 @@
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { TextColor } from '../../ui/styles/colors'
-
-const { height, width } = Dimensions.get('window')
-
-export const bookHeight = height * 1/4
-export const bookWidth = width * 1/4
 
 export default StyleSheet.create({
     container: {
@@ -39,9 +34,8 @@ export default StyleSheet.create({
         fontWeight: 'bold',
         color: TextColor
     },
-    book: {
-        height: bookHeight,
-        width: bookWidth,
-        alignItems: 'center'
+    activityIndicator : {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })

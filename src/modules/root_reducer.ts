@@ -4,6 +4,12 @@ import { combineReducers, AnyAction } from 'redux'
 /*                    Custom Reducers                     */
 /* ====================================================== */
 
+// Data
+// --------
+
+import booksReducer, { MODULE_NAME as books } from './books/book_module'
+import userReducer, { MODULE_NAME as user } from './user/user_module'
+
 // Metadata
 // --------
 import apiMetadataReducer, { MODULE_NAME as apiMetadata } from './api_metadata/api_metadata_module'
@@ -14,7 +20,8 @@ import apiMetadataReducer, { MODULE_NAME as apiMetadata } from './api_metadata/a
 
 const appReducer = combineReducers({
     // Data
-
+    [user]: userReducer,
+    [books]: booksReducer,
     // Metadata
     [apiMetadata]: apiMetadataReducer
 })

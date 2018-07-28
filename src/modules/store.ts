@@ -13,7 +13,7 @@ function startStore() {
     const initialState = {}
     const middleware = [
         apiMiddleware,
-        createLogger()
+        //createLogger()
     ]
     
     const middlewareStack = applyMiddleware(...middleware)

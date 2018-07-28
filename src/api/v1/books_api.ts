@@ -1,39 +1,41 @@
 import firebase from 'firebase'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
-import { ApiResponse, ApiError } from '../config/api_config';
+import ApiClient from '../config/api_config'
+
+import BookParser from '../parsers/books_parser'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
 const api: BookApiObject = {
-    getBookInfo
+    getBookInfoByISBN,
+    getBooksByQuery
 }
 
 export default api
 
 export interface BookApiObject {
-    getBookInfo: ({ ISBN }: { ISBN: string }) => Promise<{}>
+    getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<{}>,
+    getBooksByQuery: ({ query }: { query: string })  => Promise<{}>
 }
 
 /* ====================================================== */
 /*                        Content                         */
 /* ====================================================== */
 
-function getBookInfo({ ISBN }: { ISBN: string }) {
-    // TODO: value which implementation we want ffor the books:
-    //      1 - Vanilla HTTP request directly to amazon or related service
-    //      2 - Proxy through firestore where, if we don't find it, trigger the fetch locally and subsequent save
+function getBookInfoByISBN({ ISBN }: { ISBN: string }) {
     return new Promise((resolve,reject) => {
-        firebase.firestore().collection(ApiConstants.BOOKS_COLLECTION).doc(ISBN).get()
-            .then((document) => {
-                if (document.exists) {
+        ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=isbn:${ISBN}`, {})
+            .then((response) => {
+                const { data } = response
+                if (data) {
                     resolve({
                         headers: '',
                         status: '200',
                         statusText: '',
-                        data: document.data()
+                        data: BookParser.parseGoogleReponse(data)
                     })
                 } else {
                     reject({ 
@@ -43,6 +45,36 @@ function getBookInfo({ ISBN }: { ISBN: string }) {
                 }
             })
             .catch((error) => {
+                reject({ 
+                    code: 500, 
+                    message: ApiErrors.NOT_FOUND
+                })
+            })
+    })
+}
+
+function getBooksByQuery({ query }: { query: string }) {
+    return new Promise((resolve, reject) => {
+        ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}`, {})
+            .then((response) => {
+                const { data } = response
+                console.log(response)
+                if (data) {
+                    resolve({
+                        headers: response.headers,
+                        status: response.status,
+                        statusText: response.statusText,
+                        data: BookParser.parseGoogleReponse(data)
+                    })
+                } else {
+                    reject({ 
+                        code: 404, 
+                        message: ApiErrors.NOT_FOUND
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log('>>>>> CATCH PROMISE ', error)
                 reject({ 
                     code: 500, 
                     message: ApiErrors.NOT_FOUND

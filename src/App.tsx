@@ -15,7 +15,10 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig)
+    const firestore = firebase.firestore()
+    const settings = { timestampsInSnapshots: true }
+    firestore.settings(settings)
     Font.loadAsync({
       'FontAwesome': require('../assets/fonts/FontAwesome.ttf')
     })
