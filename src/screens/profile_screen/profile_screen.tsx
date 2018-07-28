@@ -25,10 +25,18 @@ import styles from './profile_screen_style'
 /* ====================================================== */
 
 interface ownState {
-    errorMessage: undefined | string 
+    errorMessage?: string 
 }
 
 export class ProfileScreen extends Component<NavigationScreenProps,ownState> {
+
+    constructor(props: NavigationScreenProps) {
+        super(props)
+        this.state = {
+            errorMessage: undefined
+        }
+    }
+
     handleLogout = () => {
         firebase.auth()
             .signOut()

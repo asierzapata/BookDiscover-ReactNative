@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation'
 /*                       Screens                          */
 /* ====================================================== */
 
-import Library from '../screens/library_screen/library_screen'
+import LibraryRouter from './library_router'
 import Explore from '../screens/explore_screen/explore_screen'
 import Profile from '../screens/profile_screen/profile_screen'
 
@@ -16,27 +16,33 @@ import Profile from '../screens/profile_screen/profile_screen'
 import Icon from '../ui/components/icon'
 
 /* ====================================================== */
+/*                        Style                           */
+/* ====================================================== */
+
+import IconNames from '../ui/styles/icons'
+
+/* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
 export default createBottomTabNavigator(
     {
         Library: {
-            screen: Library,
+            screen: LibraryRouter,
             navigationOptions: {
-                tabBarIcon: () => <Icon name='book' fontSize={20}/>
+                tabBarIcon: () => <Icon name={IconNames.LIBRARY} fontSize={20}/>
             }
     },
         Explore: {
             screen: Explore,
             navigationOptions: {
-                tabBarIcon: () => <Icon name='compass' fontSize={20}/>
+                tabBarIcon: () => <Icon name={IconNames.EXPLORE} fontSize={20}/>
             }
     },
         Profile: {
             screen: Profile,
             navigationOptions: {
-                tabBarIcon: () => <Icon name='user' fontSize={20}/>
+                tabBarIcon: () => <Icon name={IconNames.PROFILE} fontSize={20}/>
             }
         }
     },

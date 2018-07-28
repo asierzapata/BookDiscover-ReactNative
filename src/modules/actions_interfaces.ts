@@ -10,7 +10,7 @@ export interface BaseAction {
 }
 
 export interface AsyncAction extends BaseAction {
-    AsyncProcess: (AsyncConfig: AsyncConfigObject) => Promise<ApiResponse>,
+    AsyncProcess: (AsyncConfig: AsyncConfigObject) => Promise<{}>,
     shouldDoAsyncProcess?: (state: object) => boolean
 }
 
