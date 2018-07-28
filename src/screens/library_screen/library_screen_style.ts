@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native'
 
+import { TextColor } from '../../ui/styles/colors'
+
 const { height, width } = Dimensions.get('window')
 
 export const bookHeight = height * 1/4
@@ -30,10 +32,12 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     library: {
-        flex: 6
+        flex: 7
     },
     title: {
-        fontSize: 17
+        fontSize: 17,
+        fontWeight: 'bold',
+        color: TextColor
     },
     book: {
         height: bookHeight,

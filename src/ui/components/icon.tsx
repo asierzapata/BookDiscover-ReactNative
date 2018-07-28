@@ -1,24 +1,44 @@
 import React from 'react'
 import FontAwesome, { Icons } from 'react-native-fontawesome';
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
+
+/* ====================================================== */
+/*                        Style                           */
+/* ====================================================== */
+
+import { TextColor } from '../styles/colors'
+
+/* ====================================================== */
+/*                   Implementation                       */
+/* ====================================================== */
 
 interface ownProps {
-    fontSize: number,
+    fontSize?: number,
+    textColor?: string,
     name: string, 
     onPress?: () => void
 }
 
 export default class Icon extends React.Component<ownProps> {
 
-    constructor({ fontSize = 12, name = '', onPress } : ownProps) {
-        super({ fontSize, name, onPress })
+    constructor(props : ownProps) {
+        super(props)
     }
 
     render() {
-        const { fontSize, name, onPress } = this.props
+        const { fontSize = 12, textColor = TextColor, name = '', onPress } = this.props
+        
         return (
             <TouchableOpacity onPress={onPress}>
-                <FontAwesome style={{fontSize, textAlign: 'center'}}>{Icons[name]}</FontAwesome>
+                <FontAwesome 
+                    style={{
+                        fontSize, 
+                        textAlign: 'center',
+                        color: textColor
+                    }}
+                >
+                    {Icons[name]}
+                </FontAwesome>
             </TouchableOpacity>
         )
     }

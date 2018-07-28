@@ -18,6 +18,7 @@ import ViewWrapper from '../../ui/components/view_wrapper';
 /* ====================================================== */
 
 import styles, { bookWidth } from './library_screen_style'
+import IconNames from '../../ui/styles/icons'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -30,7 +31,6 @@ interface ownState {
 export class LibraryScreen extends Component<NavigationScreenProps,ownState> {
 
     handleSearch = () => {
-        console.log('>>>>>> handleSearch called')
         this.props.navigation.navigate('Search')
     }
 
@@ -39,18 +39,18 @@ export class LibraryScreen extends Component<NavigationScreenProps,ownState> {
             <ViewWrapper style={styles.container}>
                 <View style={styles.topBar}>
                     <View style={styles.searchIcon}>
-                        <Icon name="search" fontSize={20}/>
+                        <Icon name={IconNames.SEARCH} fontSize={20}/>
                     </View>
                     <View style={styles.topBarTitle}>
                         <Text style={styles.title}>LIBRARY</Text>
                     </View>
                     <View style={styles.addIcon}>
-                            <Icon 
-                                name="plus" 
-                                fontSize={20} 
-                                onPress={this.handleSearch}
-                            />
-                    </View>  
+                        <Icon 
+                            name={IconNames.ADD} 
+                            fontSize={20} 
+                            onPress={this.handleSearch}
+                        />
+                    </View>
                 </View>
                 <View style={styles.library}>
                     <GridView

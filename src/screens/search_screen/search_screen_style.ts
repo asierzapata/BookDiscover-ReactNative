@@ -18,8 +18,9 @@ export default StyleSheet.create({
         height: 40,
         flex: 5,
         borderColor: 'gray',
-        borderWidth: 1,
-        marginTop: 8
+        borderRadius: 10,
+        marginLeft: 10,
+        marginRight: 10
     },
     cancelButton: {
         flex: 1
