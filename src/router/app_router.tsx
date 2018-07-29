@@ -1,5 +1,5 @@
 import React from 'react'
-import { createBottomTabNavigator } from 'react-navigation'
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 
 /* ====================================================== */
 /*                       Screens                          */
@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from 'react-navigation'
 import LibraryRouter from './library_router'
 import Explore from '../screens/explore_screen/explore_screen'
 import Profile from '../screens/profile_screen/profile_screen'
+import BookDetail from '../screens/book_detail_screen/book_detail_screen';
 
 /* ====================================================== */
 /*                     Components                         */
@@ -25,20 +26,20 @@ import IconNames from '../ui/styles/icons'
 /*                   Implementation                       */
 /* ====================================================== */
 
-export default createBottomTabNavigator(
+const TabBarNavigator = createBottomTabNavigator(
     {
         Library: {
             screen: LibraryRouter,
             navigationOptions: {
                 tabBarIcon: ({ tintColor } : { tintColor: string }) => <Icon name={IconNames.LIBRARY} textColor={tintColor} fontSize={20}/>
             }
-    },
+        },
         Explore: {
             screen: Explore,
             navigationOptions: {
                 tabBarIcon: ({ tintColor } : { tintColor: string }) => <Icon name={IconNames.EXPLORE} textColor={tintColor} fontSize={20}/>
             }
-    },
+        },
         Profile: {
             screen: Profile,
             navigationOptions: {
@@ -59,5 +60,17 @@ export default createBottomTabNavigator(
             inactiveTintColor: '#8B95A3',
             showLabel: false,
         }
+    }
+)
+
+export default createStackNavigator(
+    {
+        TabBarNavigator,
+        BookDetail
+    },
+    {
+        initialRouteName: 'TabBarNavigator',
+        headerMode: 'none',
+        mode: 'modal'
     }
 )
