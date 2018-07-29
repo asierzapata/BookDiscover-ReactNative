@@ -113,7 +113,6 @@ export class BookDetailScreen extends Component<ownProps,ownState> {
             </ViewWrapper>
         )
     }
-
 }
 
 
