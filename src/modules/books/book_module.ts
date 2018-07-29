@@ -68,10 +68,8 @@ export function fetchBooksSearch(query: string): AsyncAction{
 /*                        Reducers                        */
 /* ====================================================== */
 
-function books(state = {}, { type, payload, meta } : AsyncBreakdownAction) {
-    console.log('>>>>> REDUCER BOOKS', payload)
+function searchBooks(state = {}, { type, payload, meta } : AsyncBreakdownAction) {
     switch(type.NAME) {
-        case FETCH_BOOK_BY_ISBN.SUCCESS:
         case FETCH_BOOKS_SEARCH.SUCCESS:
             return payload
         default:
@@ -79,8 +77,18 @@ function books(state = {}, { type, payload, meta } : AsyncBreakdownAction) {
     }
 }
 
+function userBooks(state = {}, { type, payload, meta } : AsyncBreakdownAction) {
+    switch(type.NAME) {
+        case FETCH_BOOK_BY_ISBN.SUCCESS:
+            return payload
+        default:
+            return state
+    }
+}
+
 export default combineReducers({
-	books
+    searchBooks,
+    userBooks
 })
 
 /* ====================================================== */
@@ -92,7 +100,4 @@ const createSelector = selectorCreatorFactory(MODULE_NAME)
 // -----------
 
 export const debugingSelector = createSelector(state => state)
-export const getSearchBooks = createSelector(state => {
-    console.log('>>>>> SELECTOR ', state)
-    return state.books ? state.books : []
-})
+export const getSearchBooks = createSelector(state => state.searchBooks ? state.searchBooks : [])

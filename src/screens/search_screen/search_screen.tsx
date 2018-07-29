@@ -61,7 +61,7 @@ export class SearchScreen extends Component<ownProps,ownState> {
     }
 
     componentDidUpdate(prevProps: ownProps){
-        console.log('>>>> componentDidUpdate',this.props.debugingState, this.props.fetchBooksByQueryStatus)
+        console.log('>>>> componentDidUpdate',this.props.fetchBooksByQueryStatus, this.props.searchBooks)
         if(this.props.fetchBooksByQueryStatus.status !== prevProps.fetchBooksByQueryStatus.status) {
             console.log('>>>> ',this.props.debugingState)
         }
@@ -74,6 +74,10 @@ export class SearchScreen extends Component<ownProps,ownState> {
     handleSearch = () => {
         const { searchQuery } = this.state
         this.props.handleFetchBooksByQuery(searchQuery)
+    }
+    
+    handleBookDetail = (book: any) => {
+        this.props.navigation.navigate('BookDetail', { book })
     }
 
     render() {
@@ -116,7 +120,7 @@ export class SearchScreen extends Component<ownProps,ownState> {
                 <GridView
                     itemDimension={bookWidth}
                     items={searchBooks}
-                    renderItem={(item) => <BookItem {...item}/>}
+                    renderItem={(item) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
                 />
             </View>
         )

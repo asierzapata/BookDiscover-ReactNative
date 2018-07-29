@@ -30,19 +30,19 @@ export default createBottomTabNavigator(
         Library: {
             screen: LibraryRouter,
             navigationOptions: {
-                tabBarIcon: () => <Icon name={IconNames.LIBRARY} fontSize={20}/>
+                tabBarIcon: ({ tintColor } : { tintColor: string }) => <Icon name={IconNames.LIBRARY} textColor={tintColor} fontSize={20}/>
             }
     },
         Explore: {
             screen: Explore,
             navigationOptions: {
-                tabBarIcon: () => <Icon name={IconNames.EXPLORE} fontSize={20}/>
+                tabBarIcon: ({ tintColor } : { tintColor: string }) => <Icon name={IconNames.EXPLORE} textColor={tintColor} fontSize={20}/>
             }
     },
         Profile: {
             screen: Profile,
             navigationOptions: {
-                tabBarIcon: () => <Icon name={IconNames.PROFILE} fontSize={20}/>
+                tabBarIcon: ({ tintColor } : { tintColor: string }) => <Icon name={IconNames.PROFILE} textColor={tintColor} fontSize={20}/>
             }
         }
     },

@@ -1,19 +1,32 @@
 import React from 'react'
-import { View, Image, StyleSheet } from 'react-native'
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { bookHeight, bookWidth } from '../styles/dimensions'
 
 interface BookItem {
-    thumbnail: string
+    thumbnail: string,
+    onPress: () => void
 }
 
-const BookItem: React.SFC<BookItem> = ({ thumbnail }) => {
+const BookItem: React.SFC<BookItem> = ({ thumbnail, onPress }) => {
+
+    if(!onPress) {
+        return (
+            <View>
+                <Image
+                    style={styles.book}
+                    source={{uri: thumbnail}}
+                />
+            </View>
+        )
+    }
+
     return (
-        <View>
+        <TouchableOpacity onPress={onPress}>
             <Image
                 style={styles.book}
                 source={{uri: thumbnail}}
             />
-        </View>
+        </TouchableOpacity>
     )
 }
 

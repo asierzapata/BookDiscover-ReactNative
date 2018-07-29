@@ -21,11 +21,11 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /*                     Components                         */
 /* ====================================================== */
 
-import { View, Text, ActivityIndicator } from 'react-native'
-import GridView from 'react-native-super-grid';
+import { View, Text } from 'react-native'
+import GridView from 'react-native-super-grid'
 import Icon from '../../ui/components/icon'
 import BookItem from '../../ui/components/book_item'
-import ViewWrapper from '../../ui/components/view_wrapper';
+import ViewWrapper from '../../ui/components/view_wrapper'
 import Loading from '../../ui/components/loading'
 
 /* ====================================================== */
@@ -99,14 +99,6 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                 items={[]}
                 renderItem={(item) => <BookItem {...item}/>}
             />
-        )
-    }
-
-    renderLoading() {
-        return (
-            <View style={styles.activityIndicator}>
-                <ActivityIndicator />
-            </View>
         )
     }
 }

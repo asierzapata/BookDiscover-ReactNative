@@ -27,6 +27,20 @@ export default class Icon extends React.Component<ownProps> {
 
     render() {
         const { fontSize = 12, textColor = TextColor, name = '', onPress } = this.props
+
+        if (!onPress) {
+            return (
+                <FontAwesome 
+                    style={{
+                        fontSize, 
+                        textAlign: 'center',
+                        color: textColor
+                    }}
+                >
+                    {Icons[name]}
+                </FontAwesome>
+            )
+        }
         
         return (
             <TouchableOpacity onPress={onPress}>
