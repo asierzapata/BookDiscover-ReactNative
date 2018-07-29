@@ -20,7 +20,7 @@ const routes = {
     return "Library";
   },
   explore() {
-    return "Explode";
+    return "Explore";
   },
   profile() {
     return "Profile";
