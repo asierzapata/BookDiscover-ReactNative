@@ -1,19 +1,20 @@
-import React from 'react'
-import { Component } from 'react'
-import { createSwitchNavigator } from 'react-navigation'
+import React from "react";
+import { Component } from "react";
+import { createSwitchNavigator } from "react-navigation";
+import routes from "./routes";
 
 /* ====================================================== */
 /*                       Routers                          */
 /* ====================================================== */
 
-import AppRouter from './router/app_router'
-import AuthRouter from './router/auth_router'
+import AppRouter from "./router/app_router";
+import AuthRouter from "./router/auth_router";
 
 /* ====================================================== */
 /*                       Screens                          */
 /* ====================================================== */
 
-import AuthLoadingScreen from './screens/auth_loading_screen/auth_loading_screen'
+import AuthLoadingScreen from "./screens/auth_loading_screen/auth_loading_screen";
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -23,15 +24,15 @@ const MainRouter = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     App: AppRouter,
-    Auth: AuthRouter,
+    Auth: AuthRouter
   },
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: routes.authLoading()
   }
 );
 
 export default class Router extends Component {
   render() {
-    return <MainRouter />
+    return <MainRouter />;
   }
 }
