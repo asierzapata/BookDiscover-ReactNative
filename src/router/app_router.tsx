@@ -1,26 +1,14 @@
-<<<<<<< HEAD
 import React from 'react'
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation'
-=======
-import React from "react";
-import { createBottomTabNavigator } from "react-navigation";
-import routes from "../routes";
->>>>>>> 3cbfe3bf05379dc479115e9f5ea2dba93bf98e9c
 
 /* ====================================================== */
 /*                       Screens                          */
 /* ====================================================== */
 
-<<<<<<< HEAD
 import LibraryRouter from './library_router'
 import Explore from '../screens/explore_screen/explore_screen'
 import Profile from '../screens/profile_screen/profile_screen'
 import BookDetail from '../screens/book_detail_screen/book_detail_screen';
-=======
-import LibraryRouter from "./library_router";
-import Explore from "../screens/explore_screen/explore_screen";
-import Profile from "../screens/profile_screen/profile_screen";
->>>>>>> 3cbfe3bf05379dc479115e9f5ea2dba93bf98e9c
 
 /* ====================================================== */
 /*                     Components                         */
