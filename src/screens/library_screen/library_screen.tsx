@@ -12,7 +12,7 @@ import {
     FETCH_USER_BOOKS,
     fetchUserBooks,
     // Selectors
-    debugingSelector
+    userBooks
 } from '../../modules/user/user_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -56,7 +56,6 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         if(prevProps.fetchUserBooksStatus.status === 200){
             
         }
-        console.log(this.props.debugingState)
     }
 
     handleSearch = () => {
@@ -93,10 +92,12 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     renderGridView() {
+        console.log('>>>>>', this.props.userBooks, this.props.fetchUserBooksStatus)
+        const books = []
         return (
             <GridView
                 itemDimension={bookWidth}
-                items={[]}
+                items={books}
                 renderItem={(item) => <BookItem {...item}/>}
             />
         )
@@ -104,10 +105,10 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 }
 
 const mapStateToProps = (state: any): StateProps => ({
+    userBooks: userBooks(state),
     fetchUserBooksStatus: getRequestStatus(state, {
 		actionType: FETCH_USER_BOOKS
     }),
-    debugingState: debugingSelector(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({

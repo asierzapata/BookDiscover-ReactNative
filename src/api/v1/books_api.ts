@@ -74,7 +74,6 @@ function getBooksByQuery({ query }: { query: string }) {
                 }
             })
             .catch((error) => {
-                console.log('>>>>> CATCH PROMISE ', error)
                 reject({ 
                     code: 500, 
                     message: ApiErrors.NOT_FOUND
