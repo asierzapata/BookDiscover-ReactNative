@@ -66,7 +66,12 @@ const TabBarNavigator = createBottomTabNavigator(
 export default createStackNavigator(
     {
         TabBarNavigator,
-        BookDetail
+        BookDetail: {
+            screen: BookDetail,
+            navigationOptions: () => ({
+                gestureResponseDistance: 200
+            })
+        }
     },
     {
         initialRouteName: 'TabBarNavigator',

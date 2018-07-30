@@ -8,6 +8,7 @@ export default {
     parseGoogleReponse
 }
 
+const bookPlaceholder = 'http://www.py.undp.org/etc/designs/UNDPGlobalDesign/clientlibs/digitallibrary/css/book-cover-placeholder.png'
 
 export interface Book {
     title: string, 
@@ -52,7 +53,7 @@ function _parseIndividualBook(book: any) {
     }) 
 
     // TODO: replace the empty string for a suitable placeholder
-    let thumbnail = imageLinks ? (imageLinks.thumbnail ? imageLinks.thumbnail : '') : ''
+    let thumbnail = imageLinks ? (imageLinks.thumbnail ? imageLinks.thumbnail : '') : bookPlaceholder
 
     return {
         title, 
