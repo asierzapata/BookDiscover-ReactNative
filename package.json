@@ -41,7 +41,8 @@
 		"watchAndStart": "concurrently \"yarn run watch\" \"yarn run start\"",
 		"buildAndStart": "yarn run build && yarn run watchAndStart ",
 		"format": "prettier --write --list-different --config ./.prettierrc '{src,scripts,tests}/**/*.{js,json,ts,css,less,scss,md}'",
-		"precommit": "lint-staged"
+		"precommit": "lint-staged",
+		"lint": "eslint src/"
 	},
 	"jest": {
 		"preset": "react-native",
