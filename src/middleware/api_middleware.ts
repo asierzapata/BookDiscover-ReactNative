@@ -1,8 +1,9 @@
 import ClientApi, { ApiObject } from '../api/api'
 import { Dispatch, MiddlewareAPI } from 'redux';
-import { BaseAction, AsyncAction, AsyncBreakdownAction } from '../modules/actions_interfaces';
-import { ApiResponse, ApiError } from '../api/config/api_config';
-import { ApiActionNames } from '../lib/redux/api_action_creator';
+import { BaseAction, AsyncAction, AppAction } from '../modules/actions_interfaces'
+import { ApiResponse, ApiError } from '../api/config/api_config'
+import { AsyncActionNames, ASYNC_ACTION_ID, asyncActionObject } from '../lib/redux/async_action_creator'
+import _ from 'lodash'
 
 /* ====================================================== */
 /*                        Middleware                      */
@@ -18,13 +19,15 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
 
     if (!AsyncProcess) return next(action)
 
-    if (!type.REQUEST || !type.SUCCESS || !type.FAILURE || !type.ALWAYS) {
+    if (!_.startsWith(type, ASYNC_ACTION_ID)) {
         throw new Error('Expected action type created with apiAction(...)')
     }
 
     if (!shouldDoAsyncProcess(getState())) return
 
-    next(requestAction({ type: { NAME: type.REQUEST }, meta }))
+    const asyncBreakdownNames = asyncActionObject(type)
+
+    next(requestAction({ type: asyncBreakdownNames.REQUEST, meta }))
 
     return new Promise<void>((resolve: ( response: any ) => void, reject: ( err: ApiError ) => void) => {
         AsyncProcess({
@@ -33,25 +36,25 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
         })
             .then(response => {
                 console.log('>>>>> Call api', response)
-                next(successAction({ type: { NAME: type.SUCCESS! }, response, meta }))
-                next(alwaysAction({ type: { NAME: type.ALWAYS! }, meta: { ...meta, ..._extractResponseMetadata(response as ApiResponse) } }))
+                next(successAction({ type: asyncBreakdownNames.SUCCESS, response, meta }))
+                next(alwaysAction({ type: asyncBreakdownNames.ALWAYS, meta: { ...meta, ..._extractResponseMetadata(response as ApiResponse) } }))
                 resolve(response) 
             })
             .catch(err => {
                 const error = err as ApiError
                 // If it's an error from API
                 if (error.code) {
-                    next(firebaseFailure({ type: { NAME: type.FAILURE! }, error, meta }))
+                    next(firebaseFailure({ type: asyncBreakdownNames.FAILURE , error, meta }))
                     next(
                         alwaysAction({
-                            type: { NAME: type.ALWAYS! },
+                            type: asyncBreakdownNames.ALWAYS,
                             meta: { ...meta, isFirebaseError: true }
                         })
                     )
                 } else {
                     // It's a Runtime error of our client side code
-                    next(runtimeFailureAction({ type: { NAME: type.FAILURE! }, error, meta }))
-                    next(alwaysAction({ type: { NAME: type.ALWAYS! }, meta: { ...meta, isFirebaseError: false } }))
+                    next(runtimeFailureAction({ type: asyncBreakdownNames.FAILURE, error, meta }))
+                    next(alwaysAction({ type: asyncBreakdownNames.ALWAYS, meta: { ...meta, isFirebaseError: false } }))
                     reject(error)
                 }
             })
@@ -68,7 +71,7 @@ export function requestAction({ type, meta }: BaseAction) {
     return { type, meta }
 }
 
-export function successAction({ type, response, meta }: { type: ApiActionNames, response: any, meta: object}): AsyncBreakdownAction {
+export function successAction({ type, response, meta }: { type: string, response: any, meta: object}): AppAction {
     return {
         type,
         payload: response.data,
@@ -76,7 +79,7 @@ export function successAction({ type, response, meta }: { type: ApiActionNames, 
     }
 }
 
-export function firebaseFailure({ type, error, meta }: { type: ApiActionNames, error: ApiError, meta: object}): AsyncBreakdownAction {
+export function firebaseFailure({ type, error, meta }: { type: string, error: ApiError, meta: object}): AppAction {
     return {
         type,
         error: true,
@@ -85,7 +88,7 @@ export function firebaseFailure({ type, error, meta }: { type: ApiActionNames, e
     }
 }
 
-export function runtimeFailureAction({ type, error, meta }: { type: ApiActionNames, error: ApiError, meta: object}): AsyncBreakdownAction {
+export function runtimeFailureAction({ type, error, meta }: { type: string, error: ApiError, meta: object}): AppAction {
     return {
         type,
         error: true,

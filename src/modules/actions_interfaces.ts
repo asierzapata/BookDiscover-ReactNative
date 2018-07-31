@@ -1,9 +1,7 @@
 import { AsyncConfigObject } from '../middleware/api_middleware'
-import { ApiResponse } from '../api/config/api_config';
-import { ApiActionNames } from '../lib/redux/api_action_creator';
 
 export interface BaseAction {
-    type: ApiActionNames,
+    type: string,
     meta: {
         [key: string]: any
     }
@@ -14,7 +12,7 @@ export interface AsyncAction extends BaseAction {
     shouldDoAsyncProcess?: (state: object) => boolean
 }
 
-export interface AsyncBreakdownAction extends BaseAction {
+export interface AppAction extends BaseAction {
     payload?: object,
     error?: boolean
 }

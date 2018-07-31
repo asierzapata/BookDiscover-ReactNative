@@ -1,7 +1,10 @@
 import selectorCreatorFactory from '../../lib/redux/selectors'
-import apiAction, { API_ACTION_SEPARATOR, ApiActionNames } from '../../lib/redux/api_action_creator'
+import { asyncActionObject, ASYNC_ACTION_SEPARATOR } from '../../lib/redux/async_action_creator'
 import { AnyAction } from 'redux';
 import _ from 'lodash'
+
+export const DEFAULT_NAMESPACE = '_no_namespace_'
+
 
 /* ====================================================== */
 /*                         Module                         */
@@ -25,53 +28,67 @@ export interface AsyncActionStatus {
 /*                        Reducers                        */
 /* ====================================================== */
 
-export default function apiReducer(state = {}, { type, payload, meta = {} }: AnyAction) {
+export default function apiReducer(state: { [key: string] : any } = {}, { type, payload, meta = {} }: AnyAction) {
     if (!type) return state
-    const parsedType = _.split(type.NAME, API_ACTION_SEPARATOR)
+    const parsedType = _.split(type, ASYNC_ACTION_SEPARATOR)
     if (parsedType.length < 2) {
         return state
     }
 
-    const actionType = apiAction(parsedType[0])
-    const namespace = _getNamespace({ actionType, requestId: meta.requestId })
+    const actionName = parsedType[0]
+
+    const actionType = asyncActionObject(actionName)
+    const namespace = _getNamespace({ requestId: meta.requestId })
 
     switch (type) {
         case actionType.REQUEST:
             return {
                 ...state,
-                [namespace]: {
-                    isLoading: true,
-                    isLoaded: false,
-                    error: '',
-                    status: null,
-                    statusText: ''
+                [actionName]: {
+                    ...state[actionName],
+                    [namespace]: {
+                        isLoading: true,
+                        isLoaded: false,
+                        error: '',
+                        errorCode: '',
+                        status: null,
+                        statusText: ''
+                    }
                 }
             }
         case actionType.SUCCESS:
-            return {
-                ...state,
-                [namespace]: {
-                    isLoading: false,
-                    isLoaded: true,
-                    error: '',
-                    status: meta.status,
-                    statusText: meta.statusText
-                }
-            }
-        case actionType.FAILURE:
-            return {
-                ...state,
-                [namespace]: {
-                    isLoading: false,
-                    isLoaded: false,
-                    error: payload.error,
-                    status: meta.status,
-                    statusText: meta.statusText
-                }
-            }
-        default:
-            return state
-    }
+			return {
+				...state,
+				[actionName]: {
+					...state[actionName],
+					[namespace]: {
+						isLoading: false,
+						isLoaded: true,
+						error: '',
+						errorCode: '',
+						status: meta.status,
+						statusText: meta.statusText
+					}
+				}
+			}
+		case actionType.FAILURE:
+			return {
+				...state,
+				[actionName]: {
+					...state[actionName],
+					[namespace]: {
+						isLoading: false,
+						isLoaded: false,
+						error: payload,
+						errorCode: payload.errorCode,
+						status: meta.status,
+						statusText: meta.statusText
+					}
+				}
+			}
+		default:
+			return state
+	}
 }
 
 /* ====================================================== */
@@ -80,23 +97,25 @@ export default function apiReducer(state = {}, { type, payload, meta = {} }: Any
 
 const createSelector = selectorCreatorFactory(MODULE_NAME)
 
-export const getRequestStatus = createSelector(
-    (state, { actionType, requestId }) => state[_getNamespace({ actionType, requestId })] || {}
-)
+export const getRequestStatus = createSelector((state, { actionType, requestId }) => {
+	if (!state[actionType.NAME]) return {}
+	return state[actionType.NAME][_getNamespace({ requestId })] || {}
+})
+
 
 /* ====================================================== */
 /*                        Helpers                         */
 /* ====================================================== */
 
-function _getNamespace({ actionType, requestId }: { actionType: ApiActionNames, requestId: string }) {
-    return requestId ? `${actionType.NAME}-${requestId}` : actionType.NAME
+function _getNamespace({ requestId = '' }) {
+	return requestId || DEFAULT_NAMESPACE
 }
 
 /* ====================================================== */
 /*                      Test Helpers                      */
 /* ====================================================== */
 
-export function stateForLoadingAction({ actionType, requestId }: { actionType: ApiActionNames, requestId: string }) {
+export function stateForLoadingAction({ actionType, requestId }: { actionType: string, requestId: string }) {
     return stateForAction({
         actionState: { isLoading: true },
         actionType,
@@ -104,10 +123,12 @@ export function stateForLoadingAction({ actionType, requestId }: { actionType: A
     })
 }
 
-export function stateForAction({ actionState, actionType, requestId }: { actionState: object, actionType: ApiActionNames, requestId: string }) {
+export function stateForAction({ actionState, actionType, requestId }: { actionState: object, actionType: string, requestId: string }) {
     return {
-        [MODULE_NAME]: {
-            [_getNamespace({ actionType, requestId })]: actionState
-        }
-    }
+		[MODULE_NAME]: {
+			[actionType]: {
+				[_getNamespace({ requestId })]: actionState
+			}
+		}
+	}
 }
