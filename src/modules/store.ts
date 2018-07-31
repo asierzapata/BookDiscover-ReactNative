@@ -1,35 +1,40 @@
-import { createStore, applyMiddleware } from 'redux'
-import { createLogger } from 'redux-logger'
+import { createStore, applyMiddleware, compose } from "redux";
+import { createLogger } from "redux-logger";
 
-import apiMiddleware from '../middleware/api_middleware'
+import apiMiddleware from "../middleware/api_middleware";
 
-import rootReducer from './root_reducer'
+import rootReducer from "./root_reducer";
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
 function startStore() {
-    const initialState = {}
-    const middleware = [
-        apiMiddleware,
-        //createLogger()
-    ]
-    
-    const middlewareStack = applyMiddleware(...middleware)
+  const initialState = {};
+  const middleware = [
+    apiMiddleware
+    //createLogger()
+  ];
 
-    const store = createStore(
-        rootReducer,
-        initialState,
-        middlewareStack
-    )
-    return {
-        store
-    }
+  const middlewareStack = applyMiddleware(...middleware);
+  const windowIfDefined =
+    typeof window === "undefined" ? null : (window as any);
+
+  const composeEnhancers =
+    windowIfDefined.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+  const store = createStore(
+    rootReducer,
+    initialState,
+    composeEnhancers(middlewareStack)
+  );
+  return {
+    store
+  };
 }
 
-const { store } = startStore()
+const { store } = startStore();
 
-export { store as reduxStore }
+export { store as reduxStore };
 
-export default startStore
+export default startStore;
