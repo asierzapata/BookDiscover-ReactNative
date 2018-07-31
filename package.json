@@ -39,8 +39,9 @@
 		"watchAndRunIOS": "concurrently \"yarn run watch\" \"yarn run ios\"",
 		"buildRunIOS": "yarn run build && yarn run watchAndRunIOS ",
 		"watchAndStart": "concurrently \"yarn run watch\" \"yarn run start\"",
-    "buildAndStart": "yarn run build && yarn run watchAndStart ",
-    "format": "prettier --write --list-different --config ./.prettierrc '{src,scripts,tests}/**/*.{js,json,ts,css,less,scss,md}'"
+		"buildAndStart": "yarn run build && yarn run watchAndStart ",
+		"format": "prettier --write --list-different --config ./.prettierrc '{src,scripts,tests}/**/*.{js,json,ts,css,less,scss,md}'",
+		"precommit": "lint-staged"
 	},
 	"jest": {
 		"preset": "react-native",
