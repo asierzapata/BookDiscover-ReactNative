@@ -58,7 +58,6 @@ function getBooksByQuery({ query }: { query: string }) {
         ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}`, {})
             .then((response) => {
                 const { data } = response
-                console.log(response)
                 if (data) {
                     resolve({
                         headers: response.headers,
@@ -74,7 +73,6 @@ function getBooksByQuery({ query }: { query: string }) {
                 }
             })
             .catch((error) => {
-                console.log('>>>>> CATCH PROMISE ', error)
                 reject({ 
                     code: 500, 
                     message: ApiErrors.NOT_FOUND

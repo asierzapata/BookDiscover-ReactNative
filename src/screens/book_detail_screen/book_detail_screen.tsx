@@ -9,10 +9,13 @@ import _ from 'lodash'
 /* ====================================================== */
 
 import {
-	// Actions
+    // Actions
+    ADD_BOOK_USER,
+    addBookUser
     // Selectors
 } from '../../modules/user/user_module'
 
+import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
 /* ====================================================== */
 /*                     Components                         */
@@ -42,31 +45,35 @@ import { Book } from '../../api/parsers/books_parser';
 
 export class BookDetailScreen extends Component<ownProps,ownState> {
 
+    constructor(props: ownProps) {
+        super(props)
+        this.state = {
+            error: undefined
+        }
+    }
+
+    componentDidUpdate(prevProps: ownProps) {
+        // if(this.props.fetchAddBookUserStatus.isLoaded) {
+        //     if(this.props.fetchAddBookUserStatus.error) {
+        //         this.setState({ error : this.props.fetchAddBookUserStatus.error})
+        //     } else {
+        //         this.props.navigation.navigate('Library')
+        //     }
+        // }
+    }
+
     render() {
-        const book = this.props.navigation.state.params!.book as Book
+        const { book, handleAddBookUser } = this.props
+        const { error } = this.state
         const authors = _.join(book.authors, ' and ')
 
-        console.log('>>>>>> state navigation ', this.props.navigation.state)
         return(
             <ViewWrapper style={styles.container}>
-                {/* <View style={styles.topBar}>
-                    <View style={styles.searchIcon}>
-                        <Icon name={IconNames.SEARCH} fontSize={20}/>
-                    </View>
-                    <View style={styles.topBarTitle}>
-                        <Text style={styles.title}>LIBRARY</Text>
-                    </View>
-                    <View style={styles.addIcon}>
-                        <Icon 
-                            name={IconNames.ADD} 
-                            fontSize={20} 
-                        />
-                    </View>
-                </View> */}
                 <View style={styles.mainView}>
                     <View style={styles.backBarContainer}>
                         <View style={styles.backBar}>-</View>
                     </View>
+                    {error ? <Text>{error}</Text> : null}
                     <View style={styles.bookCover}>
                         <View style={styles.bookCoverShadow}>
                             <Image 
@@ -98,7 +105,7 @@ export class BookDetailScreen extends Component<ownProps,ownState> {
                             <Button 
                                 color={Background}
                                 title='Add to library'
-                                onPress={()=> 1}
+                                onPress={()=> handleAddBookUser(book)}
                             />
                         </View>
                         <View style={styles.rightActionButton}>
@@ -116,10 +123,15 @@ export class BookDetailScreen extends Component<ownProps,ownState> {
 }
 
 
-const mapStateToProps = (state: any): StateProps => ({
+const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
+    book: ownProps.navigation.state.params!.book as Book,
+    fetchAddBookUserStatus: getRequestStatus(state, {
+		actionType: ADD_BOOK_USER
+    })
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+    handleAddBookUser: ({ ISBN, thumbnail }) => dispatch(addBookUser({ ISBN, thumbnail } as Book))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookDetailScreen)

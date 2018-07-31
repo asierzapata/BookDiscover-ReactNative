@@ -4,7 +4,7 @@ import '@firebase/firestore'
 // import '@firebase/auth'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
-import { ApiResponse, ApiError } from '../config/api_config';
+import { Book } from '../parsers/books_parser';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -12,6 +12,7 @@ import { ApiResponse, ApiError } from '../config/api_config';
 
 const api: UserApiObject = {
     getUserBooks,
+    addBookToUser,
     getUserInfo,
     logoutUser
 }
@@ -20,6 +21,7 @@ export default api
 
 export interface UserApiObject {
     getUserBooks: () => Promise<{}>,
+    addBookToUser: ({ ISBN, thumbnail } : Book) => Promise<{}>,
     getUserInfo: () => Promise<{}>,
     logoutUser: () => Promise<{}>
 }
@@ -39,11 +41,12 @@ function getUserBooks() {
         firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid).get()
             .then((document) => {
                 if (document.exists) {
+                    const data = document.data()
                     resolve({
                         headers: '',
                         status: '200',
                         statusText: '',
-                        data: document.data()
+                        data: data!.books
                     })
                 } else {
                     resolve({
@@ -55,6 +58,45 @@ function getUserBooks() {
                 }
             })
     })
+}
+
+function addBookToUser({ ISBN, thumbnail } : Book) {
+    const { currentUser } = firebase.auth()
+    if(_.isNull(currentUser)) 
+        return Promise.reject({ 
+            code: 401, 
+            error: ApiErrors.USER_NOT_LOGGED_IN
+        })
+
+    return new Promise((resolve, reject) => {
+        firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid).get()
+            .then((document) => {
+                if (document.exists) {
+                    const books = document.data() as object[]
+                    const data = { books: [...books,{ ISBN, thumbnail }]}
+                    return firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid).set(data, { merge: true })
+                } else {
+                    reject({ 
+                        code: 500, 
+                        message: ApiErrors.NOT_FOUND
+                    })
+                }
+            })
+            .then(() => {
+                resolve({
+                    headers: '',
+                    status: '200',
+                    statusText: '',
+                    data: ''
+                })
+            })
+            .catch((error) => {
+                reject({ 
+                    code: 500, 
+                    message: error.message
+                })
+            })
+    })  
 }
 
 function getUserInfo() {

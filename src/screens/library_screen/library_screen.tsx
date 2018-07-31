@@ -2,6 +2,7 @@ import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux';
+import _ from 'lodash'
 
 /* ====================================================== */
 /*                   Actions / Selectors                  */
@@ -12,7 +13,7 @@ import {
     FETCH_USER_BOOKS,
     fetchUserBooks,
     // Selectors
-    debugingSelector
+    userBooks
 } from '../../modules/user/user_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -56,7 +57,6 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         if(prevProps.fetchUserBooksStatus.status === 200){
             
         }
-        console.log(this.props.debugingState)
     }
 
     handleSearch = () => {
@@ -93,10 +93,12 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     renderGridView() {
+        const { userBooks } = this.props
+        let books = _.isEmpty(userBooks) ? [] : userBooks
         return (
             <GridView
                 itemDimension={bookWidth}
-                items={[]}
+                items={books}
                 renderItem={(item) => <BookItem {...item}/>}
             />
         )
@@ -104,10 +106,10 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 }
 
 const mapStateToProps = (state: any): StateProps => ({
+    userBooks: userBooks(state),
     fetchUserBooksStatus: getRequestStatus(state, {
 		actionType: FETCH_USER_BOOKS
     }),
-    debugingState: debugingSelector(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({

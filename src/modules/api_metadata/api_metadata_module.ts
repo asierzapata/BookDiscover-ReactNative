@@ -27,7 +27,7 @@ export interface AsyncActionStatus {
 
 export default function apiReducer(state = {}, { type, payload, meta = {} }: AnyAction) {
     if (!type) return state
-    const parsedType = _.split(type, API_ACTION_SEPARATOR)
+    const parsedType = _.split(type.NAME, API_ACTION_SEPARATOR)
     if (parsedType.length < 2) {
         return state
     }

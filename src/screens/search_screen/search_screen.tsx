@@ -61,10 +61,10 @@ export class SearchScreen extends Component<ownProps,ownState> {
     }
 
     componentDidUpdate(prevProps: ownProps){
-        console.log('>>>> componentDidUpdate',this.props.fetchBooksByQueryStatus, this.props.searchBooks)
-        if(this.props.fetchBooksByQueryStatus.status !== prevProps.fetchBooksByQueryStatus.status) {
-            console.log('>>>> ',this.props.debugingState)
-        }
+        // console.log('>>>> componentDidUpdate',this.props.fetchBooksByQueryStatus, this.props.searchBooks)
+        // if(this.props.fetchBooksByQueryStatus.status !== prevProps.fetchBooksByQueryStatus.status) {
+        //     console.log('>>>> ',this.props.debugingState)
+        // }
     }
 
     handleCancel = () => {
