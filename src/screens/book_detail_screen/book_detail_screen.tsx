@@ -11,9 +11,14 @@ import _ from 'lodash'
 import {
     // Actions
     ADD_BOOK_USER,
-    addBookUser
+    addBookUser,
     // Selectors
 } from '../../modules/user/user_module'
+
+import {
+    // Actions
+    fetchUserBooks
+} from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
@@ -53,13 +58,14 @@ export class BookDetailScreen extends Component<ownProps,ownState> {
     }
 
     componentDidUpdate(prevProps: ownProps) {
-        // if(this.props.fetchAddBookUserStatus.isLoaded) {
-        //     if(this.props.fetchAddBookUserStatus.error) {
-        //         this.setState({ error : this.props.fetchAddBookUserStatus.error})
-        //     } else {
-        //         this.props.navigation.navigate('Library')
-        //     }
-        // }
+        if(prevProps.fetchAddBookUserStatus.isLoading && this.props.fetchAddBookUserStatus.isLoaded) {
+            if(this.props.fetchAddBookUserStatus.error) {
+                this.setState({ error : this.props.fetchAddBookUserStatus.error})
+            } else {
+                this.props.handleFetchUserBooks()
+                this.props.navigation.navigate('Library')
+            }
+        }
     }
 
     render() {
@@ -126,12 +132,13 @@ export class BookDetailScreen extends Component<ownProps,ownState> {
 const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
     book: ownProps.navigation.state.params!.book as Book,
     fetchAddBookUserStatus: getRequestStatus(state, {
-		actionType: ADD_BOOK_USER
+		actionType: ADD_BOOK_USER.NAME
     })
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    handleAddBookUser: ({ ISBN, thumbnail }) => dispatch(addBookUser({ ISBN, thumbnail } as Book))
+    handleAddBookUser: ({ ISBN, thumbnail }) => dispatch(addBookUser({ ISBN, thumbnail } as Book)),
+    handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookDetailScreen)

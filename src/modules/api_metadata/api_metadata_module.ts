@@ -98,8 +98,8 @@ export default function apiReducer(state: { [key: string] : any } = {}, { type, 
 const createSelector = selectorCreatorFactory(MODULE_NAME)
 
 export const getRequestStatus = createSelector((state, { actionType, requestId }) => {
-	if (!state[actionType.NAME]) return {}
-	return state[actionType.NAME][_getNamespace({ requestId })] || {}
+	if (!state[actionType]) return {}
+	return state[actionType][_getNamespace({ requestId })] || {}
 })
 
 

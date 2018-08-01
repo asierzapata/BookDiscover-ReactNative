@@ -10,8 +10,7 @@ export interface ownState {
 export interface ownProps extends NavigationScreenProps, StateProps, DispatchProps {}
 
 export interface StateProps {
-    fetchBooksByQueryStatus: AsyncActionStatus;
-    debugingState: any;
+    fetchBooksByQueryStatus: AsyncActionStatus
     searchBooks: any
 }
 

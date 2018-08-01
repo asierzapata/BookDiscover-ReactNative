@@ -13,8 +13,8 @@ import {
     FETCH_USER_BOOKS,
     fetchUserBooks,
     // Selectors
-    userBooks
-} from '../../modules/user/user_module'
+    getUserBooks
+} from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
@@ -54,9 +54,9 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     componentDidUpdate(prevProps: ownProps) {
-        if(prevProps.fetchUserBooksStatus.status === 200){
+        // if(prevProps.navigation && this.props.fetchUserBooksStatus.isLoaded){
             
-        }
+        // }
     }
 
     handleSearch = () => {
@@ -106,9 +106,9 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 }
 
 const mapStateToProps = (state: any): StateProps => ({
-    userBooks: userBooks(state),
+    userBooks: getUserBooks(state),
     fetchUserBooksStatus: getRequestStatus(state, {
-		actionType: FETCH_USER_BOOKS
+		actionType: FETCH_USER_BOOKS.NAME
     }),
 })
 

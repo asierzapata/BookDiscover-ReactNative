@@ -10,7 +10,8 @@ export interface AsyncActionNames {
   REQUEST: string,
   SUCCESS: string,
   FAILURE: string,
-  ALWAYS: string
+  ALWAYS: string,
+  NAME: string
 }
 
 function asyncActionObject(type: string): AsyncActionNames {
@@ -18,7 +19,8 @@ function asyncActionObject(type: string): AsyncActionNames {
     REQUEST: `${type}${ASYNC_ACTION_SEPARATOR}REQUEST`,
     SUCCESS: `${type}${ASYNC_ACTION_SEPARATOR}SUCCESS`,
     FAILURE: `${type}${ASYNC_ACTION_SEPARATOR}FAILURE`,
-    ALWAYS: `${type}${ASYNC_ACTION_SEPARATOR}ALWAYS`
+    ALWAYS: `${type}${ASYNC_ACTION_SEPARATOR}ALWAYS`,
+    NAME: type
   }
 }
 

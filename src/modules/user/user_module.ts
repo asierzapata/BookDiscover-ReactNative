@@ -19,27 +19,12 @@ export const MODULE_NAME = 'user'
 export const FETCH_USER_INFO = asyncActionObject('FETCH_USER_INFO')
 export function fetchUserInfo(): AsyncAction {
     return {
-        type: asyncAction('FETCH_USER_INFO'),
+        type: asyncAction(FETCH_USER_INFO.NAME),
         AsyncProcess: AsyncConfig => 
             AsyncConfig.api.v1.userApi.getUserInfo(),
         shouldDoAsyncProcess: state => 
             !getRequestStatus(state, {
-                actionType: asyncAction('FETCH_USER_INFO')
-            }).isLoading,
-        meta : {}
-    }
-}
-
-
-export const FETCH_USER_BOOKS = asyncActionObject('FETCH_USER_BOOKS')
-export function fetchUserBooks(): AsyncAction {
-    return {
-        type: asyncAction('FETCH_USER_BOOKS'),
-        AsyncProcess: AsyncConfig => 
-            AsyncConfig.api.v1.userApi.getUserBooks(),
-        shouldDoAsyncProcess: state => 
-            !getRequestStatus(state, {
-                actionType: asyncAction('FETCH_USER_BOOKS')
+                actionType: asyncAction(FETCH_USER_INFO.NAME)
             }).isLoading,
         meta : {}
     }
@@ -48,12 +33,12 @@ export function fetchUserBooks(): AsyncAction {
 export const ADD_BOOK_USER = asyncActionObject('ADD_BOOK_USER')
 export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
     return {
-        type: asyncAction('ADD_BOOK_USER'),
+        type: asyncAction(ADD_BOOK_USER.NAME),
         AsyncProcess: AsyncConfig => 
             AsyncConfig.api.v1.userApi.addBookToUser({ ISBN, thumbnail } as Book),
         shouldDoAsyncProcess: state => 
             !getRequestStatus(state, {
-                actionType: asyncAction('ADD_BOOK_USER')
+                actionType: asyncAction(ADD_BOOK_USER.NAME)
             }).isLoading,
         meta : {}
     }
@@ -72,18 +57,8 @@ function userInfo(state = {}, { type, payload, meta } : AppAction) {
     }
 }
 
-function books(state = {}, { type, payload, meta } : AppAction) {
-    switch(type) {
-        case FETCH_USER_BOOKS.SUCCESS:
-            return payload
-        default:
-            return state
-    }
-}
-
 export default combineReducers({
-    userInfo,
-    books
+    userInfo
 })
 
 /* ====================================================== */
@@ -93,5 +68,3 @@ export default combineReducers({
 const createSelector = selectorCreatorFactory(MODULE_NAME)
 
 // -----------
-
-export const userBooks = createSelector(state => state.books ? state.books : [])

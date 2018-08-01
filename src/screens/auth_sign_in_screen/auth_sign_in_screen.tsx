@@ -53,7 +53,6 @@ export class AuthSignInScreen extends Component<NavigationScreenProps,ownState> 
             .then(() => this.props.navigation.navigate('App'))
             .catch(error => this.setState({ errorMessage: error.message }))
         // TODO: Firebase
-        console.log('>>>> handleSignIn')
     }
 
     render() {

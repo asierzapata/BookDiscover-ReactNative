@@ -72,7 +72,7 @@ function addBookToUser({ ISBN, thumbnail } : Book) {
         firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid).get()
             .then((document) => {
                 if (document.exists) {
-                    const books = document.data() as object[]
+                    const { books } = document.data() as { books: object[] }
                     const data = { books: [...books,{ ISBN, thumbnail }]}
                     return firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid).set(data, { merge: true })
                 } else {

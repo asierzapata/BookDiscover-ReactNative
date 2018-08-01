@@ -25,7 +25,7 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
 
     if (!shouldDoAsyncProcess(getState())) return
 
-    const asyncBreakdownNames = asyncActionObject(type)
+    const asyncBreakdownNames = asyncActionObject(_.split(type, `${ASYNC_ACTION_ID}_`)[1])
 
     next(requestAction({ type: asyncBreakdownNames.REQUEST, meta }))
 
@@ -35,7 +35,6 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
             dispatch
         })
             .then(response => {
-                console.log('>>>>> Call api', response)
                 next(successAction({ type: asyncBreakdownNames.SUCCESS, response, meta }))
                 next(alwaysAction({ type: asyncBreakdownNames.ALWAYS, meta: { ...meta, ..._extractResponseMetadata(response as ApiResponse) } }))
                 resolve(response) 

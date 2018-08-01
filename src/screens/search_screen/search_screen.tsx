@@ -13,7 +13,6 @@ import {
     FETCH_BOOKS_SEARCH,
     fetchBooksSearch,
     // Selectors
-    debugingSelector,
     getSearchBooks
 } from '../../modules/books/book_module'
 
@@ -58,13 +57,6 @@ export class SearchScreen extends Component<ownProps,ownState> {
             searchQuery: '',
             errorMessage: undefined
         }
-    }
-
-    componentDidUpdate(prevProps: ownProps){
-        // console.log('>>>> componentDidUpdate',this.props.fetchBooksByQueryStatus, this.props.searchBooks)
-        // if(this.props.fetchBooksByQueryStatus.status !== prevProps.fetchBooksByQueryStatus.status) {
-        //     console.log('>>>> ',this.props.debugingState)
-        // }
     }
 
     handleCancel = () => {
@@ -129,9 +121,8 @@ export class SearchScreen extends Component<ownProps,ownState> {
 
 const mapStateToProps = (state: any): StateProps => ({
     fetchBooksByQueryStatus: getRequestStatus(state, {
-		actionType: FETCH_BOOKS_SEARCH
+		actionType: FETCH_BOOKS_SEARCH.NAME
     }),
-    debugingState: debugingSelector(state),
     searchBooks: getSearchBooks(state)
 })
 
