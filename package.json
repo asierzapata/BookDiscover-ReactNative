@@ -71,7 +71,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
     "react-native-fontawesome": "^5.7.0",
     "react-native-scripts-ts": "^1.15.0",
-    "react-native-sideswipe": "^1.4.2",
+    "react-native-snap-carousel": "^3.7.2",
     "react-native-super-grid": "^2.4.1",
     "react-navigation": "^2.0.2",
     "react-redux": "^5.0.7",

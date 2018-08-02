@@ -1,2 +1,2 @@
 declare module 'react-native-fontawesome'
-declare module 'react-native-sideswipe'
+declare module 'react-native-snap-carousel'

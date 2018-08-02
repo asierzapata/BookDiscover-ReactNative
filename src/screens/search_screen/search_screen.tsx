@@ -28,17 +28,18 @@ import {
     Button
 } from 'react-native'
 import GridView from 'react-native-super-grid'
-import SideSwipe from 'react-native-sideswipe'
+import Carousel from 'react-native-snap-carousel';
 import ViewWrapper from '../../ui/components/view_wrapper'
 import Loading from '../../ui/components/loading'
+import BookItem from '../../ui/components/book_item'
 import CarouselCard from './components/carousel_card'
 
 /* ====================================================== */
 /*                        Style                           */
 /* ====================================================== */
 
-import styles, { contentOffset } from './search_screen_style'
-import { searchBookWidth } from '../../ui/styles/dimensions'
+import styles from './search_screen_style'
+import { searchBookWidth, bookWidth, width } from '../../ui/styles/dimensions'
 
 /* ====================================================== */
 /*                      Interfaces                        */
@@ -58,7 +59,6 @@ export class SearchScreen extends Component<ownProps,ownState> {
         this.state = {
             searchQuery: '',
             page: 0,
-            currentBookIndex: 0,
             errorMessage: undefined
         }
     }
@@ -118,17 +118,15 @@ export class SearchScreen extends Component<ownProps,ownState> {
                     items={searchBooks}
                     renderItem={(item) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
                 /> */}
-                <SideSwipe
-                index={this.state.currentBookIndex}
-                itemWidth={searchBookWidth}
-                style={styles.carouselBook}
-                data={searchBooks}
-                //contentOffset={contentOffset}
-                onIndexChange={(index: number) =>
-                    this.setState(() => ({ currentBookIndex: index }))
-                }
-                renderItem={({ item }: { item: Book }) => <CarouselCard onPress={() => this.handleBookDetail(item)} book={item}/>}
-            />
+                <Carousel 
+                    //layout={'stack'} 
+                    data={searchBooks}
+                    layoutCardOffset={18} 
+                    itemWidth={searchBookWidth}
+                    sliderWidth={width * 0.75}
+                    //renderItem={(item: Book) => <CarouselCard onPress={() => this.handleBookDetail(item)} book={item}/>}
+                    renderItem={(item: Book) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
+                />
             </View>
         )
     }
