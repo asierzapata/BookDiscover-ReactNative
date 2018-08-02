@@ -27,23 +27,25 @@ import {
     TextInput,
     Button
 } from 'react-native'
-import GridView from 'react-native-super-grid';
-import ViewWrapper from '../../ui/components/view_wrapper';
+import GridView from 'react-native-super-grid'
+import SideSwipe from 'react-native-sideswipe'
+import ViewWrapper from '../../ui/components/view_wrapper'
 import Loading from '../../ui/components/loading'
-import BookItem from '../../ui/components/book_item'
+import CarouselCard from './components/carousel_card'
 
 /* ====================================================== */
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from './search_screen_style'
-import { bookWidth } from '../../ui/styles/dimensions'
+import styles, { contentOffset } from './search_screen_style'
+import { searchBookWidth } from '../../ui/styles/dimensions'
 
 /* ====================================================== */
 /*                      Interfaces                        */
 /* ====================================================== */
 
 import { ownProps, ownState, StateProps, DispatchProps } from './search_screen_interfaces'
+import { Book } from '../../api/parsers/books_parser';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -55,6 +57,8 @@ export class SearchScreen extends Component<ownProps,ownState> {
         super(props)
         this.state = {
             searchQuery: '',
+            page: 0,
+            currentBookIndex: 0,
             errorMessage: undefined
         }
     }
@@ -64,8 +68,8 @@ export class SearchScreen extends Component<ownProps,ownState> {
     }
 
     handleSearch = () => {
-        const { searchQuery } = this.state
-        this.props.handleFetchBooksByQuery(searchQuery)
+        const { searchQuery, page } = this.state
+        this.props.handleFetchBooksByQuery(searchQuery, page)
     }
     
     handleBookDetail = (book: any) => {
@@ -109,11 +113,22 @@ export class SearchScreen extends Component<ownProps,ownState> {
         }
         return(
             <View>
-                <GridView
+                {/* <GridView
                     itemDimension={bookWidth}
                     items={searchBooks}
                     renderItem={(item) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
-                />
+                /> */}
+                <SideSwipe
+                index={this.state.currentBookIndex}
+                itemWidth={searchBookWidth}
+                style={styles.carouselBook}
+                data={searchBooks}
+                //contentOffset={contentOffset}
+                onIndexChange={(index: number) =>
+                    this.setState(() => ({ currentBookIndex: index }))
+                }
+                renderItem={({ item }: { item: Book }) => <CarouselCard onPress={() => this.handleBookDetail(item)} book={item}/>}
+            />
             </View>
         )
     }
@@ -127,7 +142,7 @@ const mapStateToProps = (state: any): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    handleFetchBooksByQuery: (query) => dispatch(fetchBooksSearch(query))
+    handleFetchBooksByQuery: (query, page) => dispatch(fetchBooksSearch(query, page))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchScreen)

@@ -51,11 +51,11 @@ export function fetchBooksBatchByISBN(ISBNArray : string[]): AsyncAction {
 }
 
 export const FETCH_BOOKS_SEARCH = asyncActionObject('FETCH_BOOKS_SEARCH')
-export function fetchBooksSearch(query: string): AsyncAction{
+export function fetchBooksSearch(query: string, page: number): AsyncAction{
     return {
         type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
         AsyncProcess: AsyncConfig => 
-            AsyncConfig.api.v1.bookApi.getBooksByQuery({ query }),
+            AsyncConfig.api.v1.bookApi.getBooksByQuery({ query, page }),
         shouldDoAsyncProcess: state => 
             !getRequestStatus(state, {
                 actionType: asyncAction(FETCH_BOOKS_SEARCH.NAME)

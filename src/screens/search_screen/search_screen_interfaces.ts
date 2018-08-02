@@ -4,6 +4,8 @@ import { AsyncAction } from '../../modules/actions_interfaces';
 
 export interface ownState {
     searchQuery: string,
+    page: number,
+    currentBookIndex: number,
     errorMessage?: string 
 }
 
@@ -16,5 +18,5 @@ export interface StateProps {
 
 
 export interface DispatchProps {
-    handleFetchBooksByQuery: (query: string) => AsyncAction;
+    handleFetchBooksByQuery: (query: string, page: number) => AsyncAction;
 }
