@@ -1,7 +1,7 @@
-import _ from 'lodash'
+import { User } from 'firebase'
 
 /* ====================================================== */
-/*                           API                          */
+/*                           Interfaces                   */
 /* ====================================================== */
 
 export interface AuthData {
@@ -9,6 +9,26 @@ export interface AuthData {
 	password: string
 }
 
+export interface User {
+	_id: string
+	email: string
+	emailVerified: string
+	displayName: string
+	phoneNumber: number
+	photoUrl: string
+}
+
 /* ====================================================== */
-/*                   Implementation                       */
+/*                    Implementation                      */
 /* ====================================================== */
+
+export function userParser(entityFromFirestore: User) {
+	return {
+		_id: entityFromFirestore.uid,
+		email: entityFromFirestore.email,
+		emailVerified: entityFromFirestore.emailVerified,
+		displayName: entityFromFirestore.displayName || '',
+		phoneNumber: entityFromFirestore.phoneNumber || null,
+		photoURL: entityFromFirestore.photoURL || null
+	}
+}

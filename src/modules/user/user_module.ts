@@ -6,6 +6,7 @@ import { getRequestStatus } from '../api_metadata/api_metadata_module'
 import selectorCreatorFactory from '../../lib/redux/selectors'
 import { Book } from '../../api/parsers/books_parser'
 import { AuthData } from '../../api/parsers/user_parser'
+import { User as UserInterface } from '../../api/parsers/user_parser'
 
 /* ====================================================== */
 /*                         Module                         */
@@ -17,14 +18,30 @@ export const MODULE_NAME = 'user'
 /*                        Actions                         */
 /* ====================================================== */
 
-export const LOG_IN_WITH_PASSWORD = asyncActionObject('LOG_IN_WITH_PASSWORD')
-export function logInWithPassword({ email, password }: AuthData): AsyncAction {
+export const LOG_IN = asyncActionObject('LOG_IN')
+export function logIn({ email, password }: AuthData): AsyncAction {
 	return {
-		type: asyncAction(LOG_IN_WITH_PASSWORD.NAME),
-		AsyncProcess: AsyncConfig => AsyncConfig.api.v1.userApi.logInWithPassword({ email, password }),
+		type: asyncAction(LOG_IN.NAME),
+		AsyncProcess: AsyncConfig => AsyncConfig.api.v1.userApi.logIn({ email, password }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
-				actionType: asyncAction(LOG_IN_WITH_PASSWORD.NAME)
+				actionType: asyncAction(LOG_IN.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
+export const SIGN_UP = asyncActionObject('SIGN_UP')
+export function signUp({ email, password }: AuthData): AsyncAction {
+	return {
+		type: asyncAction(SIGN_UP.NAME),
+		AsyncProcess: AsyncConfig =>
+			AsyncConfig.api.v1.userApi
+				.signUp({ email, password })
+				.then((user: UserInterface) => AsyncConfig.api.v1.userApi.addUser(user)),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(SIGN_UP.NAME)
 			}).isLoading,
 		meta: {}
 	}
@@ -67,6 +84,7 @@ export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 function userInfo(state = {}, { type, payload, meta }: AppAction) {
 	switch (type) {
 		case FETCH_USER_INFO.SUCCESS:
+		case LOG_IN.SUCCESS:
 			return payload
 		default:
 			return state

@@ -11,15 +11,17 @@ import { Dispatch } from 'redux'
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from './auth_sign_in_screen_style'
+import styles from './auth_log_in_screen_style'
 import { AuthData } from '../../api/parsers/user_parser'
-import { logInWithPassword } from '../../modules/user/user_module'
+import { logIn, LOG_IN } from '../../modules/user/user_module'
+
+import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
 /* ====================================================== */
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { ownProps, ownState, StateProps, DispatchProps } from './auth_sign_in_screen_interfaces'
+import { ownProps, ownState, StateProps, DispatchProps } from './auth_log_in_screen_interfaces'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -41,10 +43,11 @@ export class AuthSignInScreen extends Component<ownProps, ownState> {
 			return
 		}
 
-		this.props.handleLogInWithPassword({ email, password })
+		this.props.handlelogIn({ email, password })
 	}
 
 	render() {
+		const { logInStatus } = this.props
 		return (
 			<View style={styles.container}>
 				<Text>Sign In</Text>
@@ -64,16 +67,22 @@ export class AuthSignInScreen extends Component<ownProps, ownState> {
 					onChangeText={password => this.setState({ password })}
 					value={this.state.password}
 				/>
-				<Button title="Submit" onPress={this.handleSignIn} />
+				{!!logInStatus.error && <Text style={styles.errorText}>{logInStatus.error}</Text>}
+				<Button disabled={!!logInStatus.isLoading} title="Submit" onPress={this.handleSignIn} />
 			</View>
 		)
 	}
 }
 
-const mapStateToProps = () => ({})
+const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
+	// Metadata
+	logInStatus: getRequestStatus(state, {
+		actionType: LOG_IN.NAME
+	})
+})
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleLogInWithPassword: ({ email, password }: AuthData) => dispatch(logInWithPassword({ email, password }))
+	handlelogIn: ({ email, password }: AuthData) => dispatch(logIn({ email, password }))
 })
 
 export default connect(

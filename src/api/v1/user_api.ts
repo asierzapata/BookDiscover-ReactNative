@@ -5,7 +5,8 @@ import '@firebase/firestore'
 // import '@firebase/auth'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
-import { Book } from '../parsers/books_parser'
+import { userParser, User as UserInterface } from '../parsers/user_parser'
+import { Book as BookInterface } from '../parsers/books_parser'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -15,35 +16,95 @@ const api: UserApiObject = {
 	getUserBooks,
 	addBookToUser,
 	getUserInfo,
+	// Auth
 	logoutUser,
-	logInWithPassword
+	logIn,
+	signUp,
+	addUser
 }
 
 export default api
 
 export interface UserApiObject {
 	getUserBooks: () => Promise<{}>
-	addBookToUser: ({ ISBN, thumbnail }: Book) => Promise<{}>
+	addBookToUser: ({ ISBN, thumbnail }: BookInterface) => Promise<{}>
 	getUserInfo: () => Promise<{}>
 	logoutUser: () => Promise<{}>
-	logInWithPassword: ({ email, password }: AuthData) => Promise<{}>
+	logIn: ({ email, password }: AuthData) => Promise<{}>
+	signUp: ({ email, password }: AuthData) => Promise<{}>
+	addUser: (user: firebase.User) => Promise<{}>
 }
 
 /* ====================================================== */
 /*                     Authentication                     */
 /* ====================================================== */
 
-function logInWithPassword({ email, password }: AuthData) {
+function logIn({ email, password }: AuthData) {
 	return new Promise((resolve, reject) => {
 		firebase
 			.auth()
 			.signInWithEmailAndPassword(email, password)
-			.then(response => {
-				console.log('response', response)
-				return resolve({
-					response
+			.then(user => {
+				resolve({
+					headers: '',
+					status: '200',
+					statusText: '',
+					data: userParser(user)
 				})
 			})
+			.catch(e => reject(e))
+	})
+}
+
+function signUp({ email, password }: AuthData) {
+	return new Promise((resolve, reject) => {
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(email, password)
+			.then(user => {
+				resolve({ headers: '', status: '200', statusText: '', data: userParser(user) })
+			})
+			.catch(e => reject(e))
+	})
+}
+
+function addUser(user: firebase.User) {
+	return new Promise((resolve, reject) => {
+		firebase
+			.firestore()
+			.collection(ApiConstants.USERS_COLLECTION)
+			.add({ user })
+			.then(doc => {
+				resolve({ headers: '', status: '200', statusText: '', data: user })
+			})
+			.catch(error => {
+				reject({
+					code: 500,
+					message: error.message
+				})
+			})
+	})
+}
+
+function logoutUser() {
+	return new Promise((resolve, reject) => {
+		firebase
+			.auth()
+			.signOut()
+			.then(() =>
+				resolve({
+					headers: '',
+					status: '200',
+					statusText: '',
+					data: ''
+				})
+			)
+			.catch(error =>
+				reject({
+					code: 404,
+					message: error.message
+				})
+			)
 	})
 }
 
@@ -85,7 +146,7 @@ function getUserBooks() {
 	})
 }
 
-function addBookToUser({ ISBN, thumbnail }: Book) {
+function addBookToUser({ ISBN, thumbnail }: BookInterface) {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser))
 		return Promise.reject({
@@ -140,34 +201,12 @@ function getUserInfo() {
 				headers: '',
 				status: '200',
 				statusText: '',
-				data: currentUser
+				data: userParser(currentUser)
 			})
 		}
 		reject({
 			code: 404,
 			message: ApiErrors.USER_NOT_LOGGED_IN
 		})
-	})
-}
-
-function logoutUser() {
-	return new Promise((resolve, reject) => {
-		firebase
-			.auth()
-			.signOut()
-			.then(() =>
-				resolve({
-					headers: '',
-					status: '200',
-					statusText: '',
-					data: ''
-				})
-			)
-			.catch(error =>
-				reject({
-					code: 404,
-					message: error.message
-				})
-			)
 	})
 }
