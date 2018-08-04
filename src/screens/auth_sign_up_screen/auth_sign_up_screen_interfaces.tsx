@@ -1,17 +1,20 @@
 import { NavigationScreenProps } from 'react-navigation'
 import { AsyncActionStatus } from '../../modules/api_metadata/api_metadata_module'
 import { AsyncAction } from '../../modules/actions_interfaces'
-import { Book } from '../../api/book/book_interfaces'
+import { AuthData } from '../../api/user/user_interfaces'
 
-export interface ownState {}
+export interface ownState {
+	email: string
+	password: string
+	errorMessage?: string
+}
 
 export interface ownProps extends NavigationScreenProps, StateProps, DispatchProps {}
 
 export interface StateProps {
-	fetchUserBooksStatus: AsyncActionStatus
-	userBooks: any
+	signUpStatus: AsyncActionStatus
 }
 
 export interface DispatchProps {
-	handleFetchUserBooks: () => AsyncAction
+	handleSignUp: ({ email, password }: AuthData) => AsyncAction
 }

@@ -1,22 +1,21 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, TextInput, View, Button, ActivityIndicator } from 'react-native'
+import { Text, TextInput, View, Button } from 'react-native'
 import _ from 'lodash'
-import { NavigationScreenProps } from 'react-navigation'
 
 /* ====================================================== */
 /*                   Actions / Selectors                  */
 /* ====================================================== */
 
-import { signUp, SIGN_UP } from '../../modules/user/user_module'
+import { logIn, LOG_IN } from '../../modules/user/user_module'
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
 /* ====================================================== */
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { ownProps, ownState, StateProps, DispatchProps } from './auth_sign_up_screen_interfaces'
+import { ownProps, ownState, StateProps, DispatchProps } from './auth_log_in_screen_interfaces'
 import { AuthData } from '../../api/user/user_interfaces'
 import { Dispatch } from 'redux'
 
@@ -24,20 +23,19 @@ import { Dispatch } from 'redux'
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from './auth_sign_up_screen_style'
+import styles from './auth_log_in_screen_style'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class AuthSignUpScreen extends Component<ownProps, ownState> {
-	state = {
-		email: '',
-		password: '',
-		errorMessage: undefined
+export class AuthSignInScreen extends Component<ownProps, ownState> {
+	constructor(props: ownProps) {
+		super(props)
+		this.state = { email: '', password: '', errorMessage: undefined }
 	}
 
-	handleSignUp = () => {
+	handleSignIn = () => {
 		const { email, password } = this.state
 
 		this.setState({ errorMessage: undefined })
@@ -47,34 +45,32 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 			return
 		}
 
-		this.props.handleSignUp({ email, password })
+		this.props.handlelogIn({ email, password })
 	}
 
 	render() {
+		const { logInStatus } = this.props
 		return (
 			<View style={styles.container}>
-				<Text>Sign Up</Text>
+				<Text>Sign In</Text>
 				{this.state.errorMessage && <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>}
 				<TextInput
-					placeholder="Email"
-					autoCapitalize="none"
 					style={styles.textInput}
+					autoCapitalize="none"
+					placeholder="Email"
 					onChangeText={email => this.setState({ email })}
 					value={this.state.email}
 				/>
 				<TextInput
 					secureTextEntry
-					placeholder="Password"
-					autoCapitalize="none"
 					style={styles.textInput}
+					autoCapitalize="none"
+					placeholder="Password"
 					onChangeText={password => this.setState({ password })}
 					value={this.state.password}
 				/>
-				{this.props.signUpStatus.isLoading ? (
-					<ActivityIndicator />
-				) : (
-					<Button title="Submit" onPress={this.handleSignUp} />
-				)}
+				{!!logInStatus.error && <Text style={styles.errorText}>{logInStatus.error}</Text>}
+				<Button disabled={!!logInStatus.isLoading} title="Submit" onPress={this.handleSignIn} />
 			</View>
 		)
 	}
@@ -82,16 +78,16 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 
 const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
 	// Metadata
-	signUpStatus: getRequestStatus(state, {
-		actionType: SIGN_UP.NAME
+	logInStatus: getRequestStatus(state, {
+		actionType: LOG_IN.NAME
 	})
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleSignUp: ({ email, password }: AuthData) => dispatch(signUp({ email, password }))
+	handlelogIn: ({ email, password }: AuthData) => dispatch(logIn({ email, password }))
 })
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(AuthSignUpScreen)
+)(AuthSignInScreen)
