@@ -94,7 +94,7 @@ export function populateBookByISBN(ISBN: string): AsyncAction {
 			!getRequestStatus(state, {
 				actionType: asyncAction(POPULATE_BOOK_BY_ISBN.NAME)
 			}).isLoading,
-		meta: {}
+		meta: { ISBN }
 	}
 }
 
@@ -116,7 +116,7 @@ function searchBooks(state = {}, { type, payload }: AppAction) {
 function userBooks(state = {}, { type, payload }: AppAction) {
 	switch (type) {
         case POPULATE_BOOK_BY_ISBN.SUCCESS:
-            const book = payload as Book
+			const book = payload as Book
 	        return {
 				...state,
 				[book.ISBN]: {
@@ -144,4 +144,5 @@ const createSelector = selectorCreatorFactory(MODULE_NAME)
 // -----------
 
 export const getSearchBooks = createSelector(state => (state.searchBooks ? state.searchBooks : []))
-export const getUserBooks = createSelector(state => (state.userBooks ? state.userBooks : []))
+export const getUserBooks = createSelector(state => (state.userBooks ? state.userBooks : {}))
+export const getArrayUserBooks = createSelector(state => (state.userBooks ? _.map(state.userBooks, book => book) : []))

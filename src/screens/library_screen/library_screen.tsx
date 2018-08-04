@@ -12,10 +12,11 @@ import {
 	// Actions
     FETCH_USER_BOOKS,
     fetchUserBooks,
-    FETCH_BOOK_BY_ISBN,
-    fetchBookByISBN,
+    POPULATE_BOOK_BY_ISBN,
+    populateBookByISBN,
     // Selectors
-    getUserBooks
+    getUserBooks,
+    getArrayUserBooks,
 } from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -59,8 +60,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 
     componentDidUpdate(prevProps: ownProps) {
         const { fetchingISBN } = this.state
-        if (prevProps.fetchBookByISBN.isLoading && this.props.fetchBookByISBN.isLoaded) {
-            console.log(this.props.userBooks[fetchingISBN!], this.props.userBooks)
+        if (prevProps.populateBookByISBN.isLoading && this.props.populateBookByISBN.isLoaded) {
             this.props.navigation.navigate('BookDetail', { book: this.props.userBooks[fetchingISBN!] })
         }
     }
@@ -70,12 +70,20 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     handleBookDetail = (book: Book) => {
-        this.setState({ fetchingISBN: book.ISBN })
-        this.props.handleFetchBookByISBN(book.ISBN)
+        const ISBN = book.ISBN
+        const userBook = this.props.userBooks[ISBN]
+        console.log(userBook)
+        if(userBook.title) {
+            console.log('entered')
+            this.props.navigation.navigate('BookDetail', { book: userBook })
+        } else {
+            this.setState({ fetchingISBN: ISBN })
+            this.props.handlePopulateBookByISBN(ISBN)
+        }
     }
 
     render() {
-        const { fetchBookByISBN } = this.props
+        const { populateBookByISBN } = this.props
         return (
             <ViewWrapper style={styles.container}>
                 <View style={styles.topBar}>
@@ -96,14 +104,14 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                 <View style={styles.library}>
                     {this.renderGridView()}
                 </View>
-                {fetchBookByISBN.isLoading && <LoadingOverlay />}
+                {populateBookByISBN.isLoading && <LoadingOverlay />}
             </ViewWrapper>
         )
     }
 
     renderGridView() {
-        const { userBooks, fetchUserBooksStatus } = this.props
-        let books = _.isEmpty(userBooks) ? [] : userBooks
+        const { arrayUserBooks, fetchUserBooksStatus } = this.props
+        let books = _.isEmpty(arrayUserBooks) ? [] : arrayUserBooks
         return (
             <GridView
                 itemDimension={bookWidth}
@@ -117,17 +125,18 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 
 const mapStateToProps = (state: any): StateProps => ({
     userBooks: getUserBooks(state),
+    arrayUserBooks: getArrayUserBooks(state),
     fetchUserBooksStatus: getRequestStatus(state, {
 		actionType: FETCH_USER_BOOKS.NAME
     }),
-    fetchBookByISBN: getRequestStatus(state, {
-		actionType: FETCH_BOOK_BY_ISBN.NAME
+    populateBookByISBN: getRequestStatus(state, {
+		actionType: POPULATE_BOOK_BY_ISBN.NAME
     })
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     handleFetchUserBooks: () => dispatch(fetchUserBooks()),
-    handleFetchBookByISBN: (ISBN: string) => dispatch(fetchBookByISBN({ ISBN }))
+    handlePopulateBookByISBN: (ISBN: string) => dispatch(populateBookByISBN(ISBN))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LibraryScreen)

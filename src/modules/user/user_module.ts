@@ -5,7 +5,7 @@ import { getRequestStatus } from '../api_metadata/api_metadata_module'
 import selectorCreatorFactory from '../../lib/redux/selectors'
 
 /* ====================================================== */
-/*                         Api                         */
+/*                         Api                            */
 /* ====================================================== */
 
 import userApi from '../../api/user/user_api'
@@ -83,20 +83,6 @@ export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 				ISBN,
 				thumbnail
 			} as Book),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(ADD_BOOK_USER.NAME)
-			}).isLoading,
-		meta: {}
-	}
-}
-
-export const POPULATE_BOOK_BY_ISBN = asyncActionObject('POPULATE_BOOK_BY_ISBN')
-export function populateBookByISBN(ISBN: string): AsyncAction {
-	return {
-		type: asyncAction(ADD_BOOK_USER.NAME),
-		AsyncProcess: () =>
-			bookApi.getBookInfoByISBN({ ISBN }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(ADD_BOOK_USER.NAME)

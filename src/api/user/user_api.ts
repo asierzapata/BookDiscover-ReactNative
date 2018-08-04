@@ -169,7 +169,7 @@ function addBookToUser({ ISBN, thumbnail }: BookInterface): Promise<ApiResponse>
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)
 						.doc(currentUser.uid)
-						.set(books, { merge: true })
+						.set({ books }, { merge: true })
 				} else {
 					reject({
 						code: 500,

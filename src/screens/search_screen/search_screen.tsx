@@ -106,7 +106,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 					itemDimension={bookWidth}
 					items={searchBooks}
 					onEndReached={this.handleEndReached}
-					isLoading={fetchBooksByQueryStatus.isLoading}
+					isLoading={fetchBooksByQueryStatus.isLoading ? fetchBooksByQueryStatus.isLoading : false}
 					renderItem={(item: Book) => <BookItem onPress={() => this.handleBookDetail(item)} {...item} />}
 				/>
 				{/* <Carousel 

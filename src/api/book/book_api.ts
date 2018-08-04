@@ -37,7 +37,7 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 						headers: '',
 						status: '200',
 						statusText: '',
-						data: BookParser.parseIndividualBook(data)
+						data: BookParser.parseIndividualBook(data.items[0].volumeInfo)
 					})
 				} else {
 					reject({
