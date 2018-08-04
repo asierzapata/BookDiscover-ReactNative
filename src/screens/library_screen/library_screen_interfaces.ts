@@ -11,12 +11,12 @@ export interface ownProps extends NavigationScreenProps, StateProps, DispatchPro
 
 export interface StateProps {
     fetchUserBooksStatus: AsyncActionStatus
-    fetchBookByISBN: AsyncActionStatus
+    populateBookByISBN: AsyncActionStatus
     userBooks: any
     arrayUserBooks: Book[]
 }
 
 export interface DispatchProps {
     handleFetchUserBooks: () => AsyncAction
-    handleFetchBookByISBN: (ISBN: string) => AsyncAction
+    handlePopulateBookByISBN: (ISBN: string) => AsyncAction
 }
