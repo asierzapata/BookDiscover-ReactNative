@@ -10,11 +10,14 @@ export interface ownState {
 export interface ownProps extends NavigationScreenProps, StateProps, DispatchProps {}
 
 export interface StateProps {
-	book: Book
+	book: Book,
+	previousScreen: string
 	fetchAddBookUserStatus: AsyncActionStatus
+	fetchDeleteBookUserStatus: AsyncActionStatus
 }
 
 export interface DispatchProps {
 	handleAddBookUser: ({ ISBN, thumbnail }: Book) => AsyncAction
+	handleDeleteBookUser: ({ ISBN }: Book) => AsyncAction
 	handleFetchUserBooks: () => AsyncAction
 }

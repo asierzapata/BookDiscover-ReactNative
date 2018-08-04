@@ -39,7 +39,6 @@ class GridView extends Component {
         let itemDimension = itemDim || this.props.itemDimension;
         if (itemWidth) {
             itemDimension = itemWidth;
-            console.warn('React Native Super Grid - property "itemWidth" is depreciated. Use "itemDimension" instead.');
         }
 
         const dimension = horizontal ? 'height' : 'width';

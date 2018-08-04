@@ -22,9 +22,17 @@ export interface User {
 export interface UserApiObject {
 	getUserBooks: () => Promise<ApiResponse>
 	addBookToUser: ({ ISBN, thumbnail }: BookInterface) => Promise<ApiResponse>
+	deleteBookToUser: ({ ISBN }: BookInterface) => Promise<ApiResponse>
 	getUserInfo: () => Promise<ApiResponse>
 	logoutUser: () => Promise<ApiResponse>
 	logIn: ({ email, password }: AuthData) => Promise<ApiResponse>
 	signUp: ({ email, password }: AuthData) => Promise<ApiResponse>
 	addUser: (user: User) => Promise<ApiResponse>
+}
+
+export interface firestoreUserBooksSchema {
+	[ISBN: string] : {
+		ISBN: string,
+		thumbnail: string
+	}
 }

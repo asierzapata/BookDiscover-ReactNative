@@ -5,10 +5,11 @@ import { getRequestStatus } from '../api_metadata/api_metadata_module'
 import selectorCreatorFactory from '../../lib/redux/selectors'
 
 /* ====================================================== */
-/*                         Api                         */
+/*                         Api                            */
 /* ====================================================== */
 
 import userApi from '../../api/user/user_api'
+import bookApi from '../../api/book/book_api'
 
 /* ====================================================== */
 /*                     Interfaces                         */
@@ -79,6 +80,23 @@ export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 		type: asyncAction(ADD_BOOK_USER.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.addBookToUser({
+				ISBN,
+				thumbnail
+			} as Book),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(ADD_BOOK_USER.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
+export const DELETE_BOOK_USER = asyncActionObject('DELETE_BOOK_USER')
+export function deleteBookUser({ ISBN, thumbnail }: Book): AsyncAction {
+	return {
+		type: asyncAction(ADD_BOOK_USER.NAME),
+		AsyncProcess: ({ dispatch }) =>
+			userApi.deleteBookToUser({
 				ISBN,
 				thumbnail
 			} as Book),

@@ -1,11 +1,13 @@
 import _ from 'lodash'
+import { Book } from './book_interfaces';
 
 /* ====================================================== */
 /*                           API                          */
 /* ====================================================== */
 
 export default {
-	parseGoogleReponse
+	parseGoogleReponse,
+	parseIndividualBook
 }
 
 const bookPlaceholder =
@@ -15,12 +17,12 @@ const bookPlaceholder =
 /*                   Implementation                       */
 /* ====================================================== */
 
-function parseGoogleReponse(data: any) {
-	let books = _.map(data.items, book => _parseIndividualBook(book.volumeInfo))
+function parseGoogleReponse(data: any): Book[] {
+	let books = _.map(data.items, book => parseIndividualBook(book.volumeInfo))
 	return books
 }
 
-function _parseIndividualBook(book: any) {
+function parseIndividualBook(book: any): Book {
 	const {
 		title,
 		authors,

@@ -13,7 +13,8 @@ import {
 	FETCH_BOOKS_SEARCH,
 	fetchBooksSearch,
 	// Selectors
-	getSearchBooks
+	getSearchBooks,
+	clearSearchBooks
 } from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -40,6 +41,7 @@ import { bookWidth } from '../../ui/styles/dimensions'
 
 import { ownProps, ownState, StateProps, DispatchProps } from './search_screen_interfaces'
 import { Book } from '../../api/book/book_interfaces'
+import routes from '../../router/routes';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -50,22 +52,29 @@ export class SearchScreen extends Component<ownProps, ownState> {
 		super(props)
 		this.state = {
 			searchQuery: '',
+			lastSearchQuery: '',
 			page: 0,
 			errorMessage: undefined
 		}
 	}
 
 	handleCancel = () => {
-		this.props.navigation.navigate('Library')
+		const { handleClearSearchBooks, navigation } = this.props
+		handleClearSearchBooks()
+		navigation.navigate('Library')
 	}
 
 	handleSearch = () => {
-		const { searchQuery, page } = this.state
+		const { searchQuery, lastSearchQuery, page } = this.state
+		if (lastSearchQuery !== searchQuery) {
+			this.props.handleClearSearchBooks()
+		}
+		this.setState({ lastSearchQuery: searchQuery })
 		this.props.handleFetchBooksByQuery(searchQuery, page)
 	}
 
 	handleBookDetail = (book: any) => {
-		this.props.navigation.navigate('BookDetail', { book })
+		this.props.navigation.navigate('BookDetail', { book, previousScreen: routes.SEARCH })
 	}
 
 	handleEndReached = () => {
@@ -106,7 +115,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 					itemDimension={bookWidth}
 					items={searchBooks}
 					onEndReached={this.handleEndReached}
-					isLoading={fetchBooksByQueryStatus.isLoading}
+					isLoading={fetchBooksByQueryStatus.isLoading ? fetchBooksByQueryStatus.isLoading : false}
 					renderItem={(item: Book) => <BookItem onPress={() => this.handleBookDetail(item)} {...item} />}
 				/>
 				{/* <Carousel 
@@ -132,7 +141,8 @@ const mapStateToProps = (state: any): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleFetchBooksByQuery: (query, page) => dispatch(fetchBooksSearch(query, page))
+	handleFetchBooksByQuery: (query, page) => dispatch(fetchBooksSearch(query, page)),
+	handleClearSearchBooks: () => dispatch(clearSearchBooks())
 })
 
 export default connect(

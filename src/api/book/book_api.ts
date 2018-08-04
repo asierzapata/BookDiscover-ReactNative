@@ -10,6 +10,7 @@ import BookParser from './book_parsers'
 /* ====================================================== */
 
 import { BookApiObject } from './book_interfaces'
+import { ApiError, ApiResponse } from '../config/api_interfaces';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -26,7 +27,7 @@ export default api
 /*                        Content                         */
 /* ====================================================== */
 
-function getBookInfoByISBN({ ISBN }: { ISBN: string }) {
+function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=isbn:${ISBN}`, {})
 			.then(response => {
@@ -36,7 +37,7 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }) {
 						headers: '',
 						status: '200',
 						statusText: '',
-						data: BookParser.parseGoogleReponse(data)
+						data: BookParser.parseIndividualBook(data.items[0].volumeInfo)
 					})
 				} else {
 					reject({
