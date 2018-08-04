@@ -11,7 +11,7 @@ import { ownProps, ownState, StateProps, DispatchProps } from './profile_screen_
 /*                   Actions / Selectors                  */
 /* ====================================================== */
 
-import { fetchUserInfo } from '../../modules/user/user_module'
+import { logOut } from '../../modules/user/user_module'
 
 /* ====================================================== */
 /*                     Components                         */
@@ -37,16 +37,8 @@ export class ProfileScreen extends Component<ownProps, ownState> {
 		}
 	}
 
-	componentDidMount() {
-		this.props.fetchUserInfo()
-	}
-
 	handleLogout = () => {
-		firebase
-			.auth()
-			.signOut()
-			.then(() => this.props.navigation.navigate('Auth'))
-			.catch(error => this.setState({ errorMessage: error.message }))
+		this.props.handleLogout()
 	}
 
 	render() {
@@ -63,7 +55,7 @@ export class ProfileScreen extends Component<ownProps, ownState> {
 const mapStateToProps = () => ({})
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	fetchUserInfo: () => dispatch(fetchUserInfo())
+	handleLogout: () => dispatch(logOut())
 })
 
 export default connect(

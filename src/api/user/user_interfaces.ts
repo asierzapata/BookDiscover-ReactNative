@@ -24,7 +24,7 @@ export interface UserApiObject {
 	addBookToUser: ({ ISBN, thumbnail }: BookInterface) => Promise<ApiResponse>
 	deleteBookToUser: ({ ISBN }: BookInterface) => Promise<ApiResponse>
 	getUserInfo: () => Promise<ApiResponse>
-	logoutUser: () => Promise<ApiResponse>
+	logOut: () => Promise<ApiResponse>
 	logIn: ({ email, password }: AuthData) => Promise<ApiResponse>
 	signUp: ({ email, password }: AuthData) => Promise<ApiResponse>
 	addUser: (user: User) => Promise<ApiResponse>

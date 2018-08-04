@@ -28,7 +28,7 @@ const api: UserApiObject = {
 	deleteBookToUser,
 	getUserInfo,
 	// Auth
-	logoutUser,
+	logOut,
 	logIn,
 	signUp,
 	addUser
@@ -88,26 +88,8 @@ function addUser(user: UserInterface): Promise<ApiResponse> {
 	})
 }
 
-function logoutUser(): Promise<ApiResponse> {
-	return new Promise((resolve, reject) => {
-		firebase
-			.auth()
-			.signOut()
-			.then(() =>
-				resolve({
-					headers: '',
-					status: '200',
-					statusText: '',
-					data: ''
-				})
-			)
-			.catch(error =>
-				reject({
-					code: 404,
-					message: error.message
-				})
-			)
-	})
+function logOut(): Promise<ApiResponse> {
+	return firebase.auth().signOut()
 }
 
 /* ====================================================== */
