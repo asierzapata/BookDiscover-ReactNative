@@ -73,7 +73,8 @@ function addUser(user: UserInterface): Promise<ApiResponse> {
 		firebase
 			.firestore()
 			.collection(ApiConstants.USERS_COLLECTION)
-			.add({ user })
+			.doc(user._id)
+			.set({ userInfo: user, books: [] })
 			.then(doc => {
 				resolve({ headers: '', status: '200', statusText: '', data: user })
 			})

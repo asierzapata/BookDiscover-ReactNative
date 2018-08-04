@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, TextInput, View, Button } from 'react-native'
+import { Text, TextInput, View, Button, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
 import { NavigationScreenProps } from 'react-navigation'
 
@@ -70,7 +70,11 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 					onChangeText={password => this.setState({ password })}
 					value={this.state.password}
 				/>
-				<Button title="Submit" onPress={this.handleSignUp} />
+				{this.props.signUpStatus.isLoading ? (
+					<ActivityIndicator />
+				) : (
+					<Button title="Submit" onPress={this.handleSignUp} />
+				)}
 			</View>
 		)
 	}
