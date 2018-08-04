@@ -72,9 +72,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     handleBookDetail = (book: Book) => {
         const ISBN = book.ISBN
         const userBook = this.props.userBooks[ISBN]
-        console.log(userBook)
         if(userBook.title) {
-            console.log('entered')
             this.props.navigation.navigate('BookDetail', { book: userBook })
         } else {
             this.setState({ fetchingISBN: ISBN })

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import _ from 'lodash'
 import { asyncAction, asyncActionObject } from '../../lib/redux/async_action_creator'
-import { AsyncAction, AppAction } from '../actions_interfaces'
+import { AsyncAction, AppAction, BaseAction } from '../actions_interfaces'
 import { getRequestStatus } from '../api_metadata/api_metadata_module'
 import selectorCreatorFactory from '../../lib/redux/selectors'
 
@@ -98,6 +98,14 @@ export function populateBookByISBN(ISBN: string): AsyncAction {
 	}
 }
 
+export const CLEAR_SEARCH_BOOKS = 'CLEAR_SEARCH_BOOKS'
+export function clearSearchBooks(): BaseAction {
+	return {
+		type: CLEAR_SEARCH_BOOKS,
+		meta: {}
+	}
+}
+
 
 /* ====================================================== */
 /*                        Reducers                        */
@@ -108,6 +116,8 @@ function searchBooks(state = {}, { type, payload }: AppAction) {
         case FETCH_BOOKS_SEARCH.SUCCESS:
             const books = payload as Book[]
 			return [...state as Book[], ...books]
+		case CLEAR_SEARCH_BOOKS:
+			return []
 		default:
 			return state
 	}

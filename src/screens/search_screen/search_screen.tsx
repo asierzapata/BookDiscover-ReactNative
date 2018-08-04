@@ -13,7 +13,8 @@ import {
 	FETCH_BOOKS_SEARCH,
 	fetchBooksSearch,
 	// Selectors
-	getSearchBooks
+	getSearchBooks,
+	clearSearchBooks
 } from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -56,7 +57,9 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 
 	handleCancel = () => {
-		this.props.navigation.navigate('Library')
+		const { handleClearSearchBooks, navigation } = this.props
+		handleClearSearchBooks()
+		navigation.navigate('Library')
 	}
 
 	handleSearch = () => {
@@ -132,7 +135,8 @@ const mapStateToProps = (state: any): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleFetchBooksByQuery: (query, page) => dispatch(fetchBooksSearch(query, page))
+	handleFetchBooksByQuery: (query, page) => dispatch(fetchBooksSearch(query, page)),
+	handleClearSearchBooks: () => dispatch(clearSearchBooks())
 })
 
 export default connect(
