@@ -53,10 +53,11 @@ export function fetchBooksBatchByISBN(ISBNArray: string[]): AsyncAction {
 }
 
 export const FETCH_BOOKS_SEARCH = asyncActionObject('FETCH_BOOKS_SEARCH')
-export function fetchBooksSearch(query: string): AsyncAction {
+
+export function fetchBooksSearch(query: string, page: number): AsyncAction {
 	return {
 		type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
-		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query }),
+		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(FETCH_BOOKS_SEARCH.NAME)
@@ -85,7 +86,7 @@ export function fetchUserBooks(): AsyncAction {
 function searchBooks(state = {}, { type, payload, meta }: AppAction) {
 	switch (type) {
 		case FETCH_BOOKS_SEARCH.SUCCESS:
-			return payload
+			return [...(state as any[]), ...(payload as any[])]
 		default:
 			return state
 	}
