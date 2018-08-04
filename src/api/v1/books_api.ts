@@ -18,7 +18,7 @@ export default api
 
 export interface BookApiObject {
     getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<{}>,
-    getBooksByQuery: ({ query }: { query: string })  => Promise<{}>
+    getBooksByQuery: ({ query, page }: { query: string, page: number })  => Promise<{}>
 }
 
 /* ====================================================== */
@@ -53,9 +53,9 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }) {
     })
 }
 
-function getBooksByQuery({ query }: { query: string }) {
+function getBooksByQuery({ query, page = 0 }: { query: string, page: number }) {
     return new Promise((resolve, reject) => {
-        ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}`, {})
+        ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}?startIndex=${page}`, {})
             .then((response) => {
                 const { data } = response
                 if (data) {
