@@ -12,11 +12,17 @@ import selectorCreatorFactory from '../../lib/redux/selectors'
 export const MODULE_NAME = 'books'
 
 /* ====================================================== */
-/*                         Api                         */
+/*                         Api                            */
 /* ====================================================== */
 
 import bookApi from '../../api/book/book_api'
 import userApi from '../../api/user/user_api'
+
+/* ====================================================== */
+/*                      Interfaces                        */
+/* ====================================================== */
+
+import { Book } from '../../api/book/book_interfaces';
 
 /* ====================================================== */
 /*                        Actions                         */
@@ -53,7 +59,6 @@ export function fetchBooksBatchByISBN(ISBNArray: string[]): AsyncAction {
 }
 
 export const FETCH_BOOKS_SEARCH = asyncActionObject('FETCH_BOOKS_SEARCH')
-
 export function fetchBooksSearch(query: string, page: number): AsyncAction {
 	return {
 		type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
@@ -79,23 +84,45 @@ export function fetchUserBooks(): AsyncAction {
 	}
 }
 
+export const POPULATE_BOOK_BY_ISBN = asyncActionObject('POPULATE_BOOK_BY_ISBN')
+export function populateBookByISBN(ISBN: string): AsyncAction {
+	return {
+		type: asyncAction(POPULATE_BOOK_BY_ISBN.NAME),
+		AsyncProcess: () =>
+			bookApi.getBookInfoByISBN({ ISBN }),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(POPULATE_BOOK_BY_ISBN.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
+
 /* ====================================================== */
 /*                        Reducers                        */
 /* ====================================================== */
 
-function searchBooks(state = {}, { type, payload, meta }: AppAction) {
+function searchBooks(state = {}, { type, payload }: AppAction) {
 	switch (type) {
-		case FETCH_BOOKS_SEARCH.SUCCESS:
-			return [...(state as any[]), ...(payload as any[])]
+        case FETCH_BOOKS_SEARCH.SUCCESS:
+            const books = payload as Book[]
+			return [...state as Book[], ...books]
 		default:
 			return state
 	}
 }
 
-function userBooks(state = {}, { type, payload, meta }: AppAction) {
+function userBooks(state = {}, { type, payload }: AppAction) {
 	switch (type) {
-		// case FETCH_BOOK_BY_ISBN.SUCCESS:
-		//     return payload
+        case POPULATE_BOOK_BY_ISBN.SUCCESS:
+            const book = payload as Book
+	        return {
+				...state,
+				[book.ISBN]: {
+					...book
+				}
+			}
 		case FETCH_USER_BOOKS.SUCCESS:
 			return payload
 		default:

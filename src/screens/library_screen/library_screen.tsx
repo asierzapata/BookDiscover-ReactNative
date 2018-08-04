@@ -44,7 +44,7 @@ import { bookWidth } from '../../ui/styles/dimensions'
 /* ====================================================== */
 
 import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_interfaces'
-import { Book } from '../../api/parsers/books_parser';
+import { Book } from '../../api/book/book_interfaces';
 
 /* ====================================================== */
 /*                   Implementation                       */

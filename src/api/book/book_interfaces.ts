@@ -1,3 +1,5 @@
+import { ApiResponse } from "../config/api_interfaces";
+
 /* ====================================================== */
 /*                           Interfaces                   */
 /* ====================================================== */
@@ -16,6 +18,6 @@ export interface Book {
 }
 
 export interface BookApiObject {
-	getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<{}>
+	getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<ApiResponse>
 	getBooksByQuery: ({ query, page }: { query: string; page: number }) => Promise<{}>
 }

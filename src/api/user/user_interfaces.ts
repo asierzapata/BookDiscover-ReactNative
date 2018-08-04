@@ -28,3 +28,10 @@ export interface UserApiObject {
 	signUp: ({ email, password }: AuthData) => Promise<ApiResponse>
 	addUser: (user: User) => Promise<ApiResponse>
 }
+
+export interface firestoreUserBooksSchema {
+	[ISBN: string] : {
+		ISBN: string,
+		thumbnail: string
+	}
+}
