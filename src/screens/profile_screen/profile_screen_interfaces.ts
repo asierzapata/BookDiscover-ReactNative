@@ -12,5 +12,5 @@ export interface ownProps extends NavigationScreenProps, StateProps, DispatchPro
 export interface StateProps {}
 
 export interface DispatchProps {
-	fetchUserInfo: () => AsyncAction
+	handleLogout: () => AsyncAction
 }

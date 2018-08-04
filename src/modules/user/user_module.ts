@@ -33,6 +33,9 @@ export const MODULE_NAME = 'user'
 /*                        Actions                         */
 /* ====================================================== */
 
+// Authentication
+// ------------
+
 export const LOG_IN = asyncActionObject('LOG_IN')
 export function logIn({ email, password }: AuthData): AsyncAction {
 	return {
@@ -59,6 +62,21 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 		meta: {}
 	}
 }
+
+export const LOG_OUT = asyncActionObject('LOG_OUT')
+export function logOut(): AsyncAction {
+	return {
+		type: asyncAction(LOG_OUT.NAME),
+		AsyncProcess: ({ dispatch }) => userApi.logOut(),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(LOG_OUT.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
+// User
 
 export const FETCH_USER_INFO = asyncActionObject('FETCH_USER_INFO')
 export function fetchUserInfo(): AsyncAction {
