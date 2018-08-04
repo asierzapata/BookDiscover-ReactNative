@@ -6,6 +6,12 @@ import ApiClient from '../config/api_config'
 import BookParser from './book_parsers'
 
 /* ====================================================== */
+/*                     Interfaces                         */
+/* ====================================================== */
+
+import { BookApiObject } from './book_interfaces'
+
+/* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
@@ -15,11 +21,6 @@ const api: BookApiObject = {
 }
 
 export default api
-
-export interface BookApiObject {
-	getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<{}>
-	getBooksByQuery: ({ query, page }: { query: string; page: number }) => Promise<{}>
-}
 
 /* ====================================================== */
 /*                        Content                         */

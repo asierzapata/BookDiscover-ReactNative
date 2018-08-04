@@ -14,3 +14,8 @@ export interface Book {
 	language: string
 	thumbnail: string
 }
+
+export interface BookApiObject {
+	getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<{}>
+	getBooksByQuery: ({ query, page }: { query: string; page: number }) => Promise<{}>
+}
