@@ -16,7 +16,7 @@ import {
 	getUserBooks
 } from '../../modules/books/book_module'
 
-import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
+import { getRequestStatus } from 'Module/api_metadata/api_metadata_module'
 
 /* ====================================================== */
 /*                     Components                         */
