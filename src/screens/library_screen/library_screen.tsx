@@ -12,6 +12,8 @@ import {
 	// Actions
     FETCH_USER_BOOKS,
     fetchUserBooks,
+    FETCH_BOOK_BY_ISBN,
+    fetchBookByISBN,
     // Selectors
     getUserBooks
 } from '../../modules/books/book_module'
@@ -23,11 +25,11 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /* ====================================================== */
 
 import { View, Text } from 'react-native'
-import GridView from 'react-native-super-grid'
+import GridView from '../../ui/components/grid_view'
 import Icon from '../../ui/components/icon'
 import BookItem from '../../ui/components/book_item'
 import ViewWrapper from '../../ui/components/view_wrapper'
-import Loading from '../../ui/components/loading'
+import LoadingOverlay from '../../ui/components/loading_overlay'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -42,6 +44,7 @@ import { bookWidth } from '../../ui/styles/dimensions'
 /* ====================================================== */
 
 import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_interfaces'
+import { Book } from '../../api/parsers/books_parser';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -50,20 +53,29 @@ import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_
 export class LibraryScreen extends Component<ownProps,ownState> {
 
     componentDidMount() {
+        this.setState({ fetchingISBN: '' })
         this.props.handleFetchUserBooks()
     }
 
     componentDidUpdate(prevProps: ownProps) {
-        // if(prevProps.navigation && this.props.fetchUserBooksStatus.isLoaded){
-            
-        // }
+        const { fetchingISBN } = this.state
+        if (prevProps.fetchBookByISBN.isLoading && this.props.fetchBookByISBN.isLoaded) {
+            console.log(this.props.userBooks[fetchingISBN!], this.props.userBooks)
+            this.props.navigation.navigate('BookDetail', { book: this.props.userBooks[fetchingISBN!] })
+        }
     }
 
     handleSearch = () => {
         this.props.navigation.navigate('Search')
     }
 
+    handleBookDetail = (book: Book) => {
+        this.setState({ fetchingISBN: book.ISBN })
+        this.props.handleFetchBookByISBN(book.ISBN)
+    }
+
     render() {
+        const { fetchBookByISBN } = this.props
         return (
             <ViewWrapper style={styles.container}>
                 <View style={styles.topBar}>
@@ -82,24 +94,22 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                     </View>
                 </View>
                 <View style={styles.library}>
-                    { this.props.fetchUserBooksStatus.isLoading ? 
-                        <Loading />
-                        : 
-                        this.renderGridView()
-                    }
+                    {this.renderGridView()}
                 </View>
+                {fetchBookByISBN.isLoading && <LoadingOverlay />}
             </ViewWrapper>
         )
     }
 
     renderGridView() {
-        const { userBooks } = this.props
+        const { userBooks, fetchUserBooksStatus } = this.props
         let books = _.isEmpty(userBooks) ? [] : userBooks
         return (
             <GridView
                 itemDimension={bookWidth}
                 items={books}
-                renderItem={(item) => <BookItem {...item}/>}
+                isLoading={fetchUserBooksStatus.isLoading ? fetchUserBooksStatus.isLoading : false}
+                renderItem={(item: Book) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
             />
         )
     }
@@ -110,10 +120,14 @@ const mapStateToProps = (state: any): StateProps => ({
     fetchUserBooksStatus: getRequestStatus(state, {
 		actionType: FETCH_USER_BOOKS.NAME
     }),
+    fetchBookByISBN: getRequestStatus(state, {
+		actionType: FETCH_BOOK_BY_ISBN.NAME
+    })
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    handleFetchUserBooks: () => dispatch(fetchUserBooks())
+    handleFetchUserBooks: () => dispatch(fetchUserBooks()),
+    handleFetchBookByISBN: (ISBN: string) => dispatch(fetchBookByISBN({ ISBN }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LibraryScreen)
