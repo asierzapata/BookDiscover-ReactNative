@@ -1,21 +1,20 @@
 import { NavigationScreenProps } from 'react-navigation'
 import { AsyncActionStatus } from '../../modules/api_metadata/api_metadata_module'
-import { AsyncAction } from '../../modules/actions_interfaces';
-import { Book } from '../../api/parsers/books_parser';
+import { AsyncAction } from '../../modules/actions_interfaces'
+import { Book } from '../../api/book/book_interfaces'
 
 export interface ownState {
-    error?: string
+	error?: string
 }
 
 export interface ownProps extends NavigationScreenProps, StateProps, DispatchProps {}
 
 export interface StateProps {
-    book: Book,
-    fetchAddBookUserStatus: AsyncActionStatus
+	book: Book
+	fetchAddBookUserStatus: AsyncActionStatus
 }
 
-
 export interface DispatchProps {
-    handleAddBookUser: ({ ISBN, thumbnail }: Book) => AsyncAction
-    handleFetchUserBooks: () => AsyncAction
+	handleAddBookUser: ({ ISBN, thumbnail }: Book) => AsyncAction
+	handleFetchUserBooks: () => AsyncAction
 }

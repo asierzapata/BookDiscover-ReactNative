@@ -8,7 +8,6 @@ export function userParser(entityFromFirestore: UserInfo) {
 	return {
 		_id: entityFromFirestore.uid,
 		email: entityFromFirestore.email,
-		emailVerified: entityFromFirestore.emailVerified,
 		displayName: entityFromFirestore.displayName || '',
 		phoneNumber: entityFromFirestore.phoneNumber || null,
 		photoURL: entityFromFirestore.photoURL || null

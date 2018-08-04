@@ -5,6 +5,12 @@ import { getRequestStatus } from '../api_metadata/api_metadata_module'
 import selectorCreatorFactory from '../../lib/redux/selectors'
 
 /* ====================================================== */
+/*                         Api                         */
+/* ====================================================== */
+
+import userApi from '../../api/user/user_api'
+
+/* ====================================================== */
 /*                     Interfaces                         */
 /* ====================================================== */
 
@@ -31,7 +37,7 @@ export const LOG_IN = asyncActionObject('LOG_IN')
 export function logIn({ email, password }: AuthData): AsyncAction {
 	return {
 		type: asyncAction(LOG_IN.NAME),
-		AsyncProcess: AsyncConfig => AsyncConfig.api.v1.userApi.logIn({ email, password }),
+		AsyncProcess: ({ dispatch }) => userApi.logIn({ email, password }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(LOG_IN.NAME)
@@ -44,10 +50,8 @@ export const SIGN_UP = asyncActionObject('SIGN_UP')
 export function signUp({ email, password }: AuthData): AsyncAction {
 	return {
 		type: asyncAction(SIGN_UP.NAME),
-		AsyncProcess: AsyncConfig =>
-			AsyncConfig.api.v1.userApi
-				.signUp({ email, password })
-				.then((data: ApiResponse) => AsyncConfig.api.v1.userApi.addUser(data.data)),
+		AsyncProcess: ({ dispatch }) =>
+			userApi.signUp({ email, password }).then((data: ApiResponse) => userApi.addUser(data.data)),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(SIGN_UP.NAME)
@@ -60,7 +64,7 @@ export const FETCH_USER_INFO = asyncActionObject('FETCH_USER_INFO')
 export function fetchUserInfo(): AsyncAction {
 	return {
 		type: asyncAction(FETCH_USER_INFO.NAME),
-		AsyncProcess: AsyncConfig => AsyncConfig.api.v1.userApi.getUserInfo(),
+		AsyncProcess: ({ dispatch }) => userApi.getUserInfo(),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(FETCH_USER_INFO.NAME)
@@ -73,8 +77,8 @@ export const ADD_BOOK_USER = asyncActionObject('ADD_BOOK_USER')
 export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 	return {
 		type: asyncAction(ADD_BOOK_USER.NAME),
-		AsyncProcess: AsyncConfig =>
-			AsyncConfig.api.v1.userApi.addBookToUser({
+		AsyncProcess: ({ dispatch }) =>
+			userApi.addBookToUser({
 				ISBN,
 				thumbnail
 			} as Book),

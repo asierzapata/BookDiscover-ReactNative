@@ -1,7 +1,7 @@
 import { NavigationScreenProps } from 'react-navigation'
 import { AsyncActionStatus } from '../../modules/api_metadata/api_metadata_module'
 import { AsyncAction } from '../../modules/actions_interfaces'
-import { AuthData } from '../../api/parsers/user_parser'
+import { AuthData } from '../../api/user/user_interfaces'
 
 export interface ownState {
 	email: string

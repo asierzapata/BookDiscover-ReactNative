@@ -3,8 +3,6 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Text, TextInput, View, Button } from 'react-native'
 import _ from 'lodash'
-import * as firebase from 'firebase'
-import { NavigationScreenProps } from 'react-navigation'
 import { Dispatch } from 'redux'
 
 /* ====================================================== */
@@ -12,7 +10,7 @@ import { Dispatch } from 'redux'
 /* ====================================================== */
 
 import styles from './auth_log_in_screen_style'
-import { AuthData } from '../../api/parsers/user_parser'
+import { AuthData } from '../../api/user/user_interfaces'
 import { logIn, LOG_IN } from '../../modules/user/user_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'

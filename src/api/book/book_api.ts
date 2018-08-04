@@ -3,7 +3,7 @@ import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
 import ApiClient from '../config/api_config'
 
-import BookParser from './book_parser'
+import BookParser from './book_parsers'
 
 /* ====================================================== */
 /*                   Implementation                       */

@@ -9,7 +9,7 @@ import ApiErrors from '../config/api_errors'
 /* ====================================================== */
 
 import { Book as BookInterface } from '../book/book_interfaces'
-import { AuthData, UserApiObject } from '../user/user_interfaces'
+import { AuthData, UserApiObject, User as UserInterface } from '../user/user_interfaces'
 
 /* ====================================================== */
 /*                   	Parsers                           */

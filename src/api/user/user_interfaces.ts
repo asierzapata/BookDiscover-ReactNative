@@ -1,8 +1,5 @@
-/* ====================================================== */
-/*                   	Parsers                           */
-/* ====================================================== */
-
-import { ApiResponse } from '../config/api_config'
+import { ApiResponse } from '../config/api_interfaces'
+import { Book as BookInterface } from '../book/book_interfaces'
 
 /* ====================================================== */
 /*                           Interfaces                   */
@@ -29,5 +26,5 @@ export interface UserApiObject {
 	logoutUser: () => Promise<ApiResponse>
 	logIn: ({ email, password }: AuthData) => Promise<ApiResponse>
 	signUp: ({ email, password }: AuthData) => Promise<ApiResponse>
-	addUser: (user: firebase.User) => Promise<ApiResponse>
+	addUser: (user: User) => Promise<ApiResponse>
 }
