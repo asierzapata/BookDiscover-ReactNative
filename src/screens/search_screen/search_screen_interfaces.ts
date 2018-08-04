@@ -4,6 +4,7 @@ import { AsyncAction, BaseAction } from '../../modules/actions_interfaces';
 
 export interface ownState {
     searchQuery: string,
+    lastSearchQuery: string,
     page: number,
     errorMessage?: string 
 }

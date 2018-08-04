@@ -11,7 +11,9 @@ import _ from 'lodash'
 import {
 	// Actions
 	ADD_BOOK_USER,
-	addBookUser
+	addBookUser,
+	DELETE_BOOK_USER,
+	deleteBookUser,
 	// Selectors
 } from '../../modules/user/user_module'
 
@@ -43,6 +45,8 @@ import { Background } from '../../ui/styles/colors'
 
 import { ownProps, ownState, StateProps, DispatchProps } from './book_detail_screen_interfaces'
 import { Book } from '../../api/book/book_interfaces'
+import routes from '../../router/routes'
+import { AsyncAction } from '../../modules/actions_interfaces';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -68,7 +72,7 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 	}
 
 	render() {
-		const { book, handleAddBookUser } = this.props
+		const { book, handleAddBookUser, handleDeleteBookUser, previousScreen } = this.props
 		const { error } = this.state
 		const authors = _.join(book.authors, ' and ')
 
@@ -97,9 +101,7 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 						</Text>
 					</View>
 					<View style={styles.actionButtons}>
-						<View style={styles.leftActionButton}>
-							<Button color={Background} title="Add to library" onPress={() => handleAddBookUser(book)} />
-						</View>
+						{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
 						<View style={styles.rightActionButton}>
 							<Button color="white" title="Buy" onPress={() => 1} />
 						</View>
@@ -108,17 +110,41 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 			</ViewWrapper>
 		)
 	}
+
+	renderLeftActionButton(book: Book, handleAddBookUser: ({ ISBN, thumbnail }: Book) => AsyncAction, handleDeleteBookUser: ({ ISBN }: Book) => AsyncAction, previousScreen: string) {
+		let onPress: (book: Book) => AsyncAction, title = ''
+		switch (previousScreen) {
+			case routes.LIBRARY:
+				title = 'Delete from library'
+				onPress = handleDeleteBookUser
+				break;
+			case routes.SEARCH:
+				title = 'Add to Library'
+				onPress = handleAddBookUser
+				break;
+		}
+		return (
+			<View style={styles.leftActionButton}>
+				<Button color={Background} title={title} onPress={() => onPress(book)} />
+			</View>
+		)
+	}
 }
 
 const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
 	book: ownProps.navigation.state.params!.book as Book,
+	previousScreen: ownProps.navigation.state.params!.previousScreen,
 	fetchAddBookUserStatus: getRequestStatus(state, {
 		actionType: ADD_BOOK_USER.NAME
+	}),
+	fetchDeleteBookUserStatus: getRequestStatus(state, {
+		actionType: DELETE_BOOK_USER.NAME
 	})
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
 	handleAddBookUser: ({ ISBN, thumbnail }) => dispatch(addBookUser({ ISBN, thumbnail } as Book)),
+	handleDeleteBookUser: ({ ISBN }) => dispatch(deleteBookUser({ ISBN } as Book)),
 	handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })
 

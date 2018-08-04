@@ -41,6 +41,7 @@ import { bookWidth } from '../../ui/styles/dimensions'
 
 import { ownProps, ownState, StateProps, DispatchProps } from './search_screen_interfaces'
 import { Book } from '../../api/book/book_interfaces'
+import routes from '../../router/routes';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -51,6 +52,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 		super(props)
 		this.state = {
 			searchQuery: '',
+			lastSearchQuery: '',
 			page: 0,
 			errorMessage: undefined
 		}
@@ -63,12 +65,16 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 
 	handleSearch = () => {
-		const { searchQuery, page } = this.state
+		const { searchQuery, lastSearchQuery, page } = this.state
+		if (lastSearchQuery !== searchQuery) {
+			this.props.handleClearSearchBooks()
+		}
+		this.setState({ lastSearchQuery: searchQuery })
 		this.props.handleFetchBooksByQuery(searchQuery, page)
 	}
 
 	handleBookDetail = (book: any) => {
-		this.props.navigation.navigate('BookDetail', { book })
+		this.props.navigation.navigate('BookDetail', { book, previousScreen: routes.SEARCH })
 	}
 
 	handleEndReached = () => {

@@ -46,6 +46,7 @@ import { bookWidth } from '../../ui/styles/dimensions'
 
 import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_interfaces'
 import { Book } from '../../api/book/book_interfaces';
+import routes from '../../router/routes';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -61,8 +62,15 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     componentDidUpdate(prevProps: ownProps) {
         const { fetchingISBN } = this.state
         if (prevProps.populateBookByISBN.isLoading && this.props.populateBookByISBN.isLoaded) {
-            this.props.navigation.navigate('BookDetail', { book: this.props.userBooks[fetchingISBN!] })
+            this.navigateToBookDetail(this.props.userBooks[fetchingISBN!])
         }
+    }
+
+    navigateToBookDetail = (book: Book) => {
+        this.props.navigation.navigate('BookDetail', { 
+            book,
+            previousScreen: routes.LIBRARY 
+        })
     }
 
     handleSearch = () => {
@@ -73,7 +81,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         const ISBN = book.ISBN
         const userBook = this.props.userBooks[ISBN]
         if(userBook.title) {
-            this.props.navigation.navigate('BookDetail', { book: userBook })
+            this.navigateToBookDetail(userBook)
         } else {
             this.setState({ fetchingISBN: ISBN })
             this.props.handlePopulateBookByISBN(ISBN)

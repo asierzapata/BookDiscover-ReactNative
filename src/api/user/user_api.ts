@@ -25,6 +25,7 @@ import { ApiResponse } from '../config/api_interfaces'
 const api: UserApiObject = {
 	getUserBooks,
 	addBookToUser,
+	deleteBookToUser,
 	getUserInfo,
 	// Auth
 	logoutUser,
@@ -170,6 +171,53 @@ function addBookToUser({ ISBN, thumbnail }: BookInterface): Promise<ApiResponse>
 						.collection(ApiConstants.USERS_COLLECTION)
 						.doc(currentUser.uid)
 						.set({ books }, { merge: true })
+				} else {
+					reject({
+						code: 500,
+						message: ApiErrors.NOT_FOUND
+					})
+				}
+			})
+			.then(() => {
+				resolve({
+					headers: '',
+					status: '200',
+					statusText: '',
+					data: ''
+				})
+			})
+			.catch(error => {
+				reject({
+					code: 500,
+					message: error.message
+				})
+			})
+	})
+}
+
+function deleteBookToUser({ ISBN }: BookInterface): Promise<ApiResponse> {
+	const { currentUser } = firebase.auth()
+	if (_.isNull(currentUser))
+		return Promise.reject({
+			code: 401,
+			error: ApiErrors.USER_NOT_LOGGED_IN
+		})
+
+	return new Promise((resolve, reject) => {
+		firebase
+			.firestore()
+			.collection(ApiConstants.USERS_COLLECTION)
+			.doc(currentUser.uid)
+			.get()
+			.then(document => {
+				if (document.exists) {
+					const { books } = document.data() as { books: firestoreUserBooksSchema }
+					delete books[ISBN]
+					return firebase
+						.firestore()
+						.collection(ApiConstants.USERS_COLLECTION)
+						.doc(currentUser.uid)
+						.set({ books })
 				} else {
 					reject({
 						code: 500,

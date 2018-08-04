@@ -91,6 +91,23 @@ export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 	}
 }
 
+export const DELETE_BOOK_USER = asyncActionObject('DELETE_BOOK_USER')
+export function deleteBookUser({ ISBN, thumbnail }: Book): AsyncAction {
+	return {
+		type: asyncAction(ADD_BOOK_USER.NAME),
+		AsyncProcess: ({ dispatch }) =>
+			userApi.deleteBookToUser({
+				ISBN,
+				thumbnail
+			} as Book),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(ADD_BOOK_USER.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
 /* ====================================================== */
 /*                        Reducers                        */
 /* ====================================================== */
