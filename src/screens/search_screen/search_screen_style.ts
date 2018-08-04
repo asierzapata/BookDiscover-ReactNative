@@ -27,5 +27,8 @@ export default StyleSheet.create({
     },
     carouselBackgroundView : {
         alignSelf: 'stretch',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
     }
 })

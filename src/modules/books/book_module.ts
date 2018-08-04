@@ -85,7 +85,7 @@ export function fetchUserBooks(): AsyncAction {
 function searchBooks(state = {}, { type, payload, meta } : AppAction) {
     switch(type) {
         case FETCH_BOOKS_SEARCH.SUCCESS:
-            return payload
+            return [...state as any[], ...payload as any[]]
         default:
             return state
     }

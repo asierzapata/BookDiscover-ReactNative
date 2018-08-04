@@ -6,20 +6,21 @@ import { Book } from '../../../api/parsers/books_parser';
 import BookItem from '../../../ui/components/book_item';
 
 import { BoldTextColor, TextColor } from '../../../ui/styles/colors'
-import { width } from '../../../ui/styles/dimensions'
+import { searchBookWidth, searchBookHeight } from '../../../ui/styles/dimensions'
 
 interface CarouselCard {
-    book: Book,
+    book: any
     onPress: () => void
 }
 
 const CarouselCard: React.SFC<CarouselCard> = ({ book, onPress }) => {
-    const authors = _.join(book.authors, ' and ')
+    const bookObject = book.item
+    const authors = _.join(bookObject.authors, ' and ')
     return(
         <View style={styles.card}>
-            <BookItem onPress={onPress} {...book} />
+            <BookItem onPress={onPress} {...bookObject} carousel={true}/>
             <Text style={styles.boldText}>
-                {book.title}
+                {bookObject.title}
             </Text>
             <Text style={styles.text}>
                 by {authors}
@@ -30,10 +31,10 @@ const CarouselCard: React.SFC<CarouselCard> = ({ book, onPress }) => {
 
 const styles = StyleSheet.create({
     card : {
-        alignItems: 'center',
         justifyContent: 'center',
-        paddingLeft: 1/5 * width,
-        paddingRight: 1/5 * width
+        alignItems: 'center',
+        width: searchBookWidth,
+        height: searchBookHeight
     },
     text: {
         color: TextColor
