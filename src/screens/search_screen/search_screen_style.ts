@@ -24,5 +24,8 @@ export default StyleSheet.create({
     },
     cancelButton: {
         flex: 1
+    },
+    carouselBackgroundView : {
+        alignSelf: 'stretch',
     }
 })
