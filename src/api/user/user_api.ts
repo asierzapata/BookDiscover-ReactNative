@@ -1,12 +1,22 @@
-import { AuthData } from '../parsers/user_parser'
 import _ from 'lodash'
 import * as firebase from 'firebase'
 import '@firebase/firestore'
-// import '@firebase/auth'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
-import { userParser, User as UserInterface } from '../parsers/user_parser'
-import { Book as BookInterface } from '../parsers/books_parser'
+
+/* ====================================================== */
+/*                     Interfaces                         */
+/* ====================================================== */
+
+import { Book as BookInterface } from '../book/book_interfaces'
+import { AuthData, UserApiObject } from '../user/user_interfaces'
+
+/* ====================================================== */
+/*                   	Parsers                           */
+/* ====================================================== */
+
+import { userParser } from '../user/user_parsers'
+import { ApiResponse } from '../config/api_interfaces'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -25,21 +35,11 @@ const api: UserApiObject = {
 
 export default api
 
-export interface UserApiObject {
-	getUserBooks: () => Promise<{}>
-	addBookToUser: ({ ISBN, thumbnail }: BookInterface) => Promise<{}>
-	getUserInfo: () => Promise<{}>
-	logoutUser: () => Promise<{}>
-	logIn: ({ email, password }: AuthData) => Promise<{}>
-	signUp: ({ email, password }: AuthData) => Promise<{}>
-	addUser: (user: firebase.User) => Promise<{}>
-}
-
 /* ====================================================== */
 /*                     Authentication                     */
 /* ====================================================== */
 
-function logIn({ email, password }: AuthData) {
+function logIn({ email, password }: AuthData): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		firebase
 			.auth()
@@ -56,7 +56,7 @@ function logIn({ email, password }: AuthData) {
 	})
 }
 
-function signUp({ email, password }: AuthData) {
+function signUp({ email, password }: AuthData): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		firebase
 			.auth()
@@ -68,7 +68,7 @@ function signUp({ email, password }: AuthData) {
 	})
 }
 
-function addUser(user: firebase.User) {
+function addUser(user: UserInterface): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		firebase
 			.firestore()
@@ -86,7 +86,7 @@ function addUser(user: firebase.User) {
 	})
 }
 
-function logoutUser() {
+function logoutUser(): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		firebase
 			.auth()
@@ -112,7 +112,7 @@ function logoutUser() {
 /*                        Content                         */
 /* ====================================================== */
 
-function getUserBooks() {
+function getUserBooks(): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser))
 		return Promise.reject({
@@ -146,7 +146,7 @@ function getUserBooks() {
 	})
 }
 
-function addBookToUser({ ISBN, thumbnail }: BookInterface) {
+function addBookToUser({ ISBN, thumbnail }: BookInterface): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser))
 		return Promise.reject({
@@ -193,7 +193,7 @@ function addBookToUser({ ISBN, thumbnail }: BookInterface) {
 	})
 }
 
-function getUserInfo() {
+function getUserInfo(): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	return new Promise((resolve, reject) => {
 		if (currentUser) {

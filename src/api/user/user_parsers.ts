@@ -1,28 +1,10 @@
-import { User } from 'firebase'
-
-/* ====================================================== */
-/*                           Interfaces                   */
-/* ====================================================== */
-
-export interface AuthData {
-	email: string
-	password: string
-}
-
-export interface User {
-	_id: string
-	email: string
-	emailVerified: string
-	displayName: string
-	phoneNumber: number
-	photoUrl: string
-}
+import { UserInfo } from 'firebase'
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
-export function userParser(entityFromFirestore: User) {
+export function userParser(entityFromFirestore: UserInfo) {
 	return {
 		_id: entityFromFirestore.uid,
 		email: entityFromFirestore.email,

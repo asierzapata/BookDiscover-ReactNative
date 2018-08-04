@@ -1,12 +1,21 @@
 import { combineReducers } from 'redux'
-import _ from 'lodash'
 import { asyncAction, asyncActionObject } from '../../lib/redux/async_action_creator'
 import { AsyncAction, AppAction } from '../actions_interfaces'
 import { getRequestStatus } from '../api_metadata/api_metadata_module'
 import selectorCreatorFactory from '../../lib/redux/selectors'
-import { Book } from '../../api/parsers/books_parser'
-import { AuthData } from '../../api/parsers/user_parser'
-import { User as UserInterface } from '../../api/parsers/user_parser'
+
+/* ====================================================== */
+/*                     Interfaces                         */
+/* ====================================================== */
+
+import { Book } from '../../api/book/book_interfaces'
+
+/* ====================================================== */
+/*                   	Parsers                           */
+/* ====================================================== */
+
+import { User as UserInterface, AuthData } from '../../api/user/user_interfaces'
+import { ApiResponse } from '../../api/config/api_interfaces'
 
 /* ====================================================== */
 /*                         Module                         */
@@ -38,7 +47,7 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 		AsyncProcess: AsyncConfig =>
 			AsyncConfig.api.v1.userApi
 				.signUp({ email, password })
-				.then((user: UserInterface) => AsyncConfig.api.v1.userApi.addUser(user)),
+				.then((data: ApiResponse) => AsyncConfig.api.v1.userApi.addUser(data.data)),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(SIGN_UP.NAME)
