@@ -3,8 +3,22 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Text, TextInput, View, Button } from 'react-native'
 import _ from 'lodash'
-import * as firebase from 'firebase'
 import { NavigationScreenProps } from 'react-navigation'
+
+/* ====================================================== */
+/*                   Actions / Selectors                  */
+/* ====================================================== */
+
+import { signUp, SIGN_UP } from '../../modules/user/user_module'
+import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
+
+/* ====================================================== */
+/*                      Interfaces                        */
+/* ====================================================== */
+
+import { ownProps, ownState, StateProps, DispatchProps } from './auth_sign_up_screen_interfaces'
+import { AuthData } from '../../api/user/user_interfaces'
+import { Dispatch } from 'redux'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -16,13 +30,7 @@ import styles from './auth_sign_up_screen_style'
 /*                   Implementation                       */
 /* ====================================================== */
 
-interface ownState {
-	email: string
-	password: string
-	errorMessage: undefined | string
-}
-
-export class AuthSignUpScreen extends Component<NavigationScreenProps, ownState> {
+export class AuthSignUpScreen extends Component<ownProps, ownState> {
 	state = {
 		email: '',
 		password: '',
@@ -38,6 +46,8 @@ export class AuthSignUpScreen extends Component<NavigationScreenProps, ownState>
 			this.setState({ errorMessage: 'There is an empty field' })
 			return
 		}
+
+		this.props.handleSignUp({ email, password })
 	}
 
 	render() {
@@ -66,9 +76,16 @@ export class AuthSignUpScreen extends Component<NavigationScreenProps, ownState>
 	}
 }
 
-const mapStateToProps = () => ({})
+const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
+	// Metadata
+	signUpStatus: getRequestStatus(state, {
+		actionType: SIGN_UP.NAME
+	})
+})
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+	handleSignUp: ({ email, password }: AuthData) => dispatch(signUp({ email, password }))
+})
 
 export default connect(
 	mapStateToProps,

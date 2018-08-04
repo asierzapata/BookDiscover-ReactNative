@@ -5,6 +5,8 @@ import storage from 'redux-persist/lib/storage'
 
 import apiMiddleware from '../middleware/api_middleware'
 
+import { MODULE_NAME as apiMetadataModuleName } from './api_metadata/api_metadata_module'
+
 import rootReducer from './root_reducer'
 
 /* ====================================================== */
@@ -18,7 +20,7 @@ function startStore() {
 		//createLogger()
 	]
 
-	const persistConfig = { key: 'root', storage, blacklist: ['api_metadata_module'] }
+	const persistConfig = { key: 'root', storage, blacklist: [apiMetadataModuleName] }
 
 	const persistedReducer = persistReducer(persistConfig, rootReducer)
 

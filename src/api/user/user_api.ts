@@ -9,13 +9,13 @@ import ApiErrors from '../config/api_errors'
 /* ====================================================== */
 
 import { Book as BookInterface } from '../book/book_interfaces'
-import { AuthData, UserApiObject, User as UserInterface } from '../user/user_interfaces'
+import { AuthData, UserApiObject, User as UserInterface } from './user_interfaces'
 
 /* ====================================================== */
 /*                   	Parsers                           */
 /* ====================================================== */
 
-import { userParser } from '../user/user_parsers'
+import { userParser } from './user_parsers'
 import { ApiResponse } from '../config/api_interfaces'
 
 /* ====================================================== */

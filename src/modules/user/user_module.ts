@@ -98,6 +98,7 @@ function userInfo(state = {}, { type, payload, meta }: AppAction) {
 	switch (type) {
 		case FETCH_USER_INFO.SUCCESS:
 		case LOG_IN.SUCCESS:
+		case SIGN_UP.SUCCESS:
 			return payload
 		default:
 			return state

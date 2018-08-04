@@ -3,16 +3,12 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Text, TextInput, View, Button } from 'react-native'
 import _ from 'lodash'
-import { Dispatch } from 'redux'
 
 /* ====================================================== */
-/*                        Style                           */
+/*                   Actions / Selectors                  */
 /* ====================================================== */
 
-import styles from './auth_log_in_screen_style'
-import { AuthData } from '../../api/user/user_interfaces'
 import { logIn, LOG_IN } from '../../modules/user/user_module'
-
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
 /* ====================================================== */
@@ -20,6 +16,14 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /* ====================================================== */
 
 import { ownProps, ownState, StateProps, DispatchProps } from './auth_log_in_screen_interfaces'
+import { AuthData } from '../../api/user/user_interfaces'
+import { Dispatch } from 'redux'
+
+/* ====================================================== */
+/*                        Style                           */
+/* ====================================================== */
+
+import styles from './auth_log_in_screen_style'
 
 /* ====================================================== */
 /*                   Implementation                       */
