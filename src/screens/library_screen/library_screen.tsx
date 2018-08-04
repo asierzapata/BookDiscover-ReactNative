@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux';
+import { Dispatch } from 'redux'
 import _ from 'lodash'
 
 /* ====================================================== */
@@ -10,10 +10,10 @@ import _ from 'lodash'
 
 import {
 	// Actions
-    FETCH_USER_BOOKS,
-    fetchUserBooks,
-    // Selectors
-    getUserBooks
+	FETCH_USER_BOOKS,
+	fetchUserBooks,
+	// Selectors
+	getUserBooks
 } from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -47,73 +47,60 @@ import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class LibraryScreen extends Component<ownProps,ownState> {
+export class LibraryScreen extends Component<ownProps, ownState> {
+	componentDidMount() {
+		this.props.handleFetchUserBooks()
+	}
 
-    componentDidMount() {
-        this.props.handleFetchUserBooks()
-    }
+	componentDidUpdate(prevProps: ownProps) {
+		// if(prevProps.navigation && this.props.fetchUserBooksStatus.isLoaded){
+		// }
+	}
 
-    componentDidUpdate(prevProps: ownProps) {
-        // if(prevProps.navigation && this.props.fetchUserBooksStatus.isLoaded){
-            
-        // }
-    }
+	handleSearch = () => {
+		this.props.navigation.navigate('Search')
+	}
 
-    handleSearch = () => {
-        this.props.navigation.navigate('Search')
-    }
+	render() {
+		return (
+			<ViewWrapper style={styles.container}>
+				<View style={styles.topBar}>
+					<View style={styles.searchIcon}>
+						<Icon name={IconNames.SEARCH} fontSize={20} />
+					</View>
+					<View style={styles.topBarTitle}>
+						<Text style={styles.title}>LIBRARY</Text>
+					</View>
+					<View style={styles.addIcon}>
+						<Icon name={IconNames.ADD} fontSize={20} onPress={this.handleSearch} />
+					</View>
+				</View>
+				<View style={styles.library}>
+					{this.props.fetchUserBooksStatus.isLoading ? <Loading /> : this.renderGridView()}
+				</View>
+			</ViewWrapper>
+		)
+	}
 
-    render() {
-        return (
-            <ViewWrapper style={styles.container}>
-                <View style={styles.topBar}>
-                    <View style={styles.searchIcon}>
-                        <Icon name={IconNames.SEARCH} fontSize={20}/>
-                    </View>
-                    <View style={styles.topBarTitle}>
-                        <Text style={styles.title}>LIBRARY</Text>
-                    </View>
-                    <View style={styles.addIcon}>
-                        <Icon 
-                            name={IconNames.ADD} 
-                            fontSize={20} 
-                            onPress={this.handleSearch}
-                        />
-                    </View>
-                </View>
-                <View style={styles.library}>
-                    { this.props.fetchUserBooksStatus.isLoading ? 
-                        <Loading />
-                        : 
-                        this.renderGridView()
-                    }
-                </View>
-            </ViewWrapper>
-        )
-    }
-
-    renderGridView() {
-        const { userBooks } = this.props
-        let books = _.isEmpty(userBooks) ? [] : userBooks
-        return (
-            <GridView
-                itemDimension={bookWidth}
-                items={books}
-                renderItem={(item) => <BookItem {...item}/>}
-            />
-        )
-    }
+	renderGridView() {
+		const { userBooks } = this.props
+		let books = _.isEmpty(userBooks) ? [] : userBooks
+		return <GridView itemDimension={bookWidth} items={books} renderItem={item => <BookItem {...item} />} />
+	}
 }
 
 const mapStateToProps = (state: any): StateProps => ({
-    userBooks: getUserBooks(state),
-    fetchUserBooksStatus: getRequestStatus(state, {
+	userBooks: getUserBooks(state),
+	fetchUserBooksStatus: getRequestStatus(state, {
 		actionType: FETCH_USER_BOOKS.NAME
-    }),
+	})
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    handleFetchUserBooks: () => dispatch(fetchUserBooks())
+	handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LibraryScreen)
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(LibraryScreen)
