@@ -47,6 +47,7 @@ import { bookWidth } from '../../ui/styles/dimensions'
 import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_interfaces'
 import { Book } from '../../api/book/book_interfaces';
 import routes from '../../router/routes';
+import { Background } from '../../ui/styles/colors';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -154,11 +155,17 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     renderSearchBar() {
         if(_.isEmpty(this.state.searchQuery)) return null
         return (
-            <View>
-                <Text>
+            <View style={styles.tooltipSearchBar}>
+                <Text style={styles.searchQueryTooltip} onPress={this.handleToggleLibrarySearch}>
                     {this.state.searchQuery}
                 </Text>
-                <Button title="Clear" onPress={() => this.setState({ searchQuery: '' })} />
+                <View style={styles.tooltipButtonSearchBar}>
+                    <Button 
+                        title="Clear" 
+                        color={Background}
+                        onPress={() => this.setState({ searchQuery: '' })} 
+                    />
+                </View>
             </View>
         )
     }
@@ -173,8 +180,8 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                     onChangeText={searchQuery => this.setState({ searchQuery })}
                     value={this.state.searchQuery}
                     blurOnSubmit
-                    //onEndEditing={() => this.handleLibrarySearch(this.state.searchQuery)}
-                    //onSubmitEditing={() => this.handleLibrarySearch(this.state.searchQuery)}
+                    onEndEditing={this.handleToggleLibrarySearch}
+                    onSubmitEditing={this.handleToggleLibrarySearch}
                 />
             </View>
         )

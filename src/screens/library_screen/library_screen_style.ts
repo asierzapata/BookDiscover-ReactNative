@@ -13,7 +13,9 @@ export default StyleSheet.create({
     },
     searchBar: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     searchIcon: {
         flex: 1,
@@ -31,7 +33,7 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     library: {
-        flex: 7
+        flex: 8,
     },
     title: {
         fontSize: 17,
@@ -47,10 +49,25 @@ export default StyleSheet.create({
         flex: 5,
         borderColor: 'gray',
         borderRadius: 10,
-        marginLeft: 10,
-        marginRight: 10
+        marginLeft: 20,
+        marginRight: 20
     },
     cancelButton: {
         flex: 1
     },
+    searchQueryTooltip: {
+        color: TextColor
+    },
+    tooltipSearchBar: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginLeft: 20,
+        marginRight: 20
+    },
+    tooltipButtonSearchBar: {
+        backgroundColor: TextColor,
+        borderRadius: 10
+    }
 })
