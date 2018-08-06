@@ -57,7 +57,7 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 
 function getBooksByQuery({ query, page = 0 }: { query: string; page: number }) {
 	return new Promise((resolve, reject) => {
-		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}?startIndex=${page}`, {})
+		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}&startIndex=${page}`, {})
 			.then(response => {
 				const { data } = response
 				if (data) {

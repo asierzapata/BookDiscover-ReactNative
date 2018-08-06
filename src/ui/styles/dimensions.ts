@@ -4,5 +4,8 @@ export const { height, width } = Dimensions.get('window')
 
 export const searchBookWidth = width * 1/2
 export const searchBookHeight = height
-export const bookHeight = height * 1/4
-export const bookWidth = width * 1/4
+// Book image ratio 0,625 = 5/8
+const imageRatio = 5/8
+const imageScreenRatio = 1/4
+export const bookHeight = width * imageScreenRatio * (1/imageRatio)
+export const bookWidth = width * imageScreenRatio
