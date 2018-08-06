@@ -11,6 +11,10 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row'
     },
+    searchBar: {
+        flex: 1,
+        flexDirection: 'row'
+    },
     searchIcon: {
         flex: 1,
         justifyContent: 'center',
@@ -37,5 +41,16 @@ export default StyleSheet.create({
     activityIndicator : {
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    textInput: {
+        height: 40,
+        flex: 5,
+        borderColor: 'gray',
+        borderRadius: 10,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    cancelButton: {
+        flex: 1
+    },
 })

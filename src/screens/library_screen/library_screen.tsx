@@ -25,7 +25,7 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /*                     Components                         */
 /* ====================================================== */
 
-import { View, Text } from 'react-native'
+import { View, Text, TextInput, Button } from 'react-native'
 import GridView from '../../ui/components/grid_view'
 import Icon from '../../ui/components/icon'
 import BookItem from '../../ui/components/book_item'
@@ -54,6 +54,14 @@ import routes from '../../router/routes';
 
 export class LibraryScreen extends Component<ownProps,ownState> {
 
+    constructor(props: ownProps) {
+        super(props)
+        this.state = {
+            openSearchInput: false,
+            searchQuery: ''
+        }
+    }   
+
     componentDidMount() {
         this.setState({ fetchingISBN: '' })
         this.props.handleFetchUserBooks()
@@ -77,6 +85,10 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         this.props.navigation.navigate('Search')
     }
 
+    handleToggleLibrarySearch = () => {
+        this.setState({ openSearchInput: !this.state.openSearchInput })
+    }
+
     handleBookDetail = (book: Book) => {
         const ISBN = book.ISBN
         const userBook = this.props.userBooks[ISBN]
@@ -90,11 +102,16 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 
     render() {
         const { populateBookByISBN } = this.props
+        const { openSearchInput } = this.state
         return (
             <ViewWrapper style={styles.container}>
                 <View style={styles.topBar}>
                     <View style={styles.searchIcon}>
-                        <Icon name={IconNames.SEARCH} fontSize={20}/>
+                        <Icon 
+                            name={IconNames.SEARCH} 
+                            fontSize={20}
+                            onPress={this.handleToggleLibrarySearch}
+                        />
                     </View>
                     <View style={styles.topBarTitle}>
                         <Text style={styles.title}>LIBRARY</Text>
@@ -107,6 +124,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                         />
                     </View>
                 </View>
+                { openSearchInput ? this.renderInputSearchBar() : this.renderSearchBar() }
                 <View style={styles.library}>
                     {this.renderGridView()}
                 </View>
@@ -117,7 +135,12 @@ export class LibraryScreen extends Component<ownProps,ownState> {
 
     renderGridView() {
         const { arrayUserBooks, fetchUserBooksStatus } = this.props
+        const { searchQuery } = this.state
         let books = _.isEmpty(arrayUserBooks) ? [] : arrayUserBooks
+        books = _.isEmpty(searchQuery) ? 
+            books : 
+            _.filter(books, (book) => book.title.search(searchQuery) !== -1)
+        
         return (
             <GridView
                 itemDimension={bookWidth}
@@ -125,6 +148,35 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                 isLoading={fetchUserBooksStatus.isLoading ? fetchUserBooksStatus.isLoading : false}
                 renderItem={(item: Book) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
             />
+        )
+    }
+
+    renderSearchBar() {
+        if(_.isEmpty(this.state.searchQuery)) return null
+        return (
+            <View>
+                <Text>
+                    {this.state.searchQuery}
+                </Text>
+                <Button title="Clear" onPress={() => this.setState({ searchQuery: '' })} />
+            </View>
+        )
+    }
+
+    renderInputSearchBar() {
+        return (
+            <View style={styles.searchBar}>
+                <TextInput
+                    style={styles.textInput}
+                    autoCapitalize="sentences"
+                    placeholder="Search"
+                    onChangeText={searchQuery => this.setState({ searchQuery })}
+                    value={this.state.searchQuery}
+                    blurOnSubmit
+                    //onEndEditing={() => this.handleLibrarySearch(this.state.searchQuery)}
+                    //onSubmitEditing={() => this.handleLibrarySearch(this.state.searchQuery)}
+                />
+            </View>
         )
     }
 }
