@@ -69,8 +69,8 @@ export default StyleSheet.create({
         }),
     },
     bookCoverImage: {
-        height: bookHeight * 1.5,
-        width: bookWidth * 1.5,
+        height: bookHeight * 2,
+        width: bookWidth * 2,
         borderRadius: 10,
     },
     rating: {

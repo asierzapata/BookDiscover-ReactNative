@@ -61,7 +61,6 @@ function parseIndividualBook(book: any): Book {
 
 function _removeCurlEdgeCoverAndZoom(thumbnail: string) {
 	const curlessURL = _.split(thumbnail, '&edge=curl')
-	const zoomlessURL = _.split(_.join(curlessURL), '&zoom=1')
-	console.log('>>>> PARSER', zoomlessURL)
-	return _.join(zoomlessURL)
+	const zoomlessURL = _.split(_.join(curlessURL, ''), '&zoom=1')
+	return _.join(zoomlessURL, '')
 }
