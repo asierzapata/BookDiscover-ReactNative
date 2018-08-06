@@ -143,7 +143,7 @@ const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleAddBookUser: ({ ISBN, thumbnail }) => dispatch(addBookUser({ ISBN, thumbnail } as Book)),
+	handleAddBookUser: ({ ISBN, thumbnail, title }) => dispatch(addBookUser({ ISBN, thumbnail, title } as Book)),
 	handleDeleteBookUser: ({ ISBN }) => dispatch(deleteBookUser({ ISBN } as Book)),
 	handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })

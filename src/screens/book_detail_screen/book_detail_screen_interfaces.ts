@@ -17,7 +17,7 @@ export interface StateProps {
 }
 
 export interface DispatchProps {
-	handleAddBookUser: ({ ISBN, thumbnail }: Book) => AsyncAction
+	handleAddBookUser: ({ ISBN, thumbnail, title }: Book) => AsyncAction
 	handleDeleteBookUser: ({ ISBN }: Book) => AsyncAction
 	handleFetchUserBooks: () => AsyncAction
 }

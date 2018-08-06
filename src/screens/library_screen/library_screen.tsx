@@ -80,7 +80,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     handleBookDetail = (book: Book) => {
         const ISBN = book.ISBN
         const userBook = this.props.userBooks[ISBN]
-        if(userBook.title) {
+        if(userBook.description) {
             this.navigateToBookDetail(userBook)
         } else {
             this.setState({ fetchingISBN: ISBN })
