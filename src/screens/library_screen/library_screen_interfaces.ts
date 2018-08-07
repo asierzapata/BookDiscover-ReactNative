@@ -5,6 +5,8 @@ import { Book } from '../../api/book/book_interfaces';
 
 export interface ownState {
     fetchingISBN?: string
+    openSearchInput: boolean
+    searchQuery : string
 }
 
 export interface ownProps extends NavigationScreenProps, StateProps, DispatchProps {}
