@@ -53,6 +53,7 @@ import { Background } from '../../ui/styles/colors';
 /*                   Implementation                       */
 /* ====================================================== */
 
+const NOT_FOUND = -1
 export class LibraryScreen extends Component<ownProps,ownState> {
 
     constructor(props: ownProps) {
@@ -87,7 +88,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     handleToggleLibrarySearch = () => {
-        this.setState({ openSearchInput: !this.state.openSearchInput })
+        this.setState((currentState) => ({openSearchInput: !currentState.openSearchInput}))
     }
 
     handleBookDetail = (book: Book) => {
@@ -140,7 +141,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         let books = _.isEmpty(arrayUserBooks) ? [] : arrayUserBooks
         books = _.isEmpty(searchQuery) ? 
             books : 
-            _.filter(books, (book) => book.title.search(searchQuery) !== -1)
+            _.filter(books, (book) => book.title.search(searchQuery) !== NOT_FOUND)
         
         return (
             <GridView
