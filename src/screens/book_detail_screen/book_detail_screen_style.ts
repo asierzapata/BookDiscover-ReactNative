@@ -14,21 +14,6 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row'
     },
-    searchIcon: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    topBarTitle: {
-        flex: 3,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    addIcon:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     title: {
         fontSize: 17,
         fontWeight: 'bold',
@@ -83,12 +68,19 @@ export default StyleSheet.create({
         justifyContent: 'center',
         flex: 2
     },
+    scrollViewContainer: {
+        flex: 4,
+        paddingLeft: 15,
+        paddingRight: 15,
+    },
     bookDescription: {
         paddingLeft: 15,
         paddingRight: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 2
+    },
+    scrollView: {
+        flexGrow: 1
     },
     actionButtons: {
         flex: 2,
@@ -105,7 +97,8 @@ export default StyleSheet.create({
         borderRadius: 10
     },
     text: {
-        color: TextColor
+        color: TextColor,
+        textAlign: 'justify'
     },
     boldText: {
         color: BoldTextColor,

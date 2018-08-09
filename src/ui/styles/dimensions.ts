@@ -9,3 +9,4 @@ const imageRatio = 5/8
 const imageScreenRatio = 1/4
 export const bookHeight = width * imageScreenRatio * (1/imageRatio)
 export const bookWidth = width * imageScreenRatio
+export const gestureModalResponseDistance = height * 2/3

@@ -20,7 +20,8 @@ import Icon from "../ui/components/icon";
 /*                        Style                           */
 /* ====================================================== */
 
-import IconNames from "../ui/styles/icons";
+import IconNames from "../ui/styles/icons"
+import { gestureModalResponseDistance } from "../ui/styles/dimensions"
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -69,7 +70,9 @@ export default createStackNavigator(
         BookDetail: {
             screen: BookDetail,
             navigationOptions: () => ({
-                gestureResponseDistance: 200
+                gestureResponseDistance: {
+                    vertical: gestureModalResponseDistance
+                }
             })
         }
     },

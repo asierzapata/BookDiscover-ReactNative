@@ -29,7 +29,7 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /* ====================================================== */
 
 import ViewWrapper from '../../ui/components/view_wrapper'
-import { View, Text, Image, Button } from 'react-native'
+import { View, Text, Image, Button, ScrollView } from 'react-native'
 import Icon from '../../ui/components/icon'
 
 /* ====================================================== */
@@ -95,16 +95,20 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 					<View style={styles.rating}>
 						<Text style={styles.boldText}>Soon</Text>
 					</View>
-					<View style={styles.bookDescription}>
-						<Text numberOfLines={4} ellipsizeMode="tail" style={styles.text}>
-							{book.description}
-						</Text>
-					</View>
-					<View style={styles.actionButtons}>
-						{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
-						<View style={styles.rightActionButton}>
-							<Button color="white" title="Buy" onPress={() => 1} />
-						</View>
+					<View style={styles.scrollViewContainer}>
+						<ScrollView style={styles.scrollView}>
+							<View style={styles.bookDescription}>
+								<Text style={styles.text}>
+									{book.description}
+								</Text>
+							</View>
+							<View style={styles.actionButtons}>
+								{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
+								<View style={styles.rightActionButton}>
+									<Button color="white" title="Buy" onPress={() => 1} />
+								</View>
+							</View>
+						</ScrollView>
 					</View>
 				</View>
 			</ViewWrapper>
