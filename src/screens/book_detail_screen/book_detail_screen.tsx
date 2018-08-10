@@ -47,6 +47,7 @@ import { ownProps, ownState, StateProps, DispatchProps } from './book_detail_scr
 import { Book } from '../../api/book/book_interfaces'
 import routes from '../../router/routes'
 import { AsyncAction } from '../../modules/actions_interfaces';
+import TextReadMore from '../../ui/components/text_read_more';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -98,9 +99,13 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 					<View style={styles.scrollViewContainer}>
 						<ScrollView style={styles.scrollView}>
 							<View style={styles.bookDescription}>
-								<Text style={styles.text}>
-									{book.description}
-								</Text>
+								<TextReadMore
+									numberOfLines={4}
+								>
+									<Text style={styles.text}>
+										{book.description}
+									</Text>
+								</TextReadMore>
 							</View>
 							<View style={styles.actionButtons}>
 								{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
