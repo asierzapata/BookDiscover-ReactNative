@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native'
 import { width } from '../../../../ui/styles/dimensions'
-import { BoldTextColor } from '../../../../ui/styles/colors';
+import { BoldTextColor, PrimaryColorLight } from '../../../../ui/styles/colors';
 
 export default StyleSheet.create({
     advancedSearchRow: {
         flex: 1,
-        backgroundColor: BoldTextColor
+        backgroundColor: BoldTextColor,
+        borderRadius: 10
     },
     advancedSearchPicker: {
         maxHeight: 70,
-        color: 'white',
+        color: 'white'
     },
     title: {
         textAlign: 'center',

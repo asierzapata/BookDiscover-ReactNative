@@ -2,33 +2,50 @@ import React from 'react'
 import { View, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native'
 import { bookHeight, bookWidth } from '../styles/dimensions'
 import { BoldTextColor } from '../styles/colors' 
+import bookPlaceholder from '../../../assets/images/book-cover-placeholder.png'
 
-interface BookItem {
+interface ownProps {
     thumbnail: string,
     onPress: () => void
 }
 
-const BookItem: React.SFC<BookItem> = ({ thumbnail, onPress }) => {
+interface ownState {
+    isLoaded: boolean
+}
 
-    if(!onPress) {
+class BookItem extends React.Component<ownProps,ownState> {
+
+    constructor(props: ownProps) {
+        super(props)
+        this.state = {
+            isLoaded: false
+        }
+    }
+
+    render() {
+        const { thumbnail, onPress } = this.props
+        if(!onPress) {
+            return (
+                <View style={styles.bookContainer}>
+                    <Image
+                        style={styles.book}
+                        source={{uri: thumbnail}}
+                        onLoad={() => this.setState({ isLoaded: true })}
+                    />
+                </View>
+            )
+        }
+    
         return (
-            <View style={styles.bookContainer}>
+            <TouchableOpacity style={styles.bookContainer} onPress={onPress}>
                 <Image
                     style={styles.book}
                     source={{uri: thumbnail}}
+                    onLoad={() => this.setState({ isLoaded: true })}
                 />
-            </View>
+            </TouchableOpacity>
         )
     }
-
-    return (
-        <TouchableOpacity style={styles.bookContainer} onPress={onPress}>
-            <Image
-                style={styles.book}
-                source={{uri: thumbnail}}
-            />
-        </TouchableOpacity>
-    )
 }
 
 const styles = StyleSheet.create({

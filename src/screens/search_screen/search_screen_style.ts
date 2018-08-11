@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { width } from '../../ui/styles/dimensions'
-import { BoldTextColor } from '../../ui/styles/colors';
+import { BoldTextColor, PrimaryColorLight } from '../../ui/styles/colors';
 
 export default StyleSheet.create({
     container: {
@@ -11,7 +11,9 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 12
     },
     body: {
         flex: 6
@@ -22,7 +24,12 @@ export default StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 10,
         marginLeft: 10,
-        marginRight: 10
+        marginRight: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        backgroundColor: BoldTextColor,
+        color: 'white',
+        fontSize: 16
     },
     cancelButton: {
         flex: 1
@@ -34,7 +41,20 @@ export default StyleSheet.create({
         flex: 1
     },
     advancedSearch: {
-        flex: 2,
+        flex: 1,
+    },
+    advancedSearchOpened: {
+        flex: 3,
+    },
+    advancedSearchCollapseHeader: {
+        flex: 0,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 12,
+        paddingBottom: 5
+    },
+    advancedSearchFields: {
+        flex: 1,
     },
     advancedSearchRow: {
         flex: 1,

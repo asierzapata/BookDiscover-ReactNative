@@ -1,13 +1,17 @@
-export const SEARCH = 'search'
-export const ADD = 'plus'
-export const LIBRARY = 'book'
-export const EXPLORE = 'compass'
-export const PROFILE = 'user'
+const SEARCH = 'search'
+const ADD = 'plus'
+const LIBRARY = 'book'
+const EXPLORE = 'compass'
+const PROFILE = 'user'
+const CARET_UP = 'caretUp'
+const CARET_DOWN = 'caretDown'
 
 export default {
     SEARCH,
     ADD,
     LIBRARY,
     EXPLORE,
-    PROFILE
+    PROFILE,
+    CARET_UP,
+    CARET_DOWN
 }
