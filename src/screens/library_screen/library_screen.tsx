@@ -1,5 +1,6 @@
 import React from 'react'
 import { Component } from 'react'
+import { LayoutAnimation } from 'react-native'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux';
 import _ from 'lodash'
@@ -88,7 +89,13 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     handleToggleLibrarySearch = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         this.setState((currentState) => ({openSearchInput: !currentState.openSearchInput}))
+    }
+
+    handleClear = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        this.setState({ searchQuery: '' })
     }
 
     handleBookDetail = (book: Book) => {
@@ -164,7 +171,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                     <Button 
                         title="Clear" 
                         color={Background}
-                        onPress={() => this.setState({ searchQuery: '' })} 
+                        onPress={this.handleClear} 
                     />
                 </View>
             </View>

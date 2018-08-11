@@ -1,42 +1,84 @@
 import React from 'react'
-import { View, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native'
+import { View, Image, StyleSheet, TouchableOpacity, Platform, LayoutAnimation } from 'react-native'
 import { bookHeight, bookWidth } from '../styles/dimensions'
-import { BoldTextColor } from '../styles/colors' 
+import { BoldTextColor, TextColor } from '../styles/colors' 
 
-interface BookItem {
+interface ownProps {
     thumbnail: string,
     onPress: () => void
 }
 
-const BookItem: React.SFC<BookItem> = ({ thumbnail, onPress }) => {
+interface ownState {
+    isLoaded: boolean
+}
 
-    if(!onPress) {
-        return (
-            <View style={styles.bookContainer}>
-                <Image
-                    style={styles.book}
-                    source={{uri: thumbnail}}
-                />
-            </View>
-        )
+class BookItem extends React.Component<ownProps,ownState> {
+
+    constructor(props: ownProps) {
+        super(props)
+        this.state = {
+            isLoaded: false
+        }
     }
 
-    return (
-        <TouchableOpacity style={styles.bookContainer} onPress={onPress}>
-            <Image
-                style={styles.book}
-                source={{uri: thumbnail}}
-            />
-        </TouchableOpacity>
-    )
+    handleOnLoad = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        this.setState({ isLoaded: true })
+    }
+
+    render() {
+        const { thumbnail, onPress } = this.props
+        const { isLoaded } = this.state
+
+        const imageStyle = isLoaded ? styles.book : styles.bookCoverNotLoaded
+
+        if(!onPress) {
+            return (
+                <View style={styles.bookContainer}>
+                    <Image
+                        style={imageStyle}
+                        source={{uri: thumbnail}}
+                        onLoad={this.handleOnLoad}
+                    />
+                    {!isLoaded &&
+                        <View style={styles.bookPlaceholder} />
+                    }
+                </View>
+            )
+        }
+    
+        return (
+            <TouchableOpacity style={styles.bookContainer} onPress={onPress}>
+                <Image
+                    style={imageStyle}
+                    source={{uri: thumbnail}}
+                    onLoad={this.handleOnLoad}
+                />
+                {!isLoaded &&
+                    <View style={styles.bookPlaceholder} />
+                }
+            </TouchableOpacity>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
+    bookCoverNotLoaded: {
+        height: 1,
+        width: 1,
+    },
     book: {
         height: bookHeight,
         width: bookWidth,
         alignItems: 'center',
         borderRadius: 10,
+    },
+    bookPlaceholder: {
+        height: bookHeight,
+        width: bookWidth,
+        borderRadius: 10,
+        backgroundColor: TextColor,
+        opacity: 0.65
     },
     bookContainer: {
         ...Platform.select({

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Picker, ScrollView } from 'react-native'
+import { LayoutAnimation } from 'react-native'
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
@@ -29,6 +29,8 @@ import GridView from '../../ui/components/grid_view'
 import ViewWrapper from '../../ui/components/view_wrapper'
 import BookItem from '../../ui/components/book_item'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
+import AdvancedSearchCard from './components/advanced_search_card/advanced_search_card';
+import Icon from '../../ui/components/icon';
 
 /* ====================================================== */
 /*                        Style                           */
@@ -36,6 +38,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel'
 
 import styles from './search_screen_style'
 import { bookWidth, width } from '../../ui/styles/dimensions'
+import IconConstants from '../../ui/styles/icons'
 
 /* ====================================================== */
 /*                      Interfaces                        */
@@ -44,7 +47,7 @@ import { bookWidth, width } from '../../ui/styles/dimensions'
 import { ownProps, ownState, StateProps, DispatchProps } from './search_screen_interfaces'
 import { Book, ORDER_BY_FIELDS, QUERY_MODALITY_FIELDS, BooksQueryFields } from '../../api/book/book_interfaces'
 import routes from '../../router/routes';
-import AdvancedSearchCard from './components/advanced_search_card/advanced_search_card';
+import { BoldTextColor } from '../../ui/styles/colors';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -116,7 +119,8 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 
 	handleToggleAdvancedSearch = () => {
-        this.setState((currentState) => ({openAdvancedSearch: !currentState.openAdvancedSearch}))
+		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+		this.setState((currentState) => ({openAdvancedSearch: !currentState.openAdvancedSearch}))
     }
 
 
@@ -137,20 +141,40 @@ export class SearchScreen extends Component<ownProps, ownState> {
 					style={styles.textInput}
 					autoCapitalize='sentences'
 					placeholder='Search'
+					placeholderTextColor='white'
 					onChangeText={searchQuery => this.setState({ searchQuery })}
 					value={this.state.searchQuery}
 					blurOnSubmit
 					onEndEditing={this.handleSearch}
 					onSubmitEditing={this.handleSearch}
 				/>
-				<Button title='Cancel' onPress={this.handleCancel} />
+				<Button 
+					title='Cancel' 
+					color={BoldTextColor} 
+					onPress={this.handleCancel} 
+				/>
 			</View>
 		)
 	}
 
 	renderAdvancedSearch() {
-		const { openAdvancedSearch, activeSlide } = this.state  
-		if(!openAdvancedSearch) return <Button title='Advanced Search' onPress={this.handleToggleAdvancedSearch} />
+		const { openAdvancedSearch } = this.state  
+		const icon = openAdvancedSearch ? IconConstants.CARET_UP : IconConstants.CARET_DOWN
+		const viewStyle = openAdvancedSearch ? styles.advancedSearchOpened : styles.advancedSearch
+		return (
+			<View style={viewStyle}>
+				<View style={styles.advancedSearchCollapseHeader}>
+					<Icon name={icon} fontSize={24}/>
+					<Button title='Advanced Search' color={BoldTextColor} onPress={this.handleToggleAdvancedSearch} />
+				</View>
+				{openAdvancedSearch ? this.renderAdvancedSearchFields() : null}
+			</View>
+			
+		)
+	}
+
+	renderAdvancedSearchFields() {
+		const { activeSlide } = this.state  
 
 		/* Query Filtering: Language, orderBy (relevance, newest)*/
 		/* Query Modality: author, title, publisher, subject*/
@@ -184,7 +208,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 		]
 
 		return(
-			<View style={styles.advancedSearch}>
+			<View style={styles.advancedSearchFields}>
 				<View style={styles.advancedSearchCarousel}>
 					<Carousel 
 						layout={'default'} 
