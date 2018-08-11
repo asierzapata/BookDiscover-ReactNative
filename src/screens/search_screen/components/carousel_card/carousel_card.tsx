@@ -6,7 +6,7 @@ import _ from 'lodash'
 /*                   Implementation                       */
 /* ====================================================== */
 
-import BookItem from '../../../ui/components/book_item'
+import BookItem from '../../../../ui/components/book_item'
 
 /* ====================================================== */
 /*                      Interfaces                        */
@@ -18,8 +18,8 @@ import { CarouselCard } from './carouse_card_interfaces'
 /*                        Style                           */
 /* ====================================================== */
 
-import { BoldTextColor, TextColor } from '../../../ui/styles/colors'
-import { searchBookWidth, searchBookHeight } from '../../../ui/styles/dimensions'
+import { BoldTextColor, TextColor } from '../../../../ui/styles/colors'
+import { searchBookWidth, searchBookHeight } from '../../../../ui/styles/dimensions'
 
 /* ====================================================== */
 /*                   Implementation                       */
