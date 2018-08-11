@@ -62,9 +62,6 @@ function getBooksByQuery({ query, queryOptions = {}, queryField = {}, page = 0 }
 	const queryOptionsString = _queryStringWithSeparatorAndPrefix(queryOptions, QUERY_OPTIONS.prefix, QUERY_OPTIONS.separator)
 	const searchPath = `${ApiConstants.SEARCH_PATH}?q=${query}${queryFieldString}&startIndex=${page}${queryOptionsString}`
 
-	console.log('>>>>>>>', query, queryOptions, queryField)
-	console.log('>>>>>>> search path', searchPath)
-
 	return new Promise((resolve, reject) => {
 		ApiClient.get(searchPath, {})
 			.then(response => {
