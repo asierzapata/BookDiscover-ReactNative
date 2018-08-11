@@ -30,11 +30,13 @@ class BookItem extends React.Component<ownProps,ownState> {
         const { thumbnail, onPress } = this.props
         const { isLoaded } = this.state
 
+        const imageStyle = isLoaded ? styles.book : styles.bookCoverNotLoaded
+
         if(!onPress) {
             return (
                 <View style={styles.bookContainer}>
                     <Image
-                        style={styles.book}
+                        style={imageStyle}
                         source={{uri: thumbnail}}
                         onLoad={this.handleOnLoad}
                     />
@@ -48,7 +50,7 @@ class BookItem extends React.Component<ownProps,ownState> {
         return (
             <TouchableOpacity style={styles.bookContainer} onPress={onPress}>
                 <Image
-                    style={styles.book}
+                    style={imageStyle}
                     source={{uri: thumbnail}}
                     onLoad={this.handleOnLoad}
                 />
@@ -61,6 +63,10 @@ class BookItem extends React.Component<ownProps,ownState> {
 }
 
 const styles = StyleSheet.create({
+    bookCoverNotLoaded: {
+        height: 1,
+        width: 1,
+    },
     book: {
         height: bookHeight,
         width: bookWidth,
