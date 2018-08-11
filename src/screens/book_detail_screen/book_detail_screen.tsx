@@ -48,6 +48,7 @@ import { Book } from '../../api/book/book_interfaces'
 import routes from '../../router/routes'
 import { AsyncAction } from '../../modules/actions_interfaces';
 import TextReadMore from '../../ui/components/text_read_more';
+import CachedImage from '../../ui/components/cached_image';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -86,7 +87,10 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 					{error ? <Text>{error}</Text> : null}
 					<View style={styles.bookCover}>
 						<View style={styles.bookCoverShadow}>
-							<Image style={styles.bookCoverImage} source={{ uri: book.thumbnail }} />
+							<CachedImage 
+								style={styles.bookCoverImage} 
+								source={book.thumbnail} 
+							/>
 						</View>
 					</View>
 					<View style={styles.bookTitleAndAuthor}>

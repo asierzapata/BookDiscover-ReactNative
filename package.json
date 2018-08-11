@@ -60,9 +60,11 @@
 		"cacheDirectory": ".jest/cache"
 	},
 	"dependencies": {
+		"@types/crypto-js": "^3.1.43",
 		"@types/expo": "^27.0.6",
 		"@types/react-navigation": "^2.0.11",
 		"axios": "^0.18.0",
+		"crypto-js": "^3.1.9-1",
 		"expo": "^28.0.0",
 		"firebase": "^4.12.0",
 		"lodash": "^4.17.10",

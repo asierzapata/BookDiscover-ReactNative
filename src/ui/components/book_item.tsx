@@ -1,72 +1,47 @@
 import React from 'react'
-import { View, Image, StyleSheet, TouchableOpacity, Platform, LayoutAnimation } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Platform, LayoutAnimation } from 'react-native'
+import { Image } from 'react-native-expo-image-cache'
 import { bookHeight, bookWidth } from '../styles/dimensions'
 import { BoldTextColor, TextColor } from '../styles/colors' 
+import CachedImage from './cached_image';
 
 interface ownProps {
     thumbnail: string,
     onPress: () => void
 }
 
-interface ownState {
-    isLoaded: boolean
-}
+interface ownState {}
 
 class BookItem extends React.Component<ownProps,ownState> {
 
-    constructor(props: ownProps) {
-        super(props)
-        this.state = {
-            isLoaded: false
-        }
-    }
-
-    handleOnLoad = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-        this.setState({ isLoaded: true })
-    }
-
     render() {
         const { thumbnail, onPress } = this.props
-        const { isLoaded } = this.state
-
-        const imageStyle = isLoaded ? styles.book : styles.bookCoverNotLoaded
 
         if(!onPress) {
             return (
                 <View style={styles.bookContainer}>
-                    <Image
-                        style={imageStyle}
-                        source={{uri: thumbnail}}
-                        onLoad={this.handleOnLoad}
+                    <CachedImage 
+                        style={styles.book}
+                        placeholderStyle={styles.bookPlaceholder}
+                        source={thumbnail}
                     />
-                    {!isLoaded &&
-                        <View style={styles.bookPlaceholder} />
-                    }
                 </View>
             )
         }
     
         return (
             <TouchableOpacity style={styles.bookContainer} onPress={onPress}>
-                <Image
-                    style={imageStyle}
-                    source={{uri: thumbnail}}
-                    onLoad={this.handleOnLoad}
+                <CachedImage 
+                    style={styles.book}
+                    placeholderStyle={styles.bookPlaceholder}
+                    source={thumbnail}
                 />
-                {!isLoaded &&
-                    <View style={styles.bookPlaceholder} />
-                }
             </TouchableOpacity>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    bookCoverNotLoaded: {
-        height: 1,
-        width: 1,
-    },
     book: {
         height: bookHeight,
         width: bookWidth,
