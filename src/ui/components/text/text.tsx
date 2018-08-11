@@ -1,5 +1,5 @@
 import React from 'react'
-import classnames from '../../../helpers/classnames'
+import classnames from '../../../lib/classnames'
 import { Text as NativeText } from 'react-native'
 
 /* ====================================================== */
