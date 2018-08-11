@@ -1,9 +1,11 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native'
 
 import { BoldTextColor, TextColor, Background, SecondaryColor } from '../../ui/styles/colors'
-import { bookHeight, bookWidth } from '../../ui/styles/dimensions'
+import { bookHeight, bookWidth, width } from '../../ui/styles/dimensions'
 
-const { width } = Dimensions.get('window')
+
+const bookCoverHeight = bookHeight > bookWidth ? bookHeight * 2 : bookWidth * 2
+const bookCoverWidth = bookHeight > bookWidth ? bookWidth * 2 : bookHeight * 2
 
 export default StyleSheet.create({
     container: {
@@ -54,8 +56,8 @@ export default StyleSheet.create({
         }),
     },
     bookCoverImage: {
-        height: bookHeight * 2,
-        width: bookWidth * 2,
+        height: bookCoverHeight,
+        width: bookCoverWidth,
         borderRadius: 10,
     },
     rating: {
