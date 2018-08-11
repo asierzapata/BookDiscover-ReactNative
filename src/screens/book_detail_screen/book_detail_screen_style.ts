@@ -1,9 +1,11 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native'
 
 import { BoldTextColor, TextColor, Background, SecondaryColor } from '../../ui/styles/colors'
-import { bookHeight, bookWidth } from '../../ui/styles/dimensions'
+import { bookHeight, bookWidth, width } from '../../ui/styles/dimensions'
 
-const { width } = Dimensions.get('window')
+
+const bookCoverHeight = bookHeight > bookWidth ? bookHeight * 2 : bookWidth * 2
+const bookCoverWidth = bookHeight > bookWidth ? bookWidth * 2 : bookHeight * 2
 
 export default StyleSheet.create({
     container: {
@@ -13,21 +15,6 @@ export default StyleSheet.create({
     topBar: {
         flex: 1,
         flexDirection: 'row'
-    },
-    searchIcon: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    topBarTitle: {
-        flex: 3,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    addIcon:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     title: {
         fontSize: 17,
@@ -69,8 +56,8 @@ export default StyleSheet.create({
         }),
     },
     bookCoverImage: {
-        height: bookHeight * 1.5,
-        width: bookWidth * 1.5,
+        height: bookCoverHeight,
+        width: bookCoverWidth,
         borderRadius: 10,
     },
     rating: {
@@ -83,12 +70,19 @@ export default StyleSheet.create({
         justifyContent: 'center',
         flex: 2
     },
+    scrollViewContainer: {
+        flex: 4,
+        paddingLeft: 15,
+        paddingRight: 15,
+    },
     bookDescription: {
         paddingLeft: 15,
         paddingRight: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 2
+    },
+    scrollView: {
+        flexGrow: 1
     },
     actionButtons: {
         flex: 2,
@@ -105,7 +99,8 @@ export default StyleSheet.create({
         borderRadius: 10
     },
     text: {
-        color: TextColor
+        color: TextColor,
+        textAlign: 'justify'
     },
     boldText: {
         color: BoldTextColor,

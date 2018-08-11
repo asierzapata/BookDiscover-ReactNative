@@ -11,6 +11,12 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row'
     },
+    searchBar: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     searchIcon: {
         flex: 1,
         justifyContent: 'center',
@@ -27,7 +33,7 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     library: {
-        flex: 7
+        flex: 8,
     },
     title: {
         fontSize: 17,
@@ -37,5 +43,31 @@ export default StyleSheet.create({
     activityIndicator : {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    textInput: {
+        height: 40,
+        flex: 5,
+        borderColor: 'gray',
+        borderRadius: 10,
+        marginLeft: 20,
+        marginRight: 20
+    },
+    cancelButton: {
+        flex: 1
+    },
+    searchQueryTooltip: {
+        color: TextColor
+    },
+    tooltipSearchBar: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginLeft: 20,
+        marginRight: 20
+    },
+    tooltipButtonSearchBar: {
+        backgroundColor: TextColor,
+        borderRadius: 10
     }
 })

@@ -130,7 +130,7 @@ function getUserBooks(): Promise<ApiResponse> {
 	})
 }
 
-function addBookToUser({ ISBN, thumbnail }: BookInterface): Promise<ApiResponse> {
+function addBookToUser({ ISBN, thumbnail, title }: BookInterface): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser))
 		return Promise.reject({
@@ -147,7 +147,7 @@ function addBookToUser({ ISBN, thumbnail }: BookInterface): Promise<ApiResponse>
 			.then(document => {
 				if (document.exists) {
 					const { books } = document.data() as { books: firestoreUserBooksSchema }
-					books[ISBN] = { ISBN, thumbnail }
+					books[ISBN] = { ISBN, thumbnail, title }
 					return firebase
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)

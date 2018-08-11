@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import _ from 'lodash'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
 import ApiClient from '../config/api_config'
@@ -9,7 +10,7 @@ import BookParser from './book_parsers'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookApiObject } from './book_interfaces'
+import { BookApiObject, BooksQueryOptions, BooksQueryFields } from './book_interfaces'
 import { ApiError, ApiResponse } from '../config/api_interfaces';
 
 /* ====================================================== */
@@ -55,9 +56,17 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 	})
 }
 
-function getBooksByQuery({ query, page = 0 }: { query: string; page: number }) {
+function getBooksByQuery({ query, queryOptions = {}, queryField = {}, page = 0 }: { query: string, page: number, queryOptions?: BooksQueryOptions, queryField?: BooksQueryFields}): Promise<{}> {
+	const { QUERY_FIELDS, QUERY_OPTIONS } = ApiConstants.QUERY_SEPARATORS
+	const queryFieldString = _queryStringWithSeparatorAndPrefix(queryField, QUERY_FIELDS.prefix, QUERY_FIELDS.separator)
+	const queryOptionsString = _queryStringWithSeparatorAndPrefix(queryOptions, QUERY_OPTIONS.prefix, QUERY_OPTIONS.separator)
+	const searchPath = `${ApiConstants.SEARCH_PATH}?q=${query}${queryFieldString}&startIndex=${page}${queryOptionsString}`
+
+	console.log('>>>>>>>', query, queryOptions, queryField)
+	console.log('>>>>>>> search path', searchPath)
+
 	return new Promise((resolve, reject) => {
-		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=${query}?startIndex=${page}`, {})
+		ApiClient.get(searchPath, {})
 			.then(response => {
 				const { data } = response
 				if (data) {
@@ -81,4 +90,12 @@ function getBooksByQuery({ query, page = 0 }: { query: string; page: number }) {
 				})
 			})
 	})
+}
+
+/* ====================================================== */
+/*                        Helpers                         */
+/* ====================================================== */
+
+function _queryStringWithSeparatorAndPrefix(options: BooksQueryOptions | BooksQueryFields, prefix: string, separator: string) {
+	return _.join(_.map(options, (value, option) => `${prefix}${option}${separator}${_.trim(value)}`), '')
 }

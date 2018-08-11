@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native'
+import { width } from '../../ui/styles/dimensions'
+import { BoldTextColor } from '../../ui/styles/colors';
 
 export default StyleSheet.create({
     container: {
@@ -30,5 +32,36 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1
-    }
+    },
+    advancedSearch: {
+        flex: 2,
+    },
+    advancedSearchRow: {
+        flex: 1,
+        backgroundColor: BoldTextColor
+    },
+    advancedSearchPicker: {
+        flex: 1,
+        height: 50,
+        width: 150
+    },
+    advancedSearchDotsView: {
+        flex: 1,
+    },
+    advancedSearchDotsContainer: {
+        //backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        height: 40,
+        width: width,
+        paddingVertical: 0,
+    },
+    advancedSearchDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        marginHorizontal: 8,
+        backgroundColor: BoldTextColor
+    },
+    advancedSearchCarousel: {
+        flex: 3
+    },
 })

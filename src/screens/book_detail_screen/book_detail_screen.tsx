@@ -29,7 +29,7 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /* ====================================================== */
 
 import ViewWrapper from '../../ui/components/view_wrapper'
-import { View, Text, Image, Button } from 'react-native'
+import { View, Text, Image, Button, ScrollView } from 'react-native'
 import Icon from '../../ui/components/icon'
 
 /* ====================================================== */
@@ -47,6 +47,7 @@ import { ownProps, ownState, StateProps, DispatchProps } from './book_detail_scr
 import { Book } from '../../api/book/book_interfaces'
 import routes from '../../router/routes'
 import { AsyncAction } from '../../modules/actions_interfaces';
+import TextReadMore from '../../ui/components/text_read_more';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -95,16 +96,24 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 					<View style={styles.rating}>
 						<Text style={styles.boldText}>Soon</Text>
 					</View>
-					<View style={styles.bookDescription}>
-						<Text numberOfLines={4} ellipsizeMode="tail" style={styles.text}>
-							{book.description}
-						</Text>
-					</View>
-					<View style={styles.actionButtons}>
-						{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
-						<View style={styles.rightActionButton}>
-							<Button color="white" title="Buy" onPress={() => 1} />
-						</View>
+					<View style={styles.scrollViewContainer}>
+						<ScrollView style={styles.scrollView}>
+							<View style={styles.bookDescription}>
+								<TextReadMore
+									numberOfLines={4}
+								>
+									<Text style={styles.text}>
+										{book.description}
+									</Text>
+								</TextReadMore>
+							</View>
+							<View style={styles.actionButtons}>
+								{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
+								<View style={styles.rightActionButton}>
+									<Button color="white" title="Buy" onPress={() => 1} />
+								</View>
+							</View>
+						</ScrollView>
 					</View>
 				</View>
 			</ViewWrapper>
@@ -143,7 +152,7 @@ const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleAddBookUser: ({ ISBN, thumbnail }) => dispatch(addBookUser({ ISBN, thumbnail } as Book)),
+	handleAddBookUser: ({ ISBN, thumbnail, title }) => dispatch(addBookUser({ ISBN, thumbnail, title } as Book)),
 	handleDeleteBookUser: ({ ISBN }) => dispatch(deleteBookUser({ ISBN } as Book)),
 	handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })

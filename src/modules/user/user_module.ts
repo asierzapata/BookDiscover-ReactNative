@@ -93,13 +93,14 @@ export function fetchUserInfo(): AsyncAction {
 }
 
 export const ADD_BOOK_USER = asyncActionObject('ADD_BOOK_USER')
-export function addBookUser({ ISBN, thumbnail }: Book): AsyncAction {
+export function addBookUser({ ISBN, thumbnail, title }: Book): AsyncAction {
 	return {
 		type: asyncAction(ADD_BOOK_USER.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.addBookToUser({
 				ISBN,
-				thumbnail
+				thumbnail,
+				title
 			} as Book),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {

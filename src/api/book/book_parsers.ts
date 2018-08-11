@@ -43,7 +43,7 @@ function parseIndividualBook(book: any): Book {
 	})
 
 	// TODO: replace the empty string for a suitable placeholder
-	let thumbnail = imageLinks ? (imageLinks.thumbnail ? imageLinks.thumbnail : '') : bookPlaceholder
+	let thumbnail = imageLinks ? (imageLinks.thumbnail ? _removeCurlEdgeCoverAndZoom(imageLinks.thumbnail) : '') : bookPlaceholder
 
 	return {
 		title,
@@ -57,4 +57,10 @@ function parseIndividualBook(book: any): Book {
 		language,
 		thumbnail
 	}
+}
+
+function _removeCurlEdgeCoverAndZoom(thumbnail: string) {
+	const curlessURL = _.split(thumbnail, '&edge=curl')
+	const zoomlessURL = _.split(_.join(curlessURL, ''), '&zoom=1')
+	return _.join(zoomlessURL, '')
 }
