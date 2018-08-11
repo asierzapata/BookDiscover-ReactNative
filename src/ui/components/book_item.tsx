@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native'
+import { View, Image, StyleSheet, TouchableOpacity, Platform, LayoutAnimation } from 'react-native'
 import { bookHeight, bookWidth } from '../styles/dimensions'
-import { BoldTextColor } from '../styles/colors' 
-import bookPlaceholder from '../../../assets/images/book-cover-placeholder.png'
+import { BoldTextColor, TextColor } from '../styles/colors' 
 
 interface ownProps {
     thumbnail: string,
@@ -22,16 +21,26 @@ class BookItem extends React.Component<ownProps,ownState> {
         }
     }
 
+    handleOnLoad = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        this.setState({ isLoaded: true })
+    }
+
     render() {
         const { thumbnail, onPress } = this.props
+        const { isLoaded } = this.state
+
         if(!onPress) {
             return (
                 <View style={styles.bookContainer}>
                     <Image
                         style={styles.book}
                         source={{uri: thumbnail}}
-                        onLoad={() => this.setState({ isLoaded: true })}
+                        onLoad={this.handleOnLoad}
                     />
+                    {!isLoaded &&
+                        <View style={styles.bookPlaceholder} />
+                    }
                 </View>
             )
         }
@@ -41,8 +50,11 @@ class BookItem extends React.Component<ownProps,ownState> {
                 <Image
                     style={styles.book}
                     source={{uri: thumbnail}}
-                    onLoad={() => this.setState({ isLoaded: true })}
+                    onLoad={this.handleOnLoad}
                 />
+                {!isLoaded &&
+                    <View style={styles.bookPlaceholder} />
+                }
             </TouchableOpacity>
         )
     }
@@ -54,6 +66,13 @@ const styles = StyleSheet.create({
         width: bookWidth,
         alignItems: 'center',
         borderRadius: 10,
+    },
+    bookPlaceholder: {
+        height: bookHeight,
+        width: bookWidth,
+        borderRadius: 10,
+        backgroundColor: TextColor,
+        opacity: 0.65
     },
     bookContainer: {
         ...Platform.select({

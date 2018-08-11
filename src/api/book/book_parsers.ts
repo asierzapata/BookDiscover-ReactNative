@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { Book } from './book_interfaces';
-import bookPlaceholder from '../../../assets/images/book-cover-placeholder.png'
 
 /* ====================================================== */
 /*                           API                          */
@@ -11,8 +10,8 @@ export default {
 	parseIndividualBook
 }
 
-// const bookPlaceholder =
-// 	'http://www.py.undp.org/etc/designs/UNDPGlobalDesign/clientlibs/digitallibrary/css/book-cover-placeholder.png'
+const bookPlaceholder =
+	'http://www.py.undp.org/etc/designs/UNDPGlobalDesign/clientlibs/digitallibrary/css/book-cover-placeholder.png'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -63,5 +62,6 @@ function parseIndividualBook(book: any): Book {
 function _removeCurlEdgeCoverAndZoom(thumbnail: string) {
 	const curlessURL = _.split(thumbnail, '&edge=curl')
 	const zoomlessURL = _.split(_.join(curlessURL, ''), '&zoom=1')
+	console.log('>>>>>>>>', thumbnail, zoomlessURL)
 	return _.join(zoomlessURL, '')
 }
