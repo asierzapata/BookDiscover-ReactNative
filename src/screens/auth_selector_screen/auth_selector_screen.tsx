@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { 
     Text, 
     View, 
-    Button 
+    Button
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation';
 

@@ -1,6 +1,16 @@
 {
   "expo": {
+    "name": "Book Discover",
+    "icon": "./assets/images/book-icon.jpg",
+    "version": "0.0.1",
+    "slug": "book-discover",
     "sdkVersion": "27.0.0",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "ios": {
+      "bundleIdentifier": "com.bookdiscovery.bookdiscovery"
+    },
+    "android": {
+      "package": "com.bookdiscovery.bookdiscovery"
+    }
   }
 }
