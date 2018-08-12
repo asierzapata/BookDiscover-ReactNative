@@ -4,10 +4,13 @@
     "icon": "./assets/images/book-icon.jpg",
     "version": "0.0.1",
     "slug": "book-discover",
-    "sdkVersion": "27.0.0",
+    "sdkVersion": "28.0.0",
+    "githubUrl": "https://github.com/asierzapata/BookDiscover-ReactNative",
     "orientation": "portrait",
+    "entryPoint": "App.js",
     "ios": {
-      "bundleIdentifier": "com.bookdiscovery.bookdiscovery"
+      "bundleIdentifier": "com.bookdiscovery.bookdiscovery",
+      "supportsTablet": true
     },
     "android": {
       "package": "com.bookdiscovery.bookdiscovery"
