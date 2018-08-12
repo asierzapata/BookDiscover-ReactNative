@@ -1,5 +1,5 @@
 import { ApiResponse } from '../config/api_interfaces'
-import { Book as BookInterface } from '../book/book_interfaces'
+import { Book as BookInterface, AddBookParams } from '../book/book_interfaces'
 
 /* ====================================================== */
 /*                           Interfaces                   */
@@ -21,7 +21,7 @@ export interface User {
 
 export interface UserApiObject {
 	getUserBooks: () => Promise<ApiResponse>
-	addBookToUser: ({ ISBN, thumbnail, title }: BookInterface) => Promise<ApiResponse>
+	addBookToUser: ({ ISBN, thumbnail, title, section }: AddBookParams) => Promise<ApiResponse>
 	deleteBookToUser: ({ ISBN }: BookInterface) => Promise<ApiResponse>
 	getUserInfo: () => Promise<ApiResponse>
 	logOut: () => Promise<ApiResponse>

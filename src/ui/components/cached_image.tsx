@@ -16,23 +16,34 @@ interface ownState {
 }
 
 class CachedImage extends Component<ownProps,ownState> {
+
+    _isMounted: boolean
+
     constructor(props: ownProps) {
         super(props)
         this.state = {
             isLoaded: false
         }
+        this._isMounted = false
     }
 
     componentDidMount() {
+        this._isMounted = true
         this.load()
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false
     }
 
     async load(): Promise<void> {
         const uri = this.props.source
         if (uri) {
             const path = await CacheManager.get(uri).getPath()
-            this.setState({ uri: path })
-            this.handleOnLoad()
+            if(this._isMounted) {
+                this.setState({ uri: path })
+                this.handleOnLoad()
+            }
         }
     }
 

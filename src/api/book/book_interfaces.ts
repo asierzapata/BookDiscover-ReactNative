@@ -15,6 +15,7 @@ export interface Book {
 	categories: string[]
 	language: string
 	thumbnail: string
+	[key: string]: any| undefined
 }
 
 export interface BookApiObject {
@@ -45,4 +46,18 @@ export const QUERY_MODALITY_FIELDS = {
 	intitle: 'Title',
 	inpublisher: 'Publisher',
 	subject: 'Subject'
+}
+
+export interface AddBookParams extends Book, BookSections {}
+
+export interface BookSections {
+	section: 'favourites' | 'toRead' | 'readingNow' | 'haveRead'
+}
+
+export const BOOK_SECTIONS = {
+	'library': 'Library',
+	'favourites': 'Favourites',
+	'toRead': 'To Read',
+	'readingNow': 'Reading Now',
+	'haveRead': 'Have Read'
 }

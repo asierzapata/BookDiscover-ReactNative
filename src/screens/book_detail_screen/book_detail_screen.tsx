@@ -29,8 +29,10 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /* ====================================================== */
 
 import ViewWrapper from '../../ui/components/view_wrapper'
-import { View, Text, Image, Button, ScrollView } from 'react-native'
-import Icon from '../../ui/components/icon'
+import { View, Text, Button, ScrollView, Modal, TouchableHighlight } from 'react-native'
+import TextReadMore from '../../ui/components/text_read_more'
+import CachedImage from '../../ui/components/cached_image'
+import LoadingOverlay from '../../ui/components/loading_overlay'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -44,11 +46,9 @@ import { Background } from '../../ui/styles/colors'
 /* ====================================================== */
 
 import { ownProps, ownState, StateProps, DispatchProps } from './book_detail_screen_interfaces'
-import { Book } from '../../api/book/book_interfaces'
+import { Book, AddBookParams, BOOK_SECTIONS } from '../../api/book/book_interfaces'
 import routes from '../../router/routes'
-import { AsyncAction } from '../../modules/actions_interfaces';
-import TextReadMore from '../../ui/components/text_read_more';
-import CachedImage from '../../ui/components/cached_image';
+import { AsyncAction } from '../../modules/actions_interfaces'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -58,7 +58,9 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 	constructor(props: ownProps) {
 		super(props)
 		this.state = {
-			error: undefined
+			error: undefined,
+			showAddBookModal: false,
+			showRedirectModal: false
 		}
 	}
 
@@ -67,14 +69,33 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 			if (this.props.fetchAddBookUserStatus.error) {
 				this.setState({ error: this.props.fetchAddBookUserStatus.error })
 			} else {
-				this.props.handleFetchUserBooks()
-				this.props.navigation.navigate('Library')
+				this.handleToggleAddBookModal()
+				this.handleToggleRedirectModal()
+			}
+		}
+		if (prevProps.fetchDeleteBookUserStatus.isLoading && this.props.fetchDeleteBookUserStatus.isLoaded) {
+			if (this.props.fetchDeleteBookUserStatus.error) {
+				this.setState({ error: this.props.fetchDeleteBookUserStatus.error })
+			} else {
+				this.handleNavigateLibrary()
 			}
 		}
 	}
 
+	handleNavigateLibrary = () => {
+		this.props.navigation.navigate('Library')
+	}
+
+	handleToggleAddBookModal = () => {
+		this.setState((prevState: ownState) => ({ showAddBookModal: !prevState.showAddBookModal}))
+	}
+
+	handleToggleRedirectModal = () => {
+		this.setState((prevState: ownState) => ({ showRedirectModal: !prevState.showRedirectModal}))
+	}
+
 	render() {
-		const { book, handleAddBookUser, handleDeleteBookUser, previousScreen } = this.props
+		const { book, handleDeleteBookUser, previousScreen } = this.props
 		const { error } = this.state
 		const authors = _.join(book.authors, ' and ')
 
@@ -112,35 +133,87 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 								</TextReadMore>
 							</View>
 							<View style={styles.actionButtons}>
-								{this.renderLeftActionButton(book, handleAddBookUser, handleDeleteBookUser, previousScreen)}
+								{this.renderLeftActionButton(book, handleDeleteBookUser, previousScreen)}
 								<View style={styles.rightActionButton}>
 									<Button color="white" title="Buy" onPress={() => 1} />
 								</View>
 							</View>
 						</ScrollView>
 					</View>
+					{previousScreen === routes.SEARCH ? this.renderSearchModals() : null}
 				</View>
 			</ViewWrapper>
 		)
 	}
 
-	renderLeftActionButton(book: Book, handleAddBookUser: ({ ISBN, thumbnail }: Book) => AsyncAction, handleDeleteBookUser: ({ ISBN }: Book) => AsyncAction, previousScreen: string) {
-		let onPress: (book: Book) => AsyncAction, title = ''
-		switch (previousScreen) {
-			case routes.LIBRARY:
-				title = 'Delete from library'
-				onPress = handleDeleteBookUser
-				break;
-			case routes.SEARCH:
-				title = 'Add to Library'
-				onPress = handleAddBookUser
-				break;
-		}
-		return (
-			<View style={styles.leftActionButton}>
-				<Button color={Background} title={title} onPress={() => onPress(book)} />
+	renderSearchModals() {
+		const { fetchAddBookUserStatus, handleAddBookUser, book } = this.props
+		const { showAddBookModal, showRedirectModal } = this.state
+
+		return(
+			<View>
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={showAddBookModal}
+				>
+					<View style={styles.modal}>
+						<View style={styles.modalContent}>
+							<Text>Add book to:</Text>
+							{_.map(BOOK_SECTIONS, (display, section: 'favourites' | 'toRead' | 'readingNow' | 'haveRead') => 
+								<Button title={display} onPress={() => handleAddBookUser({...book, section})} key={section}/>
+							)}
+						</View>
+					</View>
+					{fetchAddBookUserStatus.isLoading && <LoadingOverlay />}
+				</Modal>
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={showRedirectModal}
+				>
+					<View style={styles.modal}>
+						<View style={styles.modalContent}>
+							<Text>Do you want to go to the Library or keep searching?</Text>
+							<Button title='Library' onPress={this.handleNavigateLibrary}/>
+							<Button title='Keep searching' onPress={() => this.props.navigation.goBack()}/>
+						</View>
+					</View>
+					{fetchAddBookUserStatus.isLoading && <LoadingOverlay />}
+				</Modal>
 			</View>
 		)
+	}
+
+	renderLeftActionButton(
+		book: Book, 
+		handleDeleteBookUser: ({ ISBN }: Book) => AsyncAction, 
+		previousScreen: string
+	) {
+
+		if (previousScreen === routes.LIBRARY) {
+			return(
+				<View style={styles.leftActionButton}>
+					<Button 
+						color={Background} 
+						title={'Delete from library'} 
+						onPress={() => handleDeleteBookUser(book)} 
+					/>
+				</View>
+			)
+		}
+
+		if(previousScreen === routes.SEARCH) {
+			return(
+				<View style={styles.leftActionButton}>
+					<Button 
+						color={Background} 
+						title={'Add to...'} 
+						onPress={this.handleToggleAddBookModal} 
+					/>
+				</View>
+			)
+		}
 	}
 }
 
@@ -156,7 +229,7 @@ const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleAddBookUser: ({ ISBN, thumbnail, title }) => dispatch(addBookUser({ ISBN, thumbnail, title } as Book)),
+	handleAddBookUser: ({ ISBN, thumbnail, title, section }) => dispatch(addBookUser({ ISBN, thumbnail, title, section } as AddBookParams)),
 	handleDeleteBookUser: ({ ISBN }) => dispatch(deleteBookUser({ ISBN } as Book)),
 	handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })

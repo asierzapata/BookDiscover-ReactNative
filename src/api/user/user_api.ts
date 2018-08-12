@@ -8,7 +8,7 @@ import ApiErrors from '../config/api_errors'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { Book as BookInterface } from '../book/book_interfaces'
+import { Book as BookInterface, AddBookParams, BookSections } from '../book/book_interfaces'
 import { AuthData, UserApiObject, User as UserInterface, firestoreUserBooksSchema } from './user_interfaces'
 
 /* ====================================================== */
@@ -130,13 +130,15 @@ function getUserBooks(): Promise<ApiResponse> {
 	})
 }
 
-function addBookToUser({ ISBN, thumbnail, title }: BookInterface): Promise<ApiResponse> {
+function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser))
 		return Promise.reject({
 			code: 401,
 			error: ApiErrors.USER_NOT_LOGGED_IN
 		})
+
+	const sectionsObject = _parseSection({ section })
 
 	return new Promise((resolve, reject) => {
 		firebase
@@ -147,7 +149,7 @@ function addBookToUser({ ISBN, thumbnail, title }: BookInterface): Promise<ApiRe
 			.then(document => {
 				if (document.exists) {
 					const { books } = document.data() as { books: firestoreUserBooksSchema }
-					books[ISBN] = { ISBN, thumbnail, title }
+					books[ISBN] = { ISBN, thumbnail, title, ...sectionsObject }
 					return firebase
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)
@@ -240,4 +242,14 @@ function getUserInfo(): Promise<ApiResponse> {
 			message: ApiErrors.USER_NOT_LOGGED_IN
 		})
 	})
+}
+
+/* ====================================================== */
+/*                        Helpers                         */
+/* ====================================================== */
+
+function _parseSection({ section }: BookSections): { [key: string]: boolean } {
+	let object = {} as { [key: string]: boolean }
+	object[section] = true
+	return object
 }

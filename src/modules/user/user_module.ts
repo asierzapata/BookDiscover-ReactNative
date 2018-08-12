@@ -15,7 +15,7 @@ import bookApi from '../../api/book/book_api'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { Book } from '../../api/book/book_interfaces'
+import { Book, AddBookParams } from '../../api/book/book_interfaces'
 
 /* ====================================================== */
 /*                   	Parsers                           */
@@ -93,15 +93,16 @@ export function fetchUserInfo(): AsyncAction {
 }
 
 export const ADD_BOOK_USER = asyncActionObject('ADD_BOOK_USER')
-export function addBookUser({ ISBN, thumbnail, title }: Book): AsyncAction {
+export function addBookUser({ ISBN, thumbnail, title, section }: AddBookParams): AsyncAction {
 	return {
 		type: asyncAction(ADD_BOOK_USER.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.addBookToUser({
 				ISBN,
 				thumbnail,
-				title
-			} as Book),
+				title,
+				section
+			} as AddBookParams),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(ADD_BOOK_USER.NAME)
@@ -113,7 +114,7 @@ export function addBookUser({ ISBN, thumbnail, title }: Book): AsyncAction {
 export const DELETE_BOOK_USER = asyncActionObject('DELETE_BOOK_USER')
 export function deleteBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 	return {
-		type: asyncAction(ADD_BOOK_USER.NAME),
+		type: asyncAction(DELETE_BOOK_USER.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.deleteBookToUser({
 				ISBN,
@@ -121,7 +122,7 @@ export function deleteBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 			} as Book),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
-				actionType: asyncAction(ADD_BOOK_USER.NAME)
+				actionType: asyncAction(DELETE_BOOK_USER.NAME)
 			}).isLoading,
 		meta: {}
 	}

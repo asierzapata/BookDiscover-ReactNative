@@ -1,6 +1,6 @@
 import React from 'react'
 import { Component } from 'react'
-import { LayoutAnimation } from 'react-native'
+import { LayoutAnimation, TouchableHighlight, Modal } from 'react-native'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux';
 import _ from 'lodash'
@@ -18,6 +18,10 @@ import {
     // Selectors
     getUserBooks,
     getArrayUserBooks,
+    getArrayFavouriteUserBooks,
+    getArrayHaveReadUserBooks,
+    getArrayReadingNowUserBooks,
+    getArrayToReadUserBooks
 } from '../../modules/books/book_module'
 
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
@@ -39,16 +43,17 @@ import LoadingOverlay from '../../ui/components/loading_overlay'
 
 import styles from './library_screen_style'
 import IconNames from '../../ui/styles/icons'
-import { bookWidth } from '../../ui/styles/dimensions'
+import { bookWidth, width, height } from '../../ui/styles/dimensions'
 
 /* ====================================================== */
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { ownProps, ownState, StateProps, DispatchProps } from './library_screen_interfaces'
-import { Book } from '../../api/book/book_interfaces';
+import { ownProps, ownState, StateProps, DispatchProps, SECTIONS } from './library_screen_interfaces'
+import { Book, BOOK_SECTIONS } from '../../api/book/book_interfaces';
 import routes from '../../router/routes';
 import { Background } from '../../ui/styles/colors';
+import { NavigationEventSubscription } from '../../../node_modules/@types/react-navigation';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -57,18 +62,22 @@ import { Background } from '../../ui/styles/colors';
 const NOT_FOUND = -1
 export class LibraryScreen extends Component<ownProps,ownState> {
 
+    listenTransition: NavigationEventSubscription
+
     constructor(props: ownProps) {
         super(props)
         this.state = {
             openSearchInput: false,
-            searchQuery: ''
+            openSectionSelectionModal: false,
+            forceClear: false,
+            searchQuery: '',
+            fetchingISBN: '',
+            currentSection: 'library'
         }
+        this.listenTransition = props.navigation.addListener('didFocus', () => { 
+            props.handleFetchUserBooks() 
+        })
     }   
-
-    componentDidMount() {
-        this.setState({ fetchingISBN: '' })
-        this.props.handleFetchUserBooks()
-    }
 
     componentDidUpdate(prevProps: ownProps) {
         const { fetchingISBN } = this.state
@@ -98,6 +107,10 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         this.setState({ searchQuery: '' })
     }
 
+    handleReloadView= () => {
+        this.setState({ forceClear: true }, () => setTimeout(() => this.setState({ forceClear: false }), 100))
+    }
+
     handleBookDetail = (book: Book) => {
         const ISBN = book.ISBN
         const userBook = this.props.userBooks[ISBN]
@@ -109,9 +122,27 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         }
     }
 
+    handleToggleSectionSelectionModal = () => {
+        this.setState((prevState: ownState) => ({ openSectionSelectionModal: !prevState.openSectionSelectionModal}))
+    }
+
     render() {
         const { populateBookByISBN } = this.props
-        const { openSearchInput } = this.state
+        const { openSearchInput, openSectionSelectionModal, currentSection } = this.state
+
+        let sections = [] as any
+        _.forEach(BOOK_SECTIONS, (title, value) => {
+            sections.push({
+                title,
+                onPress: () => {
+                    this.handleReloadView()
+                    this.setState({ currentSection: value as 'library' | 'favourites' | 'toRead' | 'readingNow' | 'haveRead', openSectionSelectionModal: false })
+                }
+            })
+        })
+
+        const libraryTopBarIcon = openSectionSelectionModal ? IconNames.CARET_UP : IconNames.CARET_DOWN
+
         return (
             <ViewWrapper style={styles.container}>
                 <View style={styles.topBar}>
@@ -123,7 +154,16 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                         />
                     </View>
                     <View style={styles.topBarTitle}>
-                        <Text style={styles.title}>LIBRARY</Text>
+                        {!openSectionSelectionModal &&
+                            <TouchableHighlight 
+                                onPress={this.handleToggleSectionSelectionModal}
+                            >
+                                <View style={styles.libraryDropdown}>
+                                    <Text style={styles.title}>{_.toUpper(BOOK_SECTIONS[currentSection])}</Text>
+                                    <Icon name={libraryTopBarIcon}/>
+                                </View>
+                            </TouchableHighlight>
+                        }
                     </View>
                     <View style={styles.addIcon}>
                         <Icon 
@@ -133,7 +173,34 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                         />
                     </View>
                 </View>
-                { openSearchInput ? this.renderInputSearchBar() : this.renderSearchBar() }
+                <Modal
+					animationType='fade'
+					transparent={true}
+					visible={openSectionSelectionModal}
+				>
+                    <ViewWrapper style={styles.modalContainer}>
+                        <View style={styles.topBar}>
+                            <View style={styles.topBarTitle}>
+                                <TouchableHighlight 
+                                    onPress={this.handleToggleSectionSelectionModal}
+                                >
+                                    <View style={styles.libraryDropdown}>
+                                        <Text style={styles.title}>{_.toUpper(BOOK_SECTIONS[currentSection])}</Text>
+                                        <Icon name={libraryTopBarIcon}/>
+                                    </View>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
+                        <View style={styles.modal}>
+                            <View style={styles.sectionsDropdown}>
+                                {_.map(sections, section => <Button {...section} color='white' key={section.title} /> )}
+                            </View>
+                        </View>
+                        <View style={styles.libraryModalLayout} />
+                        <View style={styles.topBar} />
+                    </ViewWrapper>
+				</Modal>
+                {openSearchInput ? this.renderInputSearchBar() : this.renderSearchBar() }
                 <View style={styles.library}>
                     {this.renderGridView()}
                 </View>
@@ -143,13 +210,32 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     renderGridView() {
-        const { arrayUserBooks, fetchUserBooksStatus } = this.props
-        const { searchQuery } = this.state
-        let books = _.isEmpty(arrayUserBooks) ? [] : arrayUserBooks
+        const { 
+            arrayUserBooks, 
+            fetchUserBooksStatus
+        } = this.props
+        const { searchQuery, currentSection, forceClear } = this.state
+        let sectionFilter: string
+        switch (currentSection) {
+            case SECTIONS.FAVOURITES:
+            case SECTIONS.HAVE_READ:
+            case SECTIONS.READING_NOW:
+            case SECTIONS.TO_READ:
+                sectionFilter = currentSection
+                break;
+            case SECTIONS.LIBRARY:
+            default:
+                sectionFilter = 'ISBN'
+                break;
+        }
+
+        let books = _.isEmpty(arrayUserBooks) || fetchUserBooksStatus.isLoading || forceClear ? 
+            [] : _.filter(arrayUserBooks, book => book[sectionFilter])
+
         books = _.isEmpty(searchQuery) ? 
             books : 
-            _.filter(books, (book) => book.title.search(searchQuery) !== NOT_FOUND)
-        
+            _.filter(books, (book: Book) => book.title.search(searchQuery) !== NOT_FOUND)
+
         return (
             <GridView
                 itemDimension={bookWidth}

@@ -159,3 +159,19 @@ const createSelector = selectorCreatorFactory(MODULE_NAME)
 export const getSearchBooks = createSelector(state => (state.searchBooks ? state.searchBooks : []))
 export const getUserBooks = createSelector(state => (state.userBooks ? state.userBooks : {}))
 export const getArrayUserBooks = createSelector(state => (state.userBooks ? _.map(state.userBooks, book => book) : []))
+export const getArrayFavouriteUserBooks = createSelector(state => {
+	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
+	return _.filter(userBooks, (book) => book.favourites)
+})
+export const getArrayToReadUserBooks = createSelector(state => {
+	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
+	return _.filter(userBooks, (book) => book.toRead)
+})
+export const getArrayReadingNowUserBooks = createSelector(state => {
+	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
+	return _.filter(userBooks, (book) => book.readingNow)
+})
+export const getArrayHaveReadUserBooks = createSelector(state => {
+	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
+	return _.filter(userBooks, (book) => book.haveRead)
+})

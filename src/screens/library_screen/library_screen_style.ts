@@ -1,11 +1,15 @@
 import { StyleSheet } from 'react-native'
 
-import { TextColor } from '../../ui/styles/colors'
+import { TextColor, BoldTextColor } from '../../ui/styles/colors'
+import { width } from '../../ui/styles/dimensions';
 
 export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F5F7FA'
+    },
+    modalContainer: {
+        flex: 1
     },
     topBar: {
         flex: 1,
@@ -31,6 +35,27 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    libraryDropdown: {
+        flex: 0,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modal: {
+        flex: 2,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    libraryModalLayout: {
+        flex: 6,
+    },
+    sectionsDropdown: {
+        backgroundColor: BoldTextColor,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        width: width / 3
     },
     library: {
         flex: 8,
@@ -69,5 +94,5 @@ export default StyleSheet.create({
     tooltipButtonSearchBar: {
         backgroundColor: TextColor,
         borderRadius: 10
-    }
+    },
 })

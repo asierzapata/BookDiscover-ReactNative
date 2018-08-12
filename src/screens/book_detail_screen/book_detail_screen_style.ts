@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native'
 
 import { BoldTextColor, TextColor, Background, SecondaryColor } from '../../ui/styles/colors'
-import { bookHeight, bookWidth, width } from '../../ui/styles/dimensions'
+import { bookHeight, bookWidth, width, height } from '../../ui/styles/dimensions'
 
 
 const bookCoverHeight = bookHeight > bookWidth ? bookHeight * 2 : bookWidth * 2
@@ -105,5 +105,22 @@ export default StyleSheet.create({
     boldText: {
         color: BoldTextColor,
         fontWeight: 'bold'
+    },
+    modal: {
+        backgroundColor: 'rgba(0,0,0,0.65)',
+        height: height,
+        width: width,
+        alignItems: 'center',
+        justifyContent: 'space-around'
+    },
+    modalContent: {
+        height: height/2,
+        width: width/2,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        backgroundColor: Background,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'space-around',
     }
 })
