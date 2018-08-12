@@ -6,7 +6,7 @@ import { Text as NativeText } from 'react-native'
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from './text_style'
+import styles from './text_component_style'
 
 /* ====================================================== */
 /*                       Interfaces                       */
@@ -16,12 +16,14 @@ export interface TextInterface {
 	italic?: boolean
 	light?: boolean
 	bold?: boolean
+	semiBold?: boolean
 	caption?: boolean
-	subtitle?: boolean
+	bigCaption?: boolean
+	subTitle?: boolean
 	title?: boolean
 	bigTitle?: boolean
 	display?: boolean
-	children?: string
+	children?: any
 	style?: number
 }
 
@@ -34,10 +36,12 @@ export const Text: React.SFC<TextInterface> = ({
 	italic,
 	// font weight
 	light,
+	semiBold,
 	bold,
 	// font size
 	caption,
-	subtitle,
+	bigCaption,
+	subTitle,
 	title,
 	bigTitle,
 	display,
@@ -49,9 +53,11 @@ export const Text: React.SFC<TextInterface> = ({
 	const classes = classnames(styles.baseText, {
 		[styles.italic]: italic,
 		[styles.light]: light,
+		[styles.semiBold]: semiBold,
 		[styles.bold]: bold,
 		[styles.caption]: caption,
-		[styles.subtitle]: subtitle,
+		[styles.bigCaption]: bigCaption,
+		[styles.subTitle]: subTitle,
 		[styles.title]: title,
 		[styles.bigTitle]: bigTitle,
 		[styles.display]: display

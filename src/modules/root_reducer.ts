@@ -27,7 +27,7 @@ const appReducer = combineReducers({
 })
 
 const rootReducer = (state: any, action: AnyAction) => {
-	if (action.type === LOG_OUT.NAME) {
+	if (action.type === LOG_OUT.SUCCESS) {
 		// Reset whole store on logout
 		return appReducer(undefined, action)
 	}

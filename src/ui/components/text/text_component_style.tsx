@@ -5,7 +5,7 @@ import Color from '../../styles/colors'
 export default StyleSheet.create({
 	baseText: {
 		color: Color.TextColor,
-		fontSize: 16
+		fontSize: 17
 	},
 	italic: {
 		fontStyle: 'italic'
@@ -13,14 +13,21 @@ export default StyleSheet.create({
 	light: {
 		fontWeight: '100'
 	},
+	semiBold: {
+		fontWeight: '500',
+		color: Color.BoldTextColor
+	},
 	bold: {
 		fontWeight: 'bold',
 		color: Color.BoldTextColor
 	},
 	caption: {
+		fontSize: 12
+	},
+	bigCaption: {
 		fontSize: 14
 	},
-	subtitle: {
+	subTitle: {
 		fontSize: 20
 	},
 	title: {

@@ -75,10 +75,8 @@ function addUser(user: UserInterface): Promise<ApiResponse> {
 			.firestore()
 			.collection(ApiConstants.USERS_COLLECTION)
 			.doc(user._id)
-			.set({ userInfo: user, books: [] })
-			.then(doc => {
-				resolve({ headers: '', status: '200', statusText: '', data: user })
-			})
+			.set({ ...user, books: {} })
+			.then(() => resolve({ headers: '', status: '200', statusText: '', data: user }))
 			.catch(error => {
 				reject({
 					code: 500,
@@ -89,7 +87,13 @@ function addUser(user: UserInterface): Promise<ApiResponse> {
 }
 
 function logOut(): Promise<ApiResponse> {
-	return firebase.auth().signOut()
+	return new Promise((resolve, reject) =>
+		firebase
+			.auth()
+			.signOut()
+			.then(() => resolve({ headers: '', status: '200', statusText: '', data: '' }))
+			.catch(error => reject({ code: 500, message: error.message }))
+	)
 }
 
 /* ====================================================== */
@@ -98,11 +102,7 @@ function logOut(): Promise<ApiResponse> {
 
 function getUserBooks(): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
-	if (_.isNull(currentUser))
-		return Promise.reject({
-			code: 401,
-			error: ApiErrors.USER_NOT_LOGGED_IN
-		})
+	if (_.isNull(currentUser)) return Promise.reject({ code: 401, error: ApiErrors.USER_NOT_LOGGED_IN })
 	return new Promise((resolve, reject) => {
 		firebase
 			.firestore()

@@ -22,7 +22,7 @@ import userApi from '../../api/user/user_api'
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { Book, BooksQueryOptions, BooksQueryFields } from '../../api/book/book_interfaces';
+import { Book, BooksQueryOptions, BooksQueryFields } from '../../api/book/book_interfaces'
 
 /* ====================================================== */
 /*                        Actions                         */
@@ -59,7 +59,12 @@ export function fetchBooksBatchByISBN(ISBNArray: string[]): AsyncAction {
 }
 
 export const FETCH_BOOKS_SEARCH = asyncActionObject('FETCH_BOOKS_SEARCH')
-export function fetchBooksSearch(query: string, page: number, queryOptions?: BooksQueryOptions, queryField?: BooksQueryFields): AsyncAction {
+export function fetchBooksSearch(
+	query: string,
+	page: number,
+	queryOptions?: BooksQueryOptions,
+	queryField?: BooksQueryFields
+): AsyncAction {
 	return {
 		type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
 		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page, queryOptions, queryField }),
@@ -88,8 +93,7 @@ export const POPULATE_BOOK_BY_ISBN = asyncActionObject('POPULATE_BOOK_BY_ISBN')
 export function populateBookByISBN(ISBN: string): AsyncAction {
 	return {
 		type: asyncAction(POPULATE_BOOK_BY_ISBN.NAME),
-		AsyncProcess: () =>
-			bookApi.getBookInfoByISBN({ ISBN }),
+		AsyncProcess: () => bookApi.getBookInfoByISBN({ ISBN }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(POPULATE_BOOK_BY_ISBN.NAME)
@@ -106,16 +110,15 @@ export function clearSearchBooks(): BaseAction {
 	}
 }
 
-
 /* ====================================================== */
 /*                        Reducers                        */
 /* ====================================================== */
 
 function searchBooks(state = {}, { type, payload }: AppAction) {
 	switch (type) {
-        case FETCH_BOOKS_SEARCH.SUCCESS:
-            const books = payload as Book[]
-			return [...state as Book[], ...books]
+		case FETCH_BOOKS_SEARCH.SUCCESS:
+			const books = payload as Book[]
+			return [...(state as Book[]), ...books]
 		case CLEAR_SEARCH_BOOKS:
 			return []
 		default:
@@ -125,9 +128,9 @@ function searchBooks(state = {}, { type, payload }: AppAction) {
 
 function userBooks(state = {}, { type, payload }: AppAction) {
 	switch (type) {
-        case POPULATE_BOOK_BY_ISBN.SUCCESS:
+		case POPULATE_BOOK_BY_ISBN.SUCCESS:
 			const book = payload as Book
-	        return {
+			return {
 				...state,
 				[book.ISBN]: {
 					...book
