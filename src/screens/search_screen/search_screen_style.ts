@@ -44,7 +44,7 @@ export default StyleSheet.create({
         flex: 1,
     },
     advancedSearchOpened: {
-        flex: 3,
+        height: 250,
     },
     advancedSearchCollapseHeader: {
         flex: 0,

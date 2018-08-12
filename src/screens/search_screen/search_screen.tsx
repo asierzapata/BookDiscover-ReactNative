@@ -186,7 +186,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 					'es': 'Spanish',
 				},
 				value: this.state.queryLanguage,
-				onValueChange: (queryLanguage: string) => this.setState({ queryLanguage })
+				onValueChange: (queryLanguage: string) => this.setState({ queryLanguage }, this.handleSearch)
 			},
 			{ 
 				title: 'Order by', 
@@ -194,7 +194,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 					...ORDER_BY_FIELDS
 				},
 				value: this.state.queryOrderBy,
-				onValueChange: (queryOrderBy: 'relevance' | 'newest') => this.setState({ queryOrderBy })
+				onValueChange: (queryOrderBy: 'relevance' | 'newest') => this.setState({ queryOrderBy }, this.handleSearch)
 			},
 			{ 
 				title: 'Specific search', 
@@ -203,7 +203,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 					...QUERY_MODALITY_FIELDS
 				},
 				value: this.state.queryModality,
-				onValueChange: (queryModality: '' | 'author' | 'title' | 'publisher' | 'subject') => this.setState({ queryModality })
+				onValueChange: (queryModality: '' | 'author' | 'title' | 'publisher' | 'subject') => this.setState({ queryModality }, this.handleSearch) 
 			}
 		]
 

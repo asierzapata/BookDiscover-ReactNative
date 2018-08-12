@@ -31,13 +31,13 @@ class CachedImage extends Component<ownProps,ownState> {
         const uri = this.props.source
         if (uri) {
             const path = await CacheManager.get(uri).getPath()
-            this.setState({ uri: path})
+            this.setState({ uri: path })
             this.handleOnLoad()
         }
     }
 
     handleOnLoad = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.linear)
         this.setState({ isLoaded: true })
         if(this.props.onLoad) this.props.onLoad()
     }

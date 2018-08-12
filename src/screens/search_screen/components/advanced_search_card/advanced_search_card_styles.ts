@@ -9,7 +9,7 @@ export default StyleSheet.create({
         borderRadius: 10
     },
     advancedSearchPicker: {
-        maxHeight: 70,
+        maxHeight: 130,
         color: 'white'
     },
     title: {
