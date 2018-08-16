@@ -37,4 +37,20 @@ export class AuthLoadingScreen extends Component<NavigationScreenProps> {
   }
 }
 
-export default AuthLoadingScreen;
+// const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
+// 	// Metadata
+// 	signUpStatus: getRequestStatus(state, {
+// 		actionType: SIGN_UP.NAME
+// 	})
+// })
+
+// const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+// 	handleSignUp: ({ email, password }: AuthData) => dispatch(signUp({ email, password }))
+// })
+
+// export default connect(
+// 	mapStateToProps,
+// 	mapDispatchToProps
+// )(AuthLoadingScreen)
+
+// export default AuthLoadingScreen;

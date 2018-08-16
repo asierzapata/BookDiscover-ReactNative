@@ -43,7 +43,8 @@ import LoadingOverlay from '../../ui/components/loading_overlay'
 
 import styles from './library_screen_style'
 import IconNames from '../../ui/styles/icons'
-import { bookWidth, width, height } from '../../ui/styles/dimensions'
+import { bookWidth } from '../../ui/styles/dimensions'
+import { Background } from '../../ui/styles/colors';
 
 /* ====================================================== */
 /*                      Interfaces                        */
@@ -51,9 +52,8 @@ import { bookWidth, width, height } from '../../ui/styles/dimensions'
 
 import { ownProps, ownState, StateProps, DispatchProps, SECTIONS } from './library_screen_interfaces'
 import { Book, BOOK_SECTIONS } from '../../api/book/book_interfaces';
+import { NavigationEventSubscription } from 'react-navigation';
 import routes from '../../router/routes';
-import { Background } from '../../ui/styles/colors';
-import { NavigationEventSubscription } from '../../../node_modules/@types/react-navigation';
 
 /* ====================================================== */
 /*                   Implementation                       */

@@ -13,6 +13,11 @@ const routes = {
   authSelector() {
     return "AuthSelector";
   },
+  // ONBOARDING
+  // ----
+  onboarding() {
+    return "Onboarding"
+  }
 
   // TABS
   // ----
