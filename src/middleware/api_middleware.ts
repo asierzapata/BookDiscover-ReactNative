@@ -3,6 +3,8 @@ import { BaseAction, AsyncAction, AppAction } from '../modules/actions_interface
 import { ApiResponse, ApiError } from '../api/config/api_interfaces'
 import { AsyncActionNames, ASYNC_ACTION_ID, asyncActionObject } from '../lib/redux/async_action_creator'
 import _ from 'lodash'
+import { getRequestStatus } from './../modules/api_metadata/api_metadata_module'
+import moment from 'moment'
 
 /* ====================================================== */
 /*                        Middleware                      */
@@ -13,7 +15,7 @@ export interface AsyncConfigObject {
 }
 
 const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch) => (action: AsyncAction) => {
-	const { type, AsyncProcess, shouldDoAsyncProcess = () => true, meta = {} } = action
+	const { type, AsyncProcess, meta = {} } = action
 
 	if (!AsyncProcess) return next(action)
 
@@ -21,7 +23,11 @@ const apiMiddleware = ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch
 		throw new Error('Expected action type created with apiAction(...)')
 	}
 
-	if (!shouldDoAsyncProcess(getState())) return
+	// isLoading?
+	if (getRequestStatus(getState(), { actionType: type }).isLoading) return
+
+	// isCached?
+	if (moment(getRequestStatus(getState(), { actionType: type }).succeedAt).diff(moment(), 'minutes') < 5) return
 
 	const asyncBreakdownNames = asyncActionObject(_.split(type, `${ASYNC_ACTION_ID}_`)[1])
 

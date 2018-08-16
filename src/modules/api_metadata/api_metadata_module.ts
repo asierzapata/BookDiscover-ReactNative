@@ -2,6 +2,7 @@ import selectorCreatorFactory from '../../lib/redux/selectors'
 import { asyncActionObject, ASYNC_ACTION_SEPARATOR } from '../../lib/redux/async_action_creator'
 import { AnyAction } from 'redux'
 import _ from 'lodash'
+import moment from 'moment'
 
 export const DEFAULT_NAMESPACE = '_no_namespace_'
 
@@ -21,6 +22,7 @@ export interface AsyncActionStatus {
 	error: string
 	status: number
 	statusText: string
+	succeedAt: Date
 }
 
 /* ====================================================== */
@@ -66,7 +68,8 @@ export default function apiReducer(state: { [key: string]: any } = {}, { type, p
 						error: '',
 						errorCode: '',
 						status: meta.status,
-						statusText: meta.statusText
+						statusText: meta.statusText,
+						succeedAt: moment()
 					}
 				}
 			}

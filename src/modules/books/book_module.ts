@@ -33,10 +33,6 @@ export function fetchBookByISBN({ ISBN }: { ISBN: string }): AsyncAction {
 	return {
 		type: asyncAction(FETCH_BOOK_BY_ISBN.NAME),
 		AsyncProcess: ({ dispatch }) => bookApi.getBookInfoByISBN({ ISBN }),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(FETCH_BOOK_BY_ISBN.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -50,10 +46,6 @@ export function fetchBooksBatchByISBN(ISBNArray: string[]): AsyncAction {
 			_.forEach(ISBNArray, ISBN => actions.push(dispatch(fetchBookByISBN({ ISBN }))))
 			return Promise.all(actions)
 		},
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(FETCH_BOOKS_BATCH_BY_ISBN.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -68,10 +60,6 @@ export function fetchBooksSearch(
 	return {
 		type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
 		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page, queryOptions, queryField }),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(FETCH_BOOKS_SEARCH.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -81,10 +69,6 @@ export function fetchUserBooks(): AsyncAction {
 	return {
 		type: asyncAction(FETCH_USER_BOOKS.NAME),
 		AsyncProcess: ({ dispatch }) => userApi.getUserBooks(),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(FETCH_USER_BOOKS.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -94,10 +78,6 @@ export function populateBookByISBN(ISBN: string): AsyncAction {
 	return {
 		type: asyncAction(POPULATE_BOOK_BY_ISBN.NAME),
 		AsyncProcess: () => bookApi.getBookInfoByISBN({ ISBN }),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(POPULATE_BOOK_BY_ISBN.NAME)
-			}).isLoading,
 		meta: { ISBN }
 	}
 }
@@ -161,17 +141,17 @@ export const getUserBooks = createSelector(state => (state.userBooks ? state.use
 export const getArrayUserBooks = createSelector(state => (state.userBooks ? _.map(state.userBooks, book => book) : []))
 export const getArrayFavouriteUserBooks = createSelector(state => {
 	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
-	return _.filter(userBooks, (book) => book.favourites)
+	return _.filter(userBooks, book => book.favourites)
 })
 export const getArrayToReadUserBooks = createSelector(state => {
 	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
-	return _.filter(userBooks, (book) => book.toRead)
+	return _.filter(userBooks, book => book.toRead)
 })
 export const getArrayReadingNowUserBooks = createSelector(state => {
 	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
-	return _.filter(userBooks, (book) => book.readingNow)
+	return _.filter(userBooks, book => book.readingNow)
 })
 export const getArrayHaveReadUserBooks = createSelector(state => {
 	const userBooks = state.userBooks ? _.map(state.userBooks, book => book) : []
-	return _.filter(userBooks, (book) => book.haveRead)
+	return _.filter(userBooks, book => book.haveRead)
 })

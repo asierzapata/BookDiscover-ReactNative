@@ -42,10 +42,6 @@ export function logIn({ email, password }: AuthData): AsyncAction {
 	return {
 		type: asyncAction(LOG_IN.NAME),
 		AsyncProcess: ({ dispatch }) => userApi.logIn({ email, password }),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(LOG_IN.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -56,10 +52,6 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 		type: asyncAction(SIGN_UP.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.signUp({ email, password }).then((data: ApiResponse) => userApi.addUser(data.data)),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(SIGN_UP.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -69,10 +61,6 @@ export function logOut(): AsyncAction {
 	return {
 		type: asyncAction(LOG_OUT.NAME),
 		AsyncProcess: ({ dispatch }) => userApi.logOut(),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(LOG_OUT.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -84,10 +72,6 @@ export function fetchUserInfo(): AsyncAction {
 	return {
 		type: asyncAction(FETCH_USER_INFO.NAME),
 		AsyncProcess: ({ dispatch }) => userApi.getUserInfo(),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(FETCH_USER_INFO.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -103,10 +87,6 @@ export function addBookUser({ ISBN, thumbnail, title, section }: AddBookParams):
 				title,
 				section
 			} as AddBookParams),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(ADD_BOOK_USER.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
@@ -120,10 +100,6 @@ export function deleteBookUser({ ISBN, thumbnail }: Book): AsyncAction {
 				ISBN,
 				thumbnail
 			} as Book),
-		shouldDoAsyncProcess: state =>
-			!getRequestStatus(state, {
-				actionType: asyncAction(DELETE_BOOK_USER.NAME)
-			}).isLoading,
 		meta: {}
 	}
 }
