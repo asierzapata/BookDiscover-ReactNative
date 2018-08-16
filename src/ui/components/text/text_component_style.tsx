@@ -1,11 +1,17 @@
 import { StyleSheet } from 'react-native'
-import { unit2, unit, unit05, unit025 } from '../../styles/dimensions'
-import Color from '../../styles/colors'
+import { unit2, unit, unit05, unit025, FONT_SIZES } from '../../styles/dimensions'
+import Color, { PrimaryColor } from '../../styles/colors'
 
 export default StyleSheet.create({
 	baseText: {
 		color: Color.TextColor,
-		fontSize: 17
+		fontSize: FONT_SIZES.body
+	},
+	secondary: {
+		color: PrimaryColor
+	},
+	white: {
+		color: 'white'
 	},
 	italic: {
 		fontStyle: 'italic'
@@ -22,21 +28,21 @@ export default StyleSheet.create({
 		color: Color.BoldTextColor
 	},
 	caption: {
-		fontSize: 12
+		fontSize: FONT_SIZES.caption
 	},
 	bigCaption: {
-		fontSize: 14
+		fontSize: FONT_SIZES.bigCaption
 	},
 	subTitle: {
-		fontSize: 20
+		fontSize: FONT_SIZES.subTitle
 	},
 	title: {
-		fontSize: 24
+		fontSize: FONT_SIZES.title
 	},
 	bigTitle: {
-		fontSize: 36
+		fontSize: FONT_SIZES.bigTitle
 	},
 	display: {
-		fontSize: 54
+		fontSize: FONT_SIZES.display
 	}
 })

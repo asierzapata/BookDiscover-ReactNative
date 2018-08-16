@@ -21,3 +21,13 @@ export const gestureModalResponseDistance = (height * 2) / 3
 function _isTablet(width: number) {
 	return width >= TABLET_BREAKPOINT
 }
+
+export const FONT_SIZES = {
+	caption: 12,
+	bigCaption: 14,
+	body: 17,
+	subTitle: 20,
+	title: 24,
+	bigTitle: 36,
+	display: 54
+}
