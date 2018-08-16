@@ -92,6 +92,20 @@ export function fetchUserInfo(): AsyncAction {
 	}
 }
 
+export const SET_USER_REGION = asyncActionObject('SET_USER_REGION')
+export function setUserRegion(region: Region): AsyncAction {
+	return {
+		type: asyncAction(SET_USER_REGION.NAME),
+		AsyncProcess: ({ dispatch }) =>
+			userApi.setUserRegion(region),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(SET_USER_REGION.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
 export const ADD_BOOK_USER = asyncActionObject('ADD_BOOK_USER')
 export function addBookUser({ ISBN, thumbnail, title, section }: AddBookParams): AsyncAction {
 	return {
@@ -154,3 +168,12 @@ export default combineReducers({
 const createSelector = selectorCreatorFactory(MODULE_NAME)
 
 // -----------
+
+/* ====================================================== */
+/*                      Interfaces                        */
+/* ====================================================== */
+
+export enum Region {
+	'es',
+	'us'
+} 

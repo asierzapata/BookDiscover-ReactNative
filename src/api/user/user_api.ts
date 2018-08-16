@@ -17,6 +17,7 @@ import { AuthData, UserApiObject, User as UserInterface, firestoreUserBooksSchem
 
 import { userParser } from './user_parsers'
 import { ApiResponse } from '../config/api_interfaces'
+import { Region } from '../../modules/user/user_module';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -27,6 +28,7 @@ const api: UserApiObject = {
 	addBookToUser,
 	deleteBookToUser,
 	getUserInfo,
+	setUserRegion,
 	// Auth
 	logOut,
 	logIn,
@@ -240,6 +242,29 @@ function getUserInfo(): Promise<ApiResponse> {
 		reject({
 			code: 404,
 			message: ApiErrors.USER_NOT_LOGGED_IN
+		})
+	})
+}
+
+function setUserRegion(region: Region): Promise<ApiResponse> {
+	const { currentUser } = firebase.auth()
+	if (_.isNull(currentUser))
+		return Promise.reject({
+			code: 401,
+			error: ApiErrors.USER_NOT_LOGGED_IN
+		})
+	return new Promise((resolve, reject) => {
+		firebase
+		.firestore()
+		.collection(ApiConstants.USERS_COLLECTION)
+		.doc(currentUser.uid)
+		.set({ region })
+		.then(() => resolve({ headers: '', status: '200', statusText: '', data: currentUser }))
+		.catch(error => {
+			reject({
+				code: 500,
+				message: error.message
+			})
 		})
 	})
 }
