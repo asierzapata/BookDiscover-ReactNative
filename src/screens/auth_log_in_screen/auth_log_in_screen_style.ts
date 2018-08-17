@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import colors from '../../ui/styles/colors'
+import { SecondaryColor } from '../../ui/styles/colors'
 
 export default StyleSheet.create({
 	container: {
@@ -15,7 +15,7 @@ export default StyleSheet.create({
 		marginTop: 8
 	},
 	errorText: {
-		color: colors.SecondaryColor,
+		color: SecondaryColor,
 		marginTop: 10
 	}
 })

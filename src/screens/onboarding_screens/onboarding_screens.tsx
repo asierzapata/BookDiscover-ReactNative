@@ -1,13 +1,19 @@
 
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
+
+import { Text } from '../../ui/components/text/text_component'
+
+import styles from './onboarding_screens_styles'
 
 export const Welcome: React.SFC<NavigationScreenProps> = () => {
     return (
-        <View>
-            <Text>Welcome to Book Discover!</Text>
-            <Text>
+        <View style={styles.container}>
+            <Text subTitle semiBold style={styles.textPadding}>
+                Welcome to Book Discover!
+            </Text>
+            <Text light style={styles.textPadding}>
                 In here you will find an amazing app that will help you keep 
                 track of your readings and also find new interesting books
             </Text>
@@ -17,8 +23,10 @@ export const Welcome: React.SFC<NavigationScreenProps> = () => {
 
 export const Enjoy: React.SFC<NavigationScreenProps> = () => {
     return (
-        <View>
-            <Text>We are all set!</Text>
+        <View style={styles.container}>
+            <Text subTitle semiBold style={styles.textPadding}>
+                We are all set!
+            </Text>
         </View>
     )
 }

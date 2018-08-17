@@ -1,15 +1,16 @@
-import React from "react";
-import { Component } from "react";
-import { ActivityIndicator, StatusBar, View } from "react-native";
-import * as firebase from "firebase";
-import { NavigationScreenProps } from "react-navigation";
-import routes from "../../routes";
+import React from "react"
+import { Component } from "react"
+import { ActivityIndicator, StatusBar, View } from "react-native"
+import * as firebase from "firebase"
+import { NavigationScreenProps } from "react-navigation"
+import routes from "../../routes"
+import moment from 'moment'
 
 /* ====================================================== */
 /*                        Style                           */
 /* ====================================================== */
 
-import styles from "./auth_loading_screen_style";
+import styles from "./auth_loading_screen_style"
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -17,15 +18,22 @@ import styles from "./auth_loading_screen_style";
 
 export class AuthLoadingScreen extends Component<NavigationScreenProps> {
   constructor(props: NavigationScreenProps) {
-    super(props);
-    this._checkIfUserIsLogged();
+    super(props)
+    this._checkIfUserIsLogged()
   }
 
   _checkIfUserIsLogged = () => {
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? routes.app() : routes.auth());
-    });
-  };
+      if(user) {
+        const { creationTime, lastSignInTime } = user.metadata
+        console.log(user)
+        //this.props.navigation.navigate(isNewlyCreated(creationTime) ? routes.onboarding() : routes.app())
+        this.props.navigation.navigate(true ? routes.onboarding() : routes.app())
+      } else {
+        this.props.navigation.navigate(routes.auth())
+      }
+    })
+  } 
 
   render() {
     return (
@@ -33,8 +41,23 @@ export class AuthLoadingScreen extends Component<NavigationScreenProps> {
         <ActivityIndicator />
         <StatusBar barStyle="default" />
       </View>
-    );
+    )
   }
+}
+
+/* ====================================================== */
+/*                       Helpers                          */
+/* ====================================================== */
+
+const CREATION_SENSIBILITY = 60
+function isNewlyCreated(creationTimeString?: string, lastSignInTimeString?: string): boolean {
+  if(creationTimeString && lastSignInTimeString) {
+    const creationTime = moment(creationTimeString)
+    const differential = creationTime.diff(moment(), 'seconds')
+    console.log('>>>>>> IS NEWLY CREATED', creationTimeString, lastSignInTimeString, differential)
+    return differential > CREATION_SENSIBILITY || differential < CREATION_SENSIBILITY
+  }
+  return false
 }
 
 // const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
@@ -53,4 +76,4 @@ export class AuthLoadingScreen extends Component<NavigationScreenProps> {
 // 	mapDispatchToProps
 // )(AuthLoadingScreen)
 
-// export default AuthLoadingScreen;
+export default AuthLoadingScreen

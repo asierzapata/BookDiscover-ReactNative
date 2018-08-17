@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { SecondaryColor } from '../../ui/styles/colors'
 
 export default StyleSheet.create({
     container: {
@@ -12,5 +13,9 @@ export default StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         marginTop: 8
-    }
+    },
+    errorText: {
+		color: SecondaryColor,
+		marginTop: 10
+	}
 })

@@ -17,7 +17,7 @@ const routes = {
   // ----
   onboarding() {
     return "Onboarding"
-  }
+  },
 
   // TABS
   // ----

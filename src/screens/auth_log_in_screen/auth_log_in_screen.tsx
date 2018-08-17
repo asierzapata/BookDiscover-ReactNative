@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, TextInput, View, Button } from 'react-native'
+import { Text, TextInput, Button, KeyboardAvoidingView } from 'react-native'
 import _ from 'lodash'
 
 /* ====================================================== */
@@ -51,13 +51,14 @@ export class AuthSignInScreen extends Component<ownProps, ownState> {
 	render() {
 		const { logInStatus } = this.props
 		return (
-			<View style={styles.container}>
+			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<Text>Sign In</Text>
 				{this.state.errorMessage && <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>}
 				<TextInput
 					style={styles.textInput}
 					autoCapitalize="none"
 					placeholder="Email"
+					keyboardType='email-address'
 					onChangeText={email => this.setState({ email })}
 					value={this.state.email}
 				/>
@@ -71,7 +72,7 @@ export class AuthSignInScreen extends Component<ownProps, ownState> {
 				/>
 				{!!logInStatus.error && <Text style={styles.errorText}>{logInStatus.error}</Text>}
 				<Button disabled={!!logInStatus.isLoading} title="Submit" onPress={this.handleSignIn} />
-			</View>
+			</KeyboardAvoidingView>
 		)
 	}
 }
