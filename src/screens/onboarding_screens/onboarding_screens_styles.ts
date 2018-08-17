@@ -6,8 +6,6 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F5F7FA',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     textPadding: {
         paddingVertical: 12,
@@ -15,10 +13,13 @@ export default StyleSheet.create({
         textAlign: 'justify',
     },
     textContainer: {
-        flex: 8
+        flex: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    buttonContainer: {
+    buttonsContainer: {
         flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
     }

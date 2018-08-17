@@ -1,6 +1,6 @@
-import React, { ReactText } from 'react'
+import React from 'react'
 import classnames from '../../../lib/classnames'
-import { Text as NativeText } from 'react-native'
+import { Text as NativeText, TextStyle, RegisteredStyle } from 'react-native'
 import _ from 'lodash'
 
 /* ====================================================== */
@@ -27,7 +27,7 @@ export interface TextProps {
 	title?: boolean
 	bigTitle?: boolean
 	display?: boolean
-	style?: number
+	style?: RegisteredStyle<TextStyle>
 	children: any
 }
 

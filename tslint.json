@@ -63,7 +63,7 @@
         "eofline": false,
         "indent": [
             true,
-            "spaces"
+            "tabs"
         ],
         "max-line-length": [
             true,
@@ -100,11 +100,6 @@
             true,
             "single",
             "avoid-escape"
-        ],
-        "semicolon": [
-            true,
-            "always",
-            "ignore-interfaces"
         ],
         "variable-name": [
             true,

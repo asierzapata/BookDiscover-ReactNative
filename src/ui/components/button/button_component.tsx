@@ -52,7 +52,7 @@ export const Button: React.SFC<ButtonProps> = ({
 			{isLoading ? (
 				<ActivityIndicator />
 			) : (
-				<Text secondary={secondary} white={!secondary} caps>
+				<Text secondary={secondary} white={!secondary} caps caption={small}>
 					{children}
 				</Text>
 			)}

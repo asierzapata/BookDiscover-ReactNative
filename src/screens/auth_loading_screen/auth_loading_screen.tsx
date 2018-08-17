@@ -26,7 +26,6 @@ export class AuthLoadingScreen extends Component<NavigationScreenProps> {
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
         const { creationTime, lastSignInTime } = user.metadata
-        console.log(user)
         //this.props.navigation.navigate(isNewlyCreated(creationTime) ? routes.onboarding() : routes.app())
         this.props.navigation.navigate(true ? routes.onboarding() : routes.app())
       } else {
@@ -54,26 +53,9 @@ function isNewlyCreated(creationTimeString?: string, lastSignInTimeString?: stri
   if(creationTimeString && lastSignInTimeString) {
     const creationTime = moment(creationTimeString)
     const differential = creationTime.diff(moment(), 'seconds')
-    console.log('>>>>>> IS NEWLY CREATED', creationTimeString, lastSignInTimeString, differential)
     return differential > CREATION_SENSIBILITY || differential < CREATION_SENSIBILITY
   }
   return false
 }
-
-// const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
-// 	// Metadata
-// 	signUpStatus: getRequestStatus(state, {
-// 		actionType: SIGN_UP.NAME
-// 	})
-// })
-
-// const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-// 	handleSignUp: ({ email, password }: AuthData) => dispatch(signUp({ email, password }))
-// })
-
-// export default connect(
-// 	mapStateToProps,
-// 	mapDispatchToProps
-// )(AuthLoadingScreen)
 
 export default AuthLoadingScreen

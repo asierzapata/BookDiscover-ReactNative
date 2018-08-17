@@ -15,6 +15,7 @@ import { TextColor } from '../styles/colors'
 interface ownProps {
 	fontSize?: number
 	textColor?: string
+	align?: 'center' | 'left' | 'right'
 	name: string
 	onPress?: () => void
 }
@@ -25,14 +26,14 @@ export default class Icon extends React.Component<ownProps> {
 	}
 
 	render() {
-		const { fontSize = 12, textColor = TextColor, name = '', onPress } = this.props
+		const { fontSize = 12, textColor = TextColor, name = '', onPress, align } = this.props
 
 		if (!onPress) {
 			return (
 				<FontAwesome
 					style={{
 						fontSize,
-						textAlign: 'center',
+						textAlign: align ? align: 'center',
 						color: textColor
 					}}
 				>
@@ -42,12 +43,15 @@ export default class Icon extends React.Component<ownProps> {
 		}
 
 		return (
-			<TouchableOpacity onPress={onPress}>
+			<TouchableOpacity 
+				onPress={onPress}
+				hitSlop={{top: 15, left: 15, bottom: 15, right: 15}}
+			>
 				<FontAwesome
 					style={{
 						fontSize,
-						textAlign: 'center',
-						color: textColor
+						textAlign: align ? align: 'center',
+						color: textColor,
 					}}
 				>
 					{Icons[name]}
