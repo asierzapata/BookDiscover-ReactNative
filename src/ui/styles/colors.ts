@@ -4,12 +4,14 @@ export const SecondaryColor = '#A3A8F8'
 export const BoldTextColor = '#6E7B8C'
 export const TextColor = '#8B95A3'
 export const Background = '#F5F7FA'
+export const White = '#FFFFFF'
 
 export default {
-    PrimaryColor,
-    PrimaryColorLight,
-    SecondaryColor,
-    BoldTextColor,
-    TextColor,
-    Background
+	PrimaryColor,
+	PrimaryColorLight,
+	SecondaryColor,
+	BoldTextColor,
+	TextColor,
+	Background,
+	White
 }

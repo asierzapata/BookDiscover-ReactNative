@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { ReactText } from 'react'
 import classnames from '../../../lib/classnames'
 import { Text as NativeText } from 'react-native'
+import _ from 'lodash'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -12,7 +13,10 @@ import styles from './text_component_style'
 /*                       Interfaces                       */
 /* ====================================================== */
 
-export interface TextInterface {
+export interface TextProps {
+	secondary?: boolean
+	white?: boolean
+	caps?: boolean
 	italic?: boolean
 	light?: boolean
 	bold?: boolean
@@ -23,15 +27,20 @@ export interface TextInterface {
 	title?: boolean
 	bigTitle?: boolean
 	display?: boolean
-	children?: any
 	style?: number
+	children: any
 }
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-export const Text: React.SFC<TextInterface> = ({
+export const Text: React.SFC<TextProps> = ({
+	// Secondary
+	secondary,
+	white,
+	// caps
+	caps,
 	// font style
 	italic,
 	// font weight
@@ -51,6 +60,8 @@ export const Text: React.SFC<TextInterface> = ({
 	style
 }) => {
 	const classes = classnames(styles.baseText, {
+		[styles.secondary]: secondary,
+		[styles.white]: white,
 		[styles.italic]: italic,
 		[styles.light]: light,
 		[styles.semiBold]: semiBold,
@@ -64,5 +75,5 @@ export const Text: React.SFC<TextInterface> = ({
 	})
 	if (style) classes.push(style)
 
-	return <NativeText style={classes}>{children}</NativeText>
+	return <NativeText style={classes}>{caps ? _.toUpper(children) : children}</NativeText>
 }
