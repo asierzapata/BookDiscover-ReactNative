@@ -4,6 +4,8 @@ import '@firebase/firestore'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
 
+import BookApi from '../book/book_api'
+
 /* ====================================================== */
 /*                     Interfaces                         */
 /* ====================================================== */
@@ -47,12 +49,13 @@ function logIn({ email, password }: AuthData): Promise<ApiResponse> {
 		firebase
 			.auth()
 			.signInWithEmailAndPassword(email, password)
-			.then(user => {
+			.then((userCredentials) => {
+				const { user } = userCredentials
 				resolve({
 					headers: '',
 					status: '200',
 					statusText: '',
-					data: userParser(user)
+					data: userParser(user!)
 				})
 			})
 			.catch(e => reject(e))
@@ -64,7 +67,15 @@ function signUp({ email, password }: AuthData): Promise<ApiResponse> {
 		firebase
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
-			.then(user => resolve({ headers: '', status: '200', statusText: '', data: userParser(user) }))
+			.then((userCredentials) => {
+				const { user } = userCredentials
+				resolve({
+					headers: '',
+					status: '200',
+					statusText: '',
+					data: userParser(user!)
+				})
+			})
 			.catch(e => reject(e))
 	})
 }
@@ -131,7 +142,7 @@ function getUserBooks(): Promise<ApiResponse> {
 	})
 }
 
-function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Promise<ApiResponse> {
+function addBookToUser({ ISBN, thumbnail, title, section, work_key, edition_key }: AddBookParams): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser)) {
 		return Promise.reject({
@@ -142,16 +153,28 @@ function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Prom
 
 	const sectionsObject = _parseSection({ section })
 
+	const userDocumentRef = firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid)
+	const bookCollectionReg = firebase.firestore().collection(ApiConstants.BOOKS_COLLECTION)
+
+	let bookDocumentId: string
+
 	return new Promise((resolve, reject) => {
-		firebase
-			.firestore()
-			.collection(ApiConstants.USERS_COLLECTION)
-			.doc(currentUser.uid)
+		bookCollectionReg.where('ISBN', 'array-contains', ISBN[0])
 			.get()
+			.then(document => {
+				if(document.empty) {
+					return BookApi.createNewBook(ISBN, { work_key, edition_key })
+				}
+				return Promise.resolve(document.docs[0].id)
+			})
+			.then(id => {
+				bookDocumentId = id
+				return userDocumentRef.get()
+			})
 			.then(document => {
 				if (document.exists) {
 					const { books } = document.data() as { books: FirestoreUserBooksSchema }
-					books[ISBN] = { ISBN, thumbnail, title, ...sectionsObject }
+					books[bookDocumentId] = { _id: bookDocumentId, thumbnail, title, ...sectionsObject }
 					return firebase
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)
@@ -181,7 +204,7 @@ function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Prom
 	})
 }
 
-function deleteBookToUser({ ISBN }: BookInterface): Promise<ApiResponse> {
+function deleteBookToUser({ _id }: BookInterface): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
 	if (_.isNull(currentUser)) {
 		return Promise.reject({
@@ -199,13 +222,12 @@ function deleteBookToUser({ ISBN }: BookInterface): Promise<ApiResponse> {
 			.then(document => {
 				if (document.exists) {
 					const { books } = document.data() as { books: FirestoreUserBooksSchema }
-					delete books[ISBN]
+					delete books[_id]
 					return firebase
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)
 						.doc(currentUser.uid)
-						//.set({ ...document.data(), books })
-						.update({ [`books.${ISBN}`] : firebase.firestore.FieldValue.delete() })
+						.update({ [`books.${_id}`] : firebase.firestore.FieldValue.delete() })
 				} else {
 					reject({
 						code: 500,

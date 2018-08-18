@@ -33,8 +33,8 @@ export interface UserApiObject {
 }
 
 export interface FirestoreUserBooksSchema {
-	[ISBN: string]: {
-		ISBN: string
+	[_id: string]: {
+		_id: string
 		thumbnail: string
 		title: string
 	}
