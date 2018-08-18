@@ -275,22 +275,22 @@ function setUserRegion(region: Region): Promise<ApiResponse> {
 			.firestore()
 			.collection(ApiConstants.USERS_COLLECTION)
 			.doc(currentUser.uid)
-			.get()
-			.then(document => {
-				if (document.exists) {
-					console.log('>>>>> DOCUMENT DATA',document.data())
-					return firebase
-						.firestore()
-						.collection(ApiConstants.USERS_COLLECTION)
-						.doc(currentUser.uid)
-						.set({ ...document.data(), region })
-				} else {
-					reject({
-						code: 500,
-						message: ApiErrors.NOT_FOUND
-					})
-				}
-			})
+			.set({ region }, { merge: true })
+			// .then(document => {
+			// 	if (document.exists) {
+			// 		console.log('>>>>> DOCUMENT DATA',document.data())
+			// 		return firebase
+			// 			.firestore()
+			// 			.collection(ApiConstants.USERS_COLLECTION)
+			// 			.doc(currentUser.uid)
+			// 			
+			// 	} else {
+			// 		reject({
+			// 			code: 500,
+			// 			message: ApiErrors.NOT_FOUND
+			// 		})
+			// 	}
+			// })
 			.then(() => {
 				resolve({
 					headers: '',

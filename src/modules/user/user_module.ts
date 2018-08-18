@@ -55,8 +55,9 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 	return {
 		type: asyncAction(SIGN_UP.NAME),
 		AsyncProcess: ({ dispatch }) =>
-			userApi.signUp({ email, password })
-				.then(({ data }: ApiResponse) => userApi.addUser(data)),
+			userApi.signUp({ email, password }).then((data: ApiResponse) => userApi.addUser(data.data)),
+			// userApi.signUp({ email, password })
+			// 	.then(({ data }: ApiResponse) => userApi.addUser(data)),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(SIGN_UP.NAME)
