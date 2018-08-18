@@ -73,5 +73,5 @@ interface OwnProps {
 		value: any
 	}[]
 	option: string
-	onOptionSelected: ({ value, key }: { value: string, key: string }) => void
+	onOptionSelected: ({ value, key }: { value: any, key: any }) => void
 }

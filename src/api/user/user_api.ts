@@ -9,7 +9,7 @@ import ApiErrors from '../config/api_errors'
 /* ====================================================== */
 
 import { Book as BookInterface, AddBookParams, BookSections } from '../book/book_interfaces'
-import { AuthData, UserApiObject, User as UserInterface, firestoreUserBooksSchema } from './user_interfaces'
+import { AuthData, UserApiObject, User as UserInterface, FirestoreUserBooksSchema } from './user_interfaces'
 
 /* ====================================================== */
 /*                   	Parsers                           */
@@ -65,21 +65,32 @@ function signUp({ email, password }: AuthData): Promise<ApiResponse> {
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
 			.then(user => {
+				console.log('>>>>> PROMISE SIGN UP RESOLVED', user)
 				resolve({ headers: '', status: '200', statusText: '', data: userParser(user) })
 			})
-			.catch(e => reject(e))
+			.catch(e => {
+				console.log('>>>>> PROMISE SIGN UP CATCHED', e)
+				reject(e)
+			})
 	})
 }
 
 function addUser(user: UserInterface): Promise<ApiResponse> {
+	console.log('>>>>>>> ADD USER', user)
 	return new Promise((resolve, reject) => {
+		const userInfo = { ...user, books: {} }
+		console.log('>>>>> ADD USER PROMISE', userInfo)
 		firebase
 			.firestore()
 			.collection(ApiConstants.USERS_COLLECTION)
-			.doc(user._id)
-			.set({ ...user, books: {} })
-			.then(() => resolve({ headers: '', status: '200', statusText: '', data: user }))
+			.doc(userInfo._id)
+			.set(userInfo)
+			.then(() => {
+				console.log('>>>>> ADD USER SUCCESS')
+				resolve({ headers: '', status: '200', statusText: '', data: user })
+			})
 			.catch(error => {
+				console.log('>>>>> ADD USER ERROR', error)
 				reject({
 					code: 500,
 					message: error.message
@@ -134,11 +145,12 @@ function getUserBooks(): Promise<ApiResponse> {
 
 function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
-	if (_.isNull(currentUser))
+	if (_.isNull(currentUser)) {
 		return Promise.reject({
 			code: 401,
 			error: ApiErrors.USER_NOT_LOGGED_IN
 		})
+	}
 
 	const sectionsObject = _parseSection({ section })
 
@@ -150,7 +162,7 @@ function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Prom
 			.get()
 			.then(document => {
 				if (document.exists) {
-					const { books } = document.data() as { books: firestoreUserBooksSchema }
+					const { books } = document.data() as { books: FirestoreUserBooksSchema }
 					books[ISBN] = { ISBN, thumbnail, title, ...sectionsObject }
 					return firebase
 						.firestore()
@@ -183,11 +195,12 @@ function addBookToUser({ ISBN, thumbnail, title, section }: AddBookParams): Prom
 
 function deleteBookToUser({ ISBN }: BookInterface): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
-	if (_.isNull(currentUser))
+	if (_.isNull(currentUser)) {
 		return Promise.reject({
 			code: 401,
 			error: ApiErrors.USER_NOT_LOGGED_IN
 		})
+	}
 
 	return new Promise((resolve, reject) => {
 		firebase
@@ -197,13 +210,14 @@ function deleteBookToUser({ ISBN }: BookInterface): Promise<ApiResponse> {
 			.get()
 			.then(document => {
 				if (document.exists) {
-					const { books } = document.data() as { books: firestoreUserBooksSchema }
+					const { books } = document.data() as { books: FirestoreUserBooksSchema }
 					delete books[ISBN]
 					return firebase
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)
 						.doc(currentUser.uid)
-						.set({ books })
+						//.set({ ...document.data(), books })
+						.update({ [`books.${ISBN}`] : firebase.firestore.FieldValue.delete() })
 				} else {
 					reject({
 						code: 500,
@@ -248,24 +262,49 @@ function getUserInfo(): Promise<ApiResponse> {
 
 function setUserRegion(region: Region): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
-	if (_.isNull(currentUser))
+	console.log(currentUser)
+	if (_.isNull(currentUser)) {
 		return Promise.reject({
 			code: 401,
 			error: ApiErrors.USER_NOT_LOGGED_IN
 		})
+	}
+
 	return new Promise((resolve, reject) => {
 		firebase
-		.firestore()
-		.collection(ApiConstants.USERS_COLLECTION)
-		.doc(currentUser.uid)
-		.set({ region })
-		.then(() => resolve({ headers: '', status: '200', statusText: '', data: currentUser }))
-		.catch(error => {
-			reject({
-				code: 500,
-				message: error.message
+			.firestore()
+			.collection(ApiConstants.USERS_COLLECTION)
+			.doc(currentUser.uid)
+			.get()
+			.then(document => {
+				if (document.exists) {
+					console.log('>>>>> DOCUMENT DATA',document.data())
+					return firebase
+						.firestore()
+						.collection(ApiConstants.USERS_COLLECTION)
+						.doc(currentUser.uid)
+						.set({ ...document.data(), region })
+				} else {
+					reject({
+						code: 500,
+						message: ApiErrors.NOT_FOUND
+					})
+				}
 			})
-		})
+			.then(() => {
+				resolve({
+					headers: '',
+					status: '200',
+					statusText: '',
+					data: ''
+				})
+			})
+			.catch(error => {
+				reject({
+					code: 500,
+					message: error.message
+				})
+			})
 	})
 }
 
@@ -274,7 +313,7 @@ function setUserRegion(region: Region): Promise<ApiResponse> {
 /* ====================================================== */
 
 function _parseSection({ section }: BookSections): { [key: string]: boolean } {
-	let object = {} as { [key: string]: boolean }
+	const object = {} as { [key: string]: boolean }
 	object[section] = true
 	return object
 }

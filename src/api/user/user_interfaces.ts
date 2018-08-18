@@ -32,7 +32,7 @@ export interface UserApiObject {
 	addUser: (user: User) => Promise<ApiResponse>
 }
 
-export interface firestoreUserBooksSchema {
+export interface FirestoreUserBooksSchema {
 	[ISBN: string]: {
 		ISBN: string
 		thumbnail: string

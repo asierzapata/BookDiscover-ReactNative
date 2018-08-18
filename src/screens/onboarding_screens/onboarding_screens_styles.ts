@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 import { width } from '../../ui/styles/dimensions'
+import { SecondaryColor } from '../../ui/styles/colors'
 
 export default StyleSheet.create({
     container: {
@@ -22,5 +23,9 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-    }
+    },
+    errorText: {
+		color: SecondaryColor,
+        paddingVertical: 24,
+	}
 })

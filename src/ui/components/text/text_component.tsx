@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactText } from 'react'
 import classnames from '../../../lib/classnames'
 import { Text as NativeText, TextStyle, RegisteredStyle } from 'react-native'
 import _ from 'lodash'
@@ -28,7 +28,7 @@ export interface TextProps {
 	bigTitle?: boolean
 	display?: boolean
 	style?: RegisteredStyle<TextStyle>
-	children: any
+	children: string | ReactText[]
 }
 
 /* ====================================================== */
@@ -75,5 +75,5 @@ export const Text: React.SFC<TextProps> = ({
 	})
 	if (style) classes.push(style)
 
-	return <NativeText style={classes}>{caps ? _.toUpper(children) : children}</NativeText>
+	return <NativeText style={classes}>{caps ? _.toUpper(children as string) : children}</NativeText>
 }

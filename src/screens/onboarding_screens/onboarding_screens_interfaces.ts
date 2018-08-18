@@ -4,17 +4,17 @@ import { AsyncAction } from '../../modules/actions_interfaces'
 import { Region } from '../../modules/user/user_module';
 
 export interface RegionSelectState {
-    region: {
-        key: string,
-        value: string
-    }
+	region: {
+		key: Region,
+		value: string
+	}
 }
 export interface RegionSelectProps extends NavigationScreenProps, RegionSelectStateProps, RegionSelectDispatchProps {}
 
 export interface RegionSelectStateProps {
-    fetchSetRegionStatus: AsyncActionStatus
+	fetchSetRegionStatus: AsyncActionStatus
 }
 
 export interface RegionSelectDispatchProps {
-    handleSetRegion: (region: Region) => AsyncAction
+	handleSetRegion: (region: Region) => AsyncAction
 }
