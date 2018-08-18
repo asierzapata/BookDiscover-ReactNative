@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { unit, unit2, unit05, unit025, FONT_SIZES } from '../../styles/dimensions'
+import { unit, unit2, unit05, unit025 } from '../../styles/dimensions'
 import Color from '../../styles/colors'
 
 export default StyleSheet.create({
@@ -21,12 +21,10 @@ export default StyleSheet.create({
 		backgroundColor: Color.White
 	},
 	small: {
-		fontSize: FONT_SIZES.caption,
 		width: unit,
 		height: (unit05 / 5) * 4
 	},
 	big: {
-		fontSize: FONT_SIZES.title,
 		width: unit2 + unit05,
 		height: unit05 + unit025
 	}

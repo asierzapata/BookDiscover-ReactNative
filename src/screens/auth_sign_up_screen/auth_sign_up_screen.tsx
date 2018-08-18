@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, TextInput, View, Button, ActivityIndicator } from 'react-native'
+import { Text, TextInput, KeyboardAvoidingView, Button, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
 import { NavigationScreenProps } from 'react-navigation'
 
@@ -37,6 +37,8 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 		errorMessage: undefined
 	}
 
+
+
 	handleSignUp = () => {
 		const { email, password } = this.state
 
@@ -51,13 +53,15 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 	}
 
 	render() {
+		const { signUpStatus } = this.props
 		return (
-			<View style={styles.container}>
+			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<Text>Sign Up</Text>
 				{this.state.errorMessage && <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>}
 				<TextInput
 					placeholder="Email"
 					autoCapitalize="none"
+					keyboardType='email-address'
 					style={styles.textInput}
 					onChangeText={email => this.setState({ email })}
 					value={this.state.email}
@@ -70,12 +74,13 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 					onChangeText={password => this.setState({ password })}
 					value={this.state.password}
 				/>
+				{!!signUpStatus.error && <Text style={styles.errorText}>{signUpStatus.error}</Text>}
 				{this.props.signUpStatus.isLoading ? (
 					<ActivityIndicator />
 				) : (
 					<Button title="Submit" onPress={this.handleSignUp} />
 				)}
-			</View>
+			</KeyboardAvoidingView>
 		)
 	}
 }

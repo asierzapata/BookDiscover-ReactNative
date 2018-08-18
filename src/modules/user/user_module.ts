@@ -56,6 +56,8 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 		type: asyncAction(SIGN_UP.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.signUp({ email, password }).then((data: ApiResponse) => userApi.addUser(data.data)),
+			// userApi.signUp({ email, password })
+			// 	.then(({ data }: ApiResponse) => userApi.addUser(data)),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(SIGN_UP.NAME)
@@ -87,6 +89,20 @@ export function fetchUserInfo(): AsyncAction {
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(FETCH_USER_INFO.NAME)
+			}).isLoading,
+		meta: {}
+	}
+}
+
+export const SET_USER_REGION = asyncActionObject('SET_USER_REGION')
+export function setUserRegion(region: Region): AsyncAction {
+	return {
+		type: asyncAction(SET_USER_REGION.NAME),
+		AsyncProcess: ({ dispatch }) =>
+			userApi.setUserRegion(region),
+		shouldDoAsyncProcess: state =>
+			!getRequestStatus(state, {
+				actionType: asyncAction(SET_USER_REGION.NAME)
 			}).isLoading,
 		meta: {}
 	}
@@ -154,3 +170,12 @@ export default combineReducers({
 const createSelector = selectorCreatorFactory(MODULE_NAME)
 
 // -----------
+
+/* ====================================================== */
+/*                      Interfaces                        */
+/* ====================================================== */
+
+export enum Region {
+	'spain' = 'es',
+	'unitedStates' = 'us'
+}

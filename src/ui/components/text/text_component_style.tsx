@@ -1,14 +1,14 @@
 import { StyleSheet } from 'react-native'
 import { unit2, unit, unit05, unit025, FONT_SIZES } from '../../styles/dimensions'
-import Color, { PrimaryColor } from '../../styles/colors'
+import { SecondaryColor, TextColor, BoldTextColor } from '../../styles/colors'
 
 export default StyleSheet.create({
 	baseText: {
-		color: Color.TextColor,
+		color: TextColor,
 		fontSize: FONT_SIZES.body
 	},
 	secondary: {
-		color: PrimaryColor
+		color: SecondaryColor
 	},
 	white: {
 		color: 'white'
@@ -21,11 +21,11 @@ export default StyleSheet.create({
 	},
 	semiBold: {
 		fontWeight: '500',
-		color: Color.BoldTextColor
+		color: BoldTextColor
 	},
 	bold: {
 		fontWeight: 'bold',
-		color: Color.BoldTextColor
+		color: BoldTextColor
 	},
 	caption: {
 		fontSize: FONT_SIZES.caption

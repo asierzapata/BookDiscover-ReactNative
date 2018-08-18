@@ -11,5 +11,9 @@ export default {
             prefix: '&',
             separator: '='
         }
+    },
+    'REGIONS' : {
+        'es': 'Spain',
+        'us': 'United States'
     }
 }

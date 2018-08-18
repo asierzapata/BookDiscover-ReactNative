@@ -13,7 +13,20 @@ const routes = {
   authSelector() {
     return "AuthSelector";
   },
-
+  // ONBOARDING
+  // ----
+  onboarding() {
+    return "Onboarding"
+  },
+  welcome() {
+    return "Welcome"
+  },
+  regionSelect() {
+    return "RegionSelect"
+  },
+  enjoy() {
+    return "Enjoy"
+  },
   // TABS
   // ----
   library() {

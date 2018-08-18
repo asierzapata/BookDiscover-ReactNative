@@ -9,6 +9,7 @@ import routes from "./routes";
 
 import AppRouter from "./router/app_router";
 import AuthRouter from "./router/auth_router";
+import OnboardingRouter from './router/onboarding_router'
 
 /* ====================================================== */
 /*                       Screens                          */
@@ -23,6 +24,7 @@ import AuthLoadingScreen from "./screens/auth_loading_screen/auth_loading_screen
 const MainRouter = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
+    Onboarding: OnboardingRouter,
     App: AppRouter,
     Auth: AuthRouter
   },

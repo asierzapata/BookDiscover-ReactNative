@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, ReactText } from 'react'
 import classnames from '../../../lib/classnames'
 import { TouchableOpacity, TouchableHighlight, ActivityIndicator, ViewStyle, StyleProp } from 'react-native'
 import { Text } from '../text/text_component'
@@ -23,8 +23,8 @@ export interface ButtonProps {
 	secondary?: boolean
 	disabled?: boolean
 	style?: StyleProp<ViewStyle>
-	onPress: () => any
-	children: ReactNode
+	onPress: () => void
+	children: string | ReactText[]
 }
 
 /* ====================================================== */
@@ -52,7 +52,7 @@ export const Button: React.SFC<ButtonProps> = ({
 			{isLoading ? (
 				<ActivityIndicator />
 			) : (
-				<Text secondary={secondary} white={!secondary} caps>
+				<Text secondary={secondary} white={!secondary} caps caption={small}>
 					{children}
 				</Text>
 			)}

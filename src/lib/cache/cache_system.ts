@@ -17,7 +17,7 @@ export default {
 /*                    Implementation                      */
 /* ====================================================== */
 
-function getCachedDataByKey(key: string): Promise<string> {
+function getCachedDataByKey(key: string): Promise<string | null> {
     return AsyncStorage.getItem(key)
 }
 

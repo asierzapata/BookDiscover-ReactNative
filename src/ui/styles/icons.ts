@@ -12,6 +12,7 @@ const STAR_EMPTY = 'starEmpty'
 const STAR_FULL = 'starFull'
 const STAR_HALF_EMPTY = 'starHalfEmpty'
 const STAR_HALF_FULL = 'starHalfFull'
+const CLOSE = 'times'
 
 export default {
 	SEARCH,
@@ -27,5 +28,6 @@ export default {
 	STAR_EMPTY,
 	STAR_FULL,
 	STAR_HALF_EMPTY,
-	STAR_HALF_FULL
+	STAR_HALF_FULL,
+	CLOSE
 }
