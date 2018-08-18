@@ -23,15 +23,18 @@ export class AuthLoadingScreen extends Component<NavigationScreenProps> {
 	}
 
 	_checkIfUserIsLogged = () => {
-		firebase.auth().onAuthStateChanged(user => {
-			if (user) {
-				const { creationTime } = user.metadata
-				this.props.navigation.navigate(isNewlyCreated(creationTime) ? routes.onboarding() : routes.app())
-				// this.props.navigation.navigate(true ? routes.onboarding() : routes.app())
-			} else {
-				this.props.navigation.navigate(routes.auth())
-			}
-		})
+		const { currentUser } = firebase.auth()
+		if(currentUser) this.props.navigation.navigate(routes.app())
+		else {
+			firebase.auth().onAuthStateChanged(user => {
+				if (user) {
+					const { creationTime } = user.metadata
+					this.props.navigation.navigate(isNewlyCreated(creationTime) ? routes.onboarding() : routes.app())
+				} else {
+					this.props.navigation.navigate(routes.auth())
+				}
+			})
+		}
 	}
 
 	render() {

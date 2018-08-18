@@ -51,7 +51,7 @@ import { Background } from '../../ui/styles/colors';
 /* ====================================================== */
 
 import { ownProps, ownState, StateProps, DispatchProps, SECTIONS } from './library_screen_interfaces'
-import { Book, BOOK_SECTIONS } from '../../api/book/book_interfaces';
+import { Book, BOOK_SECTIONS, BookSections } from '../../api/book/book_interfaces';
 import { NavigationEventSubscription } from 'react-navigation';
 import routes from '../../router/routes';
 
@@ -112,13 +112,13 @@ export class LibraryScreen extends Component<ownProps,ownState> {
     }
 
     handleBookDetail = (book: Book) => {
-        const ISBN = book.ISBN
-        const userBook = this.props.userBooks[ISBN]
+        const _id = book._id
+        const userBook = this.props.userBooks[_id!]
         if(userBook.description) {
             this.navigateToBookDetail(userBook)
         } else {
-            this.setState({ fetchingISBN: ISBN })
-            this.props.handlePopulateBookByISBN(ISBN)
+            this.setState({ fetchingISBN: _id })
+            this.props.handlePopulateBookByISBN(_id!)
         }
     }
 
@@ -130,7 +130,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
         const { populateBookByISBN } = this.props
         const { openSearchInput, openSectionSelectionModal, currentSection } = this.state
 
-        let sections = [] as any
+        const sections = [] as Array<{title: string, onPress: () => void}>
         _.forEach(BOOK_SECTIONS, (title, value) => {
             sections.push({
                 title,

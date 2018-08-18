@@ -22,7 +22,7 @@ import userApi from '../../api/user/user_api'
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { Book, BooksQueryOptions, BooksQueryFields } from '../../api/book/book_interfaces'
+import { Book, BooksQueryFields } from '../../api/book/book_interfaces'
 
 /* ====================================================== */
 /*                        Actions                         */
@@ -62,12 +62,11 @@ export const FETCH_BOOKS_SEARCH = asyncActionObject('FETCH_BOOKS_SEARCH')
 export function fetchBooksSearch(
 	query: string,
 	page: number,
-	queryOptions?: BooksQueryOptions,
 	queryField?: BooksQueryFields
 ): AsyncAction {
 	return {
 		type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
-		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page, queryOptions, queryField }),
+		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page, queryField }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(FETCH_BOOKS_SEARCH.NAME)
@@ -132,7 +131,7 @@ function userBooks(state = {}, { type, payload }: AppAction) {
 			const book = payload as Book
 			return {
 				...state,
-				[book.ISBN]: {
+				[book._id!]: {
 					...book
 				}
 			}

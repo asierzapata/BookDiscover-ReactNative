@@ -150,6 +150,8 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 		const { fetchAddBookUserStatus, handleAddBookUser, book } = this.props
 		const { showAddBookModal, showRedirectModal } = this.state
 
+		const { ISBN, thumbnail, title, work_key, edition_key  } = book
+
 		return(
 			<View>
 				<Modal
@@ -161,7 +163,7 @@ export class BookDetailScreen extends Component<ownProps, ownState> {
 						<View style={styles.modalContent}>
 							<Text>Add book to:</Text>
 							{_.map(BOOK_SECTIONS, (display, section: 'favourites' | 'toRead' | 'readingNow' | 'haveRead') => 
-								<Button title={display} onPress={() => handleAddBookUser({...book, section})} key={section}/>
+								<Button title={display} onPress={() => handleAddBookUser({ ISBN, thumbnail, title, section, work_key, edition_key })} key={section}/>
 							)}
 						</View>
 					</View>
@@ -229,7 +231,7 @@ const mapStateToProps = (state: any, ownProps: ownProps): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleAddBookUser: ({ ISBN, thumbnail, title, section }) => dispatch(addBookUser({ ISBN, thumbnail, title, section } as AddBookParams)),
+	handleAddBookUser: ({ ISBN, thumbnail, title, section, work_key, edition_key }) => dispatch(addBookUser({ ISBN, thumbnail, title, section, work_key, edition_key })),
 	handleDeleteBookUser: ({ ISBN }) => dispatch(deleteBookUser({ ISBN } as Book)),
 	handleFetchUserBooks: () => dispatch(fetchUserBooks())
 })

@@ -39,6 +39,7 @@ function searchByISBN({ ISBN }: BookModuleMethodsInput, page: number): Promise<B
 }
 
 function searchByStandardQuery({ query }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+	console.log('>>>>> SEARCH BY STANDARD QUERY', query)
 	const queryObject = Constants.QUERY_PARAMS.QUERY_STANDARD
 	return _searchRequestFactory(query!, queryObject, page)
 }
@@ -91,18 +92,22 @@ function _searchRequestFactory(value: string, queryObject: { key: string, separa
 }
 
 function _queryStringWithSeparatorAndPrefix(param: { key: string, separator: string }, value: string) {
-	return `${param.key}${param.separator}${_.replace(value, ' ', '+')}`
+	return `${param.key}${param.separator}${ _.join(_.split(_.trim(value), ' '), '+')}`
 }
 
-function _getBatchDescriptionRequest(keys: string[]) {
+function _getBatchDescriptionRequest(keys: string[]): Promise<OpenLibraryBookResponse[]> {
 	const batch = _.map(keys, (key) => {
-		return new Promise((resolve, reject) => {
-			ApiClient.get(`${Constants.BASE_PATH}${key}`, {})
-				.then(response => {
-					const data = response.data as OpenLibraryBookResponse
-					resolve(data.description)
-				})
-		})
+		return _getDescriptionRequest(`${Constants.BASE_PATH}${key}.json`)
 	})
-	return sequence(batch)
+	return Promise.all(batch)
+}
+
+function _getDescriptionRequest(path: string): Promise<OpenLibraryBookResponse> {
+	return new Promise((resolve) => {
+		ApiClient.get(path, {})
+			.then(response => {
+				const data = response.data as OpenLibraryBookResponse
+				resolve(data)
+			})
+	})
 }

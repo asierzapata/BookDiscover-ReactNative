@@ -18,7 +18,8 @@ const bookPlaceholder =
 /* ====================================================== */
 
 function parseOpenLibraryReponse(data: OpenLibraryBook[], descriptions: OpenLibraryBookResponse[]): Book[] {
-	const books = _.map(data, (book, index) => parseIndividualBook(book,descriptions[index]))
+    const books = _.map(data, (book, index) => parseIndividualBook(book,descriptions[index]))
+    console.log('>>>>>> PARSE OPEN LIBRARY RESPOSNSE', books)
 	return books
 }
 
@@ -33,18 +34,37 @@ function parseIndividualBook(book: OpenLibraryBook, { description }: OpenLibrary
         publisher,
         first_publish_year,
         edition_count,
+        key,
+	    edition_key,
         language
     } = book
+    console.log(        
+        title,
+        cover_i,
+        isbn,
+        author_name,
+        author_key,
+        subject,
+        publisher,
+        first_publish_year,
+        edition_count,
+        key,
+	    edition_key,
+        language,
+        description
+    )
     return {
         title,
         authors: [ author_name ],
-        publisher,
-        publishedDate: first_publish_year.toString(),
-        description,
+        publisher: publisher ? publisher : [],
+        publishedDate: first_publish_year ? first_publish_year.toString() : 'Undefined',
+        description: description ? description : 'Description not available',
         ISBN: isbn,
-        subject,
-        language,
-        thumbnail: _getCoverUrl('id', cover_i.toString(), 'L')
+        subject: subject ? subject : [],
+        language: language ? language : [],
+        work_key: key,
+	    edition_key: edition_key ? edition_key : [ key ],
+        thumbnail: cover_i ? _getCoverUrl('id', cover_i.toString(), 'L') : bookPlaceholder
     }
 }
 

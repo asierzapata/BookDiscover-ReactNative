@@ -17,6 +17,7 @@ interface OpenLibraryBook {
     first_publish_year: number
     edition_count: number
     language: string[]
+    edition_key: string[]
 }
 
 interface OpenLibraryBookResponse {

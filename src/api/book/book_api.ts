@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as firebase from 'firebase'
+import firebase from 'firebase'
 import '@firebase/firestore'
 import ApiErrors from '../config/api_errors'
 
@@ -58,18 +58,23 @@ function getBooksByQuery(
 	{ query: string, page: number, queryField?: BooksQueryFields }
 ): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
-		let promise: Promise<Book[] | string[]> = Promise.resolve([])
+		let promise: () => Promise<Book[] | string[]> = () => Promise.resolve([])
 		switch(queryField) {
 			case BooksQueryFields.standard:
-				promise = OpenLibrary.searchByStandardQuery({ query }, page)
+				promise = () => OpenLibrary.searchByStandardQuery({ query }, page)
+				break;
 			case BooksQueryFields.isbn:
-				promise = OpenLibrary.searchByISBN({ ISBN: query }, page)
+				promise = () => OpenLibrary.searchByISBN({ ISBN: query }, page)
+				break;
 			case BooksQueryFields.author:
-				promise = OpenLibrary.searchByAuthor({ author: query }, page)
+				promise = () => OpenLibrary.searchByAuthor({ author: query }, page)
+				break;
 			case BooksQueryFields.subject:
-				promise = OpenLibrary.searchBySubject({ subject: query }, page)
+				promise = () => OpenLibrary.searchBySubject({ subject: query }, page)
+				break;
 			case BooksQueryFields.title:
-				promise = OpenLibrary.searchByTitle({ title: query }, page)
+				promise = () => OpenLibrary.searchByTitle({ title: query }, page)
+				break;
 			default:
 				reject({
 					code: 500,
@@ -77,7 +82,7 @@ function getBooksByQuery(
 				})
 				break;
 		}
-		promise
+		promise()
 			.then(data => {
 				resolve({
 					headers: '',

@@ -15,6 +15,9 @@ export interface Book {
 	subject: string[]
 	language: string[]
 	thumbnail: string
+	_id?: string
+	work_key: string
+	edition_key: string[]
 	[key: string]: any | undefined
 }
 
@@ -28,21 +31,25 @@ export type BooksQueryField =
 	BooksQueryFields.standard | BooksQueryFields.title | BooksQueryFields.author | BooksQueryFields.isbn | BooksQueryFields.subject
 
 export enum BooksQueryFields {
-	'standard',
-	'title',
-	'author',
-	'isbn',
-	'subject'
+	'standard' = 'standard',
+	'title' = 'title',
+	'author' = 'author',
+	'isbn' = 'isbn',
+	'subject' = 'subject'
 }
 
-export interface AddBookParams extends Book, BookSections {
+export interface AddBookParams {
+	_id?: string
+	ISBN: string[]
+	thumbnail: string
+	title: string
+	section: BookSections
 	work_key: string
 	edition_key: string[]
 }
 
-export interface BookSections {
-	section: 'favourites' | 'toRead' | 'readingNow' | 'haveRead'
-}
+export type BookSections = 'favourites' | 'toRead' | 'readingNow' | 'haveRead'
+
 
 export const BOOK_SECTIONS = {
 	'library': 'Library',

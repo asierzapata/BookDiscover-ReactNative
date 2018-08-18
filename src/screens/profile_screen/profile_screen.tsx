@@ -104,10 +104,10 @@ export class ProfileScreen extends Component<ownProps, ownState> {
 				style={styles.booksList}
 				horizontal={true}
 				data={this.props.books}
-				keyExtractor={item => item.ISBN}
+				keyExtractor={item => item._id!}
 				renderItem={({ item }) => (
 					<View style={styles.bookItem}>
-						<BookItem key={item.ISBN} onPress={() => {}} thumbnail={item.thumbnail}>
+						<BookItem key={item._id!} onPress={() => {}} thumbnail={item.thumbnail}>
 							{item}
 						</BookItem>
 					</View>
@@ -123,7 +123,7 @@ export class ProfileScreen extends Component<ownProps, ownState> {
 				style={styles.reviewList}
 				horizontal={true}
 				data={this.props.books}
-				keyExtractor={item => item.ISBN}
+				keyExtractor={item => item._id!}
 				renderItem={({ item }) => (
 					<View style={styles.reviewItem}>
 						<View style={styles.descriptionItem}>

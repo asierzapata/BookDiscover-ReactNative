@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as firebase from 'firebase'
+import firebase from 'firebase'
 import '@firebase/firestore'
 import ApiConstants from '../config/api_constants'
 import ApiErrors from '../config/api_errors'
@@ -151,7 +151,7 @@ function addBookToUser({ ISBN, thumbnail, title, section, work_key, edition_key 
 		})
 	}
 
-	const sectionsObject = _parseSection({ section })
+	const sectionsObject = _parseSection(section)
 
 	const userDocumentRef = firebase.firestore().collection(ApiConstants.USERS_COLLECTION).doc(currentUser.uid)
 	const bookCollectionReg = firebase.firestore().collection(ApiConstants.BOOKS_COLLECTION)
@@ -222,7 +222,7 @@ function deleteBookToUser({ _id }: BookInterface): Promise<ApiResponse> {
 			.then(document => {
 				if (document.exists) {
 					const { books } = document.data() as { books: FirestoreUserBooksSchema }
-					delete books[_id]
+					delete books[_id!]
 					return firebase
 						.firestore()
 						.collection(ApiConstants.USERS_COLLECTION)
@@ -306,7 +306,7 @@ function setUserRegion(region: Region): Promise<ApiResponse> {
 /*                        Helpers                         */
 /* ====================================================== */
 
-function _parseSection({ section }: BookSections): { [key: string]: boolean } {
+function _parseSection(section: BookSections): { [key: string]: boolean } {
 	const object = {} as { [key: string]: boolean }
 	object[section] = true
 	return object
