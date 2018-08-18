@@ -1,10 +1,11 @@
-export interface ownState {}
+export interface OwnState {}
 
-export interface ownProps {
+export interface OwnProps {
     title: string
-    items: {
-        [key: string]: string
-    }
+    items: Array<{
+		key: string
+		value: any
+	}>
     value: string
     onValueChange: (value: any) => void
 }

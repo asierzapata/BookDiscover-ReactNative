@@ -1,32 +1,28 @@
 import { NavigationScreenProps } from 'react-navigation'
 import { AsyncActionStatus } from '../../modules/api_metadata/api_metadata_module'
 import { AsyncAction, BaseAction } from '../../modules/actions_interfaces';
-import { BooksQueryOptions, BooksQueryFields, QUERY_MODALITY_FIELDS, ORDER_BY_FIELDS } from '../../api/book/book_interfaces';
+import { BooksQueryField, Book } from '../../api/book/book_interfaces';
 
-export interface ownState {
+export interface OwnState {
     openAdvancedSearch: boolean
-    queryLanguage: string,
-    queryOrderBy: 'relevance' | 'newest'
-    queryModality: '' | 'author' | 'title' | 'publisher' | 'subject'
+    queryModality: BooksQueryField
     searchQuery: string
     lastSearchQuery: string
-    lastQueryOrderBy: 'relevance' | 'newest',
-    lastQueryModality: '' | 'author' | 'title' | 'publisher' | 'subject',
-    lastQueryLanguage: string,
+    lastQueryModality: BooksQueryField,
     page: number
     activeSlide: number
     errorMessage?: string 
 }
 
-export interface ownProps extends NavigationScreenProps, StateProps, DispatchProps {}
+export interface OwnProps extends NavigationScreenProps, StateProps, DispatchProps {}
 
 export interface StateProps {
     fetchBooksByQueryStatus: AsyncActionStatus
-    searchBooks: any
+    searchBooks: Book[]
 }
 
 
 export interface DispatchProps {
-    handleFetchBooksByQuery: (query: string, page: number, queryOptions: BooksQueryOptions, queryField: BooksQueryFields) => AsyncAction
+    handleFetchBooksByQuery: (query: string, page: number, queryField: BooksQueryField) => AsyncAction
     handleClearSearchBooks: () => BaseAction
 }

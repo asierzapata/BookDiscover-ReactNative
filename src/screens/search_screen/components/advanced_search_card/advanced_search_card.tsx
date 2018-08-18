@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
-import { Text, View, Picker } from 'react-native'
 import _ from 'lodash'
+
+/* ====================================================== */
+/*                      Components                        */
+/* ====================================================== */
+
+import { View } from 'react-native'
+import PickerComponent from '../../../../ui/components/picker/picker_component'
 
 /* ====================================================== */
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { ownProps, ownState } from './advanced_search_card_interfaces';
+import { OwnProps, OwnState } from './advanced_search_card_interfaces'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -18,21 +24,17 @@ import styles from './advanced_search_card_styles'
 /*                   Implementation                       */
 /* ====================================================== */
 
-export default class AdvancedSearchCard extends Component<ownProps,ownState> {
+export default class AdvancedSearchCard extends Component<OwnProps,OwnState> {
     render() {
         const { title, items, value, onValueChange} = this.props
         return (
             <View style={styles.advancedSearchRow}>
-                <Text style={styles.title}>{title}</Text>
-                <Picker
-                    selectedValue={value}
-                    onValueChange={onValueChange}
-                    itemStyle={styles.advancedSearchPicker}
-                >
-                    {_.map(items, (display, field) => 
-                        <Picker.Item label={display} value={field} key={field}/>
-                    )}
-                </Picker>
+                <PickerComponent
+						title={title}
+						options={items}
+						option={value}
+						onOptionSelected={onValueChange}
+					/>
             </View>
         )
     }

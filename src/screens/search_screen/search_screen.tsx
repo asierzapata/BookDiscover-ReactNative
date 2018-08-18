@@ -44,8 +44,8 @@ import IconConstants from '../../ui/styles/icons'
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { ownProps, ownState, StateProps, DispatchProps } from './search_screen_interfaces'
-import { Book, ORDER_BY_FIELDS, QUERY_MODALITY_FIELDS, BooksQueryFields } from '../../api/book/book_interfaces'
+import { OwnProps, OwnState, StateProps, DispatchProps } from './search_screen_interfaces'
+import { Book, BooksQueryFields, BooksQueryField } from '../../api/book/book_interfaces'
 import routes from '../../router/routes';
 import { BoldTextColor } from '../../ui/styles/colors';
 
@@ -53,20 +53,16 @@ import { BoldTextColor } from '../../ui/styles/colors';
 /*                   Implementation                       */
 /* ====================================================== */
 
-export class SearchScreen extends Component<ownProps, ownState> {
+export class SearchScreen extends Component<OwnProps, OwnState> {
 
-	constructor(props: ownProps) {
+	constructor(props: OwnProps) {
 		super(props)
 		this.state = {
-			queryLanguage: 'en',
-			queryOrderBy: 'relevance',
-			queryModality: '',
 			openAdvancedSearch: false,
 			searchQuery: '',
+			queryModality: BooksQueryFields.standard,
 			lastSearchQuery: '',
-			lastQueryOrderBy: 'relevance',
-			lastQueryModality: '',
-			lastQueryLanguage: '',
+			lastQueryModality: BooksQueryFields.standard,
 			page: 0,
 			activeSlide: 0,
 			errorMessage: undefined
@@ -80,35 +76,24 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 
 	handleSearch = () => {
-		const { searchQuery, lastSearchQuery, page, queryOrderBy, queryLanguage, queryModality, lastQueryLanguage, lastQueryModality, lastQueryOrderBy } = this.state
+		const { searchQuery, lastSearchQuery, page, queryModality,lastQueryModality } = this.state
 
 		if (
-			lastSearchQuery !== searchQuery || 
-			queryOrderBy !== lastQueryOrderBy ||
-			queryLanguage !== lastQueryLanguage ||
+			lastSearchQuery !== searchQuery ||
 			queryModality !== lastQueryModality
 		) {
 			this.props.handleClearSearchBooks()
 		}
 		this.setState({ 
 			lastSearchQuery: searchQuery, 
-			lastQueryLanguage: queryLanguage, 
-			lastQueryModality: queryModality, 
-			lastQueryOrderBy: queryOrderBy 
+			lastQueryModality: queryModality
 		})
 
-		const queryOptions = { orderyBy: queryOrderBy, langRestrict: queryLanguage }
-		let queryField = {} as BooksQueryFields
+		this.props.handleFetchBooksByQuery(searchQuery, page, queryModality)
 
-		if(!_.isEmpty(queryModality)) {
-			queryField[queryModality] = searchQuery
-			this.props.handleFetchBooksByQuery('', page, queryOptions, queryField)
-		} else {
-			this.props.handleFetchBooksByQuery(searchQuery, page, queryOptions, queryField)
-		}
 	}
 
-	handleBookDetail = (book: any) => {
+	handleBookDetail = (book: Book) => {
 		this.props.navigation.navigate('BookDetail', { book, previousScreen: routes.SEARCH })
 	}
 
@@ -120,7 +105,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 
 	handleToggleAdvancedSearch = () => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-		this.setState((currentState) => ({openAdvancedSearch: !currentState.openAdvancedSearch}))
+		this.setState((currentState: OwnState) => ({openAdvancedSearch: !currentState.openAdvancedSearch}))
     }
 
 
@@ -179,31 +164,49 @@ export class SearchScreen extends Component<ownProps, ownState> {
 		/* Query Filtering: Language, orderBy (relevance, newest)*/
 		/* Query Modality: author, title, publisher, subject*/
 		const advancedSearchCards = [
-			{ 
-				title: 'Language', 
-				items: {
-					'en': 'English',
-					'es': 'Spanish',
-				},
-				value: this.state.queryLanguage,
-				onValueChange: (queryLanguage: string) => this.setState({ queryLanguage }, this.handleSearch)
-			},
-			{ 
-				title: 'Order by', 
-				items: {
-					...ORDER_BY_FIELDS
-				},
-				value: this.state.queryOrderBy,
-				onValueChange: (queryOrderBy: 'relevance' | 'newest') => this.setState({ queryOrderBy }, this.handleSearch)
-			},
+			// { 
+			// 	title: 'Language', 
+			// 	items: {
+			// 		'en': 'English',
+			// 		'es': 'Spanish',
+			// 	},
+			// 	value: this.state.queryLanguage,
+			// 	onValueChange: (queryLanguage: string) => this.setState({ queryLanguage }, this.handleSearch)
+			// },
+			// { 
+			// 	title: 'Order by', 
+			// 	items: {
+			// 		...ORDER_BY_FIELDS
+			// 	},
+			// 	value: this.state.queryOrderBy,
+			// 	onValueChange: (queryOrderBy: 'relevance' | 'newest') => this.setState({ queryOrderBy }, this.handleSearch)
+			// },
 			{ 
 				title: 'Specific search', 
-				items: {
-					'': '-',
-					...QUERY_MODALITY_FIELDS
-				},
+				items: [
+					{
+						key: BooksQueryFields.standard,
+						value: '-'
+					},
+					{
+						key: BooksQueryFields.author,
+						value: 'Author'
+					},
+					{
+						key: BooksQueryFields.title,
+						value: 'Title'
+					},
+					{
+						key: BooksQueryFields.subject,
+						value: 'Subject'
+					},
+					{
+						key: BooksQueryFields.isbn,
+						value: 'ISBN'
+					},
+				],
 				value: this.state.queryModality,
-				onValueChange: (queryModality: '' | 'author' | 'title' | 'publisher' | 'subject') => this.setState({ queryModality }, this.handleSearch) 
+				onValueChange: (queryModality: BooksQueryField) => this.setState({ queryModality }, this.handleSearch) 
 			}
 		]
 
@@ -266,7 +269,7 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 }
 
-const mapStateToProps = (state: any): StateProps => ({
+const mapStateToProps = (state: OwnState): StateProps => ({
 	fetchBooksByQueryStatus: getRequestStatus(state, {
 		actionType: FETCH_BOOKS_SEARCH.NAME
 	}),
@@ -274,7 +277,7 @@ const mapStateToProps = (state: any): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleFetchBooksByQuery: (query, page, queryOptions, queryField) => dispatch(fetchBooksSearch(query, page, queryOptions, queryField)),
+	handleFetchBooksByQuery: (query, page, queryField) => dispatch(fetchBooksSearch(query, page, queryField)),
 	handleClearSearchBooks: () => dispatch(clearSearchBooks())
 })
 

@@ -3,7 +3,6 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Text, TextInput, KeyboardAvoidingView, Button, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
-import { NavigationScreenProps } from 'react-navigation'
 
 /* ====================================================== */
 /*                   Actions / Selectors                  */

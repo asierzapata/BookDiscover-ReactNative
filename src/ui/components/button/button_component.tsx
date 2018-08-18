@@ -1,6 +1,6 @@
-import React, { ReactNode, ReactText } from 'react'
+import React, { ReactText } from 'react'
 import classnames from '../../../lib/classnames'
-import { TouchableOpacity, TouchableHighlight, ActivityIndicator, ViewStyle, StyleProp } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, ViewStyle, StyleProp } from 'react-native'
 import { Text } from '../text/text_component'
 
 /* ====================================================== */
