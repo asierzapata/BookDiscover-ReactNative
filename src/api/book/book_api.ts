@@ -1,17 +1,21 @@
-import firebase from 'firebase'
 import _ from 'lodash'
-import ApiConstants from '../config/api_constants'
+import * as firebase from 'firebase'
+import '@firebase/firestore'
 import ApiErrors from '../config/api_errors'
-import ApiClient from '../config/api_config'
 
-import BookParser from './book_parsers'
+/* ====================================================== */
+/*                      Services                          */
+/* ====================================================== */
+
+import OpenLibrary from '../../services/book_services/open_library/open_library'
 
 /* ====================================================== */
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookApiObject, BooksQueryOptions, BooksQueryFields } from './book_interfaces'
-import { ApiError, ApiResponse } from '../config/api_interfaces';
+import { BookApiObject, BooksQueryField, BooksQueryFields, Book } from './book_interfaces'
+import { ApiResponse } from '../config/api_interfaces';
+import ApiConstants from '../config/api_constants';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -19,7 +23,8 @@ import { ApiError, ApiResponse } from '../config/api_interfaces';
 
 const api: BookApiObject = {
 	getBookInfoByISBN,
-	getBooksByQuery
+	getBooksByQuery,
+	createNewBook
 }
 
 export default api
@@ -30,22 +35,14 @@ export default api
 
 function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
-		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=isbn:${ISBN}`, {})
-			.then(response => {
-				const { data } = response
-				if (data) {
-					resolve({
-						headers: '',
-						status: '200',
-						statusText: '',
-						data: BookParser.parseIndividualBook(data.items[0].volumeInfo)
-					})
-				} else {
-					reject({
-						code: 404,
-						message: ApiErrors.NOT_FOUND
-					})
-				}
+		OpenLibrary.searchByISBN({ ISBN }, 0)
+			.then(data => {
+				resolve({
+					headers: '',
+					status: '',
+					statusText: '',
+					data
+				})
 			})
 			.catch(error => {
 				reject({
@@ -56,31 +53,40 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 	})
 }
 
-function getBooksByQuery({ query, queryOptions = {}, queryField = {}, page = 0 }: { query: string, page: number, queryOptions?: BooksQueryOptions, queryField?: BooksQueryFields}): Promise<{}> {
-	const { QUERY_FIELDS, QUERY_OPTIONS } = ApiConstants.QUERY_SEPARATORS
-	const queryFieldString = _queryStringWithSeparatorAndPrefix(queryField, QUERY_FIELDS.prefix, QUERY_FIELDS.separator)
-	const queryOptionsString = _queryStringWithSeparatorAndPrefix(queryOptions, QUERY_OPTIONS.prefix, QUERY_OPTIONS.separator)
-	const searchPath = `${ApiConstants.SEARCH_PATH}?q=${query}${queryFieldString}&startIndex=${page}${queryOptionsString}`
-
+function getBooksByQuery(
+	{ query, queryField = BooksQueryFields.standard, page = 0 }: 
+	{ query: string, page: number, queryField?: BooksQueryFields }
+): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
-		ApiClient.get(searchPath, {})
-			.then(response => {
-				const { data } = response
-				if (data) {
-					resolve({
-						headers: response.headers,
-						status: response.status,
-						statusText: response.statusText,
-						data: BookParser.parseGoogleReponse(data)
-					})
-				} else {
-					reject({
-						code: 404,
-						message: ApiErrors.NOT_FOUND
-					})
-				}
+		let promise: Promise<Book[] | string[]> = Promise.resolve([])
+		switch(queryField) {
+			case BooksQueryFields.standard:
+				promise = OpenLibrary.searchByStandardQuery({ query }, page)
+			case BooksQueryFields.isbn:
+				promise = OpenLibrary.searchByISBN({ ISBN: query }, page)
+			case BooksQueryFields.author:
+				promise = OpenLibrary.searchByAuthor({ author: query }, page)
+			case BooksQueryFields.subject:
+				promise = OpenLibrary.searchBySubject({ subject: query }, page)
+			case BooksQueryFields.title:
+				promise = OpenLibrary.searchByTitle({ title: query }, page)
+			default:
+				reject({
+					code: 500,
+					message: ApiErrors.INCORRECT_PARAM
+				})
+				break;
+		}
+		promise
+			.then(data => {
+				resolve({
+					headers: '',
+					status: '',
+					statusText: '',
+					data
+				})
 			})
-			.catch(error => {
+			.catch(() => {
 				reject({
 					code: 500,
 					message: ApiErrors.NOT_FOUND
@@ -89,10 +95,13 @@ function getBooksByQuery({ query, queryOptions = {}, queryField = {}, page = 0 }
 	})
 }
 
-/* ====================================================== */
-/*                        Helpers                         */
-/* ====================================================== */
-
-function _queryStringWithSeparatorAndPrefix(options: BooksQueryOptions | BooksQueryFields, prefix: string, separator: string) {
-	return _.join(_.map(options, (value, option) => `${prefix}${option}${separator}${_.trim(value)}`), '')
+function createNewBook( ISBN: string[], OpenLibrary: { work_key: string, edition_key: string[] }): Promise<string> {
+	return new Promise((resolve, reject) => {
+		firebase
+			.firestore()
+			.collection(ApiConstants.USERS_COLLECTION)
+			.add({ ISBN, services: { OpenLibrary } })
+			.then(document => resolve(document.id))
+			.catch(error => reject(error))
+	})
 }

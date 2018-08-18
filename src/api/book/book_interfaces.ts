@@ -7,48 +7,38 @@ import { ApiResponse } from "../config/api_interfaces";
 export interface Book {
 	title: string
 	authors: string[]
-	publisher: string
+	publisher: string[]
 	publishedDate: string
 	description: string
-	ISBN: string
-	pageCount: number
-	categories: string[]
-	language: string
+	ISBN: string[]
+	pageCount?: number
+	subject: string[]
+	language: string[]
 	thumbnail: string
-	[key: string]: any| undefined
+	[key: string]: any | undefined
 }
 
 export interface BookApiObject {
 	getBookInfoByISBN: ({ ISBN }: { ISBN: string }) => Promise<ApiResponse>
-	getBooksByQuery: ({ query, queryOptions, queryField, page }: { query: string, page: number, queryOptions?: BooksQueryOptions, queryField?: BooksQueryFields}) => Promise<{}>
+	getBooksByQuery: ({ query, queryField, page }: { query: string, page: number, queryField?: BooksQueryFields }) => Promise<ApiResponse>
+	createNewBook: ( ISBN: string[], OpenLibrary: { work_key: string, edition_key: string[] } ) => Promise<string>
 }
 
-export interface BooksQueryOptions {
-	orderBy?: 'relevance' | 'newest'
-	langRestrict?: string
+export type BooksQueryField = 
+	BooksQueryFields.standard | BooksQueryFields.title | BooksQueryFields.author | BooksQueryFields.isbn | BooksQueryFields.subject
+
+export enum BooksQueryFields {
+	'standard',
+	'title',
+	'author',
+	'isbn',
+	'subject'
 }
 
-export const ORDER_BY_FIELDS = {
-	relevance: 'Relevance',
-	newest: 'Newest'
+export interface AddBookParams extends Book, BookSections {
+	work_key: string
+	edition_key: string[]
 }
-
-export interface BooksQueryFields {
-	inauthor?: string
-	intitle?: string
-	inpublisher?: string
-	subject?: string
-	[key: string]: string | undefined
-}
-
-export const QUERY_MODALITY_FIELDS = {
-	inauthor: 'Author',
-	intitle: 'Title',
-	inpublisher: 'Publisher',
-	subject: 'Subject'
-}
-
-export interface AddBookParams extends Book, BookSections {}
 
 export interface BookSections {
 	section: 'favourites' | 'toRead' | 'readingNow' | 'haveRead'
