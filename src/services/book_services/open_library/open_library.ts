@@ -10,7 +10,7 @@ import Constants from './open_library_constants'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookModule, BookModuleMethodsInput, LIMIT } from '../book_modules_interface'
+import { BookModule, BookModuleMethodsInput, LIMIT } from '../book_services_interface'
 import { Book } from '../../../api/book/book_interfaces'
 
 /* ====================================================== */

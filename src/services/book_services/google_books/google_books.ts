@@ -7,7 +7,7 @@ import parser from './google_books_parser'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookModule, BookModuleMethodsInput } from '../book_modules_interface'
+import { BookModule, BookModuleMethodsInput } from '../book_services_interface'
 import { Book } from '../../../api/book/book_interfaces'
 
 /* ====================================================== */
