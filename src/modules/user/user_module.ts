@@ -176,6 +176,6 @@ const createSelector = selectorCreatorFactory(MODULE_NAME)
 /* ====================================================== */
 
 export enum Region {
-	'es',
-	'us'
+	'spain' = 'es',
+	'unitedStates' = 'us'
 }

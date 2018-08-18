@@ -262,7 +262,7 @@ function getUserInfo(): Promise<ApiResponse> {
 
 function setUserRegion(region: Region): Promise<ApiResponse> {
 	const { currentUser } = firebase.auth()
-	console.log(currentUser)
+	console.log(currentUser, region)
 	if (_.isNull(currentUser)) {
 		return Promise.reject({
 			code: 401,
@@ -276,21 +276,6 @@ function setUserRegion(region: Region): Promise<ApiResponse> {
 			.collection(ApiConstants.USERS_COLLECTION)
 			.doc(currentUser.uid)
 			.set({ region }, { merge: true })
-			// .then(document => {
-			// 	if (document.exists) {
-			// 		console.log('>>>>> DOCUMENT DATA',document.data())
-			// 		return firebase
-			// 			.firestore()
-			// 			.collection(ApiConstants.USERS_COLLECTION)
-			// 			.doc(currentUser.uid)
-			// 			
-			// 	} else {
-			// 		reject({
-			// 			code: 500,
-			// 			message: ApiErrors.NOT_FOUND
-			// 		})
-			// 	}
-			// })
 			.then(() => {
 				resolve({
 					headers: '',

@@ -48,13 +48,12 @@ export class AuthLoadingScreen extends Component<NavigationScreenProps> {
 /*                       Helpers                          */
 /* ====================================================== */
 
-const CREATION_SENSIBILITY = 60
+const CREATION_SENSIBILITY = 60 * 2
 function isNewlyCreated(creationTimeString?: string): boolean {
 	if (creationTimeString) {
 		const creationTime = moment(creationTimeString)
-		const differential = creationTime.diff(moment(), 'seconds')
-		console.log('>>>>>> DIFF', differential)
-		return differential > CREATION_SENSIBILITY || differential < CREATION_SENSIBILITY
+		const differential = Math.abs(creationTime.diff(moment(), 'seconds'))
+		return differential < CREATION_SENSIBILITY
 	}
 	return false
 }

@@ -9,7 +9,7 @@ export function userParser(entityFromFirestore: UserInfo) {
 		_id: entityFromFirestore.uid,
 		email: entityFromFirestore.email,
 		displayName: entityFromFirestore.displayName || '',
-		phoneNumber: entityFromFirestore.phoneNumber || undefined,
-		photoURL: entityFromFirestore.photoURL || undefined
+		phoneNumber: entityFromFirestore.phoneNumber || null,
+		photoURL: entityFromFirestore.photoURL || null
 	}
 }

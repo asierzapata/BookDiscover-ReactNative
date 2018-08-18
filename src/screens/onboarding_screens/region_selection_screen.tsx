@@ -38,11 +38,11 @@ import PickerComponent from '../../ui/components/picker/picker_component';
 
 const REGION_OPTIONS = [
 	{
-		key: 'es',
+		key: Region.spain,
 		value: 'Spain'
 	},
 	{
-		key: 'us',
+		key: Region.unitedStates,
 		value: 'United States'
 	}
 ]
@@ -51,7 +51,7 @@ class RegionSelectionScreen extends Component<RegionSelectProps, RegionSelectSta
 
 	state = {
 		region: {
-			key: Region.us,
+			key: Region.unitedStates,
 			value: 'United States'
 		}
 	}
