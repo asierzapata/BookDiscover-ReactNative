@@ -1,14 +1,17 @@
+import _ from 'lodash'
+
 import ApiClient from '../../../api/config/api_config'
 import ApiConstants from '../../../api/config/api_constants'
 
 import parser from './google_books_parser'
+import Constants from './google_books_constants'
 
 /* ====================================================== */
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookService, BookServiceMethodsInput } from '../book_services_interface'
-import { Book } from '../../../api/book/book_interfaces'
+import { BookService, BookServiceMethodsInput, LIMIT } from '../book_services_interface'
+import { Book, BooksQueryOptions } from '../../../api/book/book_interfaces'
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -30,34 +33,58 @@ export default api
 /*                        Content                         */
 /* ====================================================== */
 
-function searchByISBN({ ISBN }: BookServiceMethodsInput): Promise<Book[]> {
+function searchByISBN({ ISBN }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
+	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	return _searchRequestFactory(ISBN!, queryObject, queryOptions!, page)
+}
+
+function searchByStandardQuery({ query }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
+	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	return _searchRequestFactory(query!, queryObject, queryOptions!, page)
+}
+
+function searchByAuthor({ author }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
+	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	return _searchRequestFactory(author!, queryObject, queryOptions!, page)
+}
+
+function searchByTitle({ title }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
+	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	return _searchRequestFactory(title!, queryObject, queryOptions!, page)
+}
+
+function searchBySubject({ subject }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
+	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	return _searchRequestFactory(subject!, queryObject, queryOptions!, page)
+}
+
+function searchByPublisher({ publisher }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
+	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	return _searchRequestFactory(publisher!, queryObject, queryOptions!, page)
+}
+
+function getEditionsByISBN(): Promise<string[]> {
+	return Promise.resolve([])
+}
+
+/* ====================================================== */
+/*                        Helpers                         */
+/* ====================================================== */
+
+function _searchRequestFactory(value: string, queryObject: { key: string, separator: string }, queryOptions: BooksQueryOptions, page: number): Promise<Book[]> {
 	return new Promise((resolve, reject) => {
-		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=isbn:${ISBN}`, {})
+		ApiClient.get(
+			`${Constants.SEARCH_PATH}?q=${_queryStringWithSeparatorAndPrefix(queryObject, value)}&maxResults=${LIMIT}&startIndex=${page*LIMIT}${_queryStringForQueryOptions(queryOptions, '=')}`
+			, {})
 			.then(response => resolve(parser.parseGoogleReponse(response.data)))
 			.catch(error => reject(error))
 	})
 }
 
-function searchByStandardQuery(): Promise<Book[]> {
-	return Promise.resolve([])
+function _queryStringWithSeparatorAndPrefix(param: { key: string, separator: string }, value: string) {
+	return `${param.key}${param.separator}${ _.join(_.split(_.trim(value), ' '), '+')}`
 }
 
-function searchByAuthor(): Promise<Book[]> {
-		return Promise.resolve([])
-}
-
-function searchByTitle(): Promise<Book[]> {
-		return Promise.resolve([])
-}
-
-function searchBySubject(): Promise<Book[]> {
-		return Promise.resolve([])
-}
-
-function searchByPublisher(): Promise<Book[]> {
-		return Promise.resolve([])
-}
-
-function getEditionsByISBN(): Promise<string[]> {
-		return Promise.resolve([])
+function _queryStringForQueryOptions(queryOptions: BooksQueryOptions, separator: string) {
+	return _.join(_.map(queryOptions, (value, option) => `&${Constants.QUERY_OPTIONS[option]}${separator}${_.trim(value)}`), '')
 }

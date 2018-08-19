@@ -14,14 +14,14 @@ export default {
         },
         QUERY_TITLE: {
             key: 'title',
-            separator: '='
+            separator: '='  
         },
         QUERY_AUTHOR: {
             key: 'author',
             separator: '='
         },
         QUERY_SUBJECT: {
-            key: 'author',
+            key: 'subject',
             separator: '='
         },
         QUERY_PUBLISHER: {
