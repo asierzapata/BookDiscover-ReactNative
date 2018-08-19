@@ -13,7 +13,7 @@ import OpenLibrary from '../../services/book_services/open_library/open_library'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookApiObject, BooksQueryField, BooksQueryFields, Book } from './book_interfaces'
+import { BookApiObject, BooksQueryField, BooksQueryFields, Book, BooksQueryOptions } from './book_interfaces'
 import { ApiResponse } from '../config/api_interfaces';
 import ApiConstants from '../config/api_constants';
 
@@ -37,6 +37,7 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		OpenLibrary.searchByISBN({ ISBN }, 0)
 			.then(data => {
+				console.log(data)
 				resolve({
 					headers: '',
 					status: '',
@@ -54,8 +55,8 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 }
 
 function getBooksByQuery(
-	{ query, queryField = BooksQueryFields.standard, page = 0 }: 
-	{ query: string, page: number, queryField?: BooksQueryFields }
+	{ query, queryField = BooksQueryFields.standard, queryOptions, page = 0 }: 
+	{ query: string, page: number, queryField?: BooksQueryFields, queryOptions?: BooksQueryOptions }
 ): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		let promise: () => Promise<Book[] | string[]> = () => Promise.resolve([])
@@ -100,12 +101,16 @@ function getBooksByQuery(
 	})
 }
 
-function createNewBook( ISBN: string[], OpenLibrary: { work_key: string, edition_key: string[] }): Promise<string> {
+function createNewBook( ISBN: string, title: string ): Promise<string> {
 	return new Promise((resolve, reject) => {
-		firebase
-			.firestore()
-			.collection(ApiConstants.USERS_COLLECTION)
-			.add({ ISBN, services: { OpenLibrary } })
+		OpenLibrary.searchByISBN({ ISBN }, 0)
+			.then(books => {
+				const book = books[0]
+				return firebase
+					.firestore()
+					.collection(ApiConstants.BOOKS_COLLECTION)
+					.add({ ISBN: book.ISBN, title, services: { OpenLibrary: { work_key: book.work_key, edition_key: book.edition_key } } })
+			})
 			.then(document => resolve(document.id))
 			.catch(error => reject(error))
 	})

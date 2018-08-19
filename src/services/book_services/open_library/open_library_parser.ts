@@ -59,7 +59,7 @@ function parseIndividualBook(book: OpenLibraryBook, { description }: OpenLibrary
         publisher: publisher ? publisher : [],
         publishedDate: first_publish_year ? first_publish_year.toString() : 'Undefined',
         description: description ? description : 'Description not available',
-        ISBN: isbn,
+        ISBN: isbn[0],
         subject: subject ? subject : [],
         language: language ? language : [],
         work_key: key,

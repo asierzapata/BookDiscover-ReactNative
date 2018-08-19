@@ -21,7 +21,7 @@ import { Book, AddBookParams } from '../../api/book/book_interfaces'
 /*                   	Parsers                           */
 /* ====================================================== */
 
-import { User as UserInterface, AuthData } from '../../api/user/user_interfaces'
+import { User as UserInterface, AuthData, SearchEngines } from '../../api/user/user_interfaces'
 import { ApiResponse } from '../../api/config/api_interfaces'
 
 /* ====================================================== */
@@ -56,8 +56,6 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 		type: asyncAction(SIGN_UP.NAME),
 		AsyncProcess: ({ dispatch }) =>
 			userApi.signUp({ email, password }).then((data: ApiResponse) => userApi.addUser(data.data)),
-			// userApi.signUp({ email, password })
-			// 	.then(({ data }: ApiResponse) => userApi.addUser(data)),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(SIGN_UP.NAME)
@@ -170,6 +168,8 @@ export default combineReducers({
 const createSelector = selectorCreatorFactory(MODULE_NAME)
 
 // -----------
+
+export const getUserSearchEngine = createSelector(state => (state.userInfo.settings.searchEngine ? state.userInfo.settings.searchEngine : SearchEngines.GoogleBooks) )
 
 /* ====================================================== */
 /*                      Interfaces                        */

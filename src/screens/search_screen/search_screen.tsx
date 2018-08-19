@@ -18,6 +18,8 @@ import {
 	clearSearchBooks
 } from '../../modules/books/book_module'
 
+import { getUserSearchEngine } from '../../modules/user/user_module'
+
 import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module'
 
 /* ====================================================== */
@@ -44,10 +46,11 @@ import IconConstants from '../../ui/styles/icons'
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { OwnProps, OwnState, StateProps, DispatchProps } from './search_screen_interfaces'
-import { Book, BooksQueryFields, BooksQueryField } from '../../api/book/book_interfaces'
+import { OwnProps, OwnState, StateProps, DispatchProps, Card } from './search_screen_interfaces'
+import { Book, BooksQueryFields, BooksQueryField, BooksQueryLanguages, BooksQueryOrderBys, BooksQueryLanguage, BooksQueryOrderBy, BooksQueryOptions } from '../../api/book/book_interfaces'
 import routes from '../../router/routes';
 import { BoldTextColor } from '../../ui/styles/colors';
+import { SearchEngines } from '../../api/user/user_interfaces';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -55,18 +58,83 @@ import { BoldTextColor } from '../../ui/styles/colors';
 
 export class SearchScreen extends Component<OwnProps, OwnState> {
 
+	advancedSearchCards: Card[] = []
+
 	constructor(props: OwnProps) {
 		super(props)
 		this.state = {
 			openAdvancedSearch: false,
 			searchQuery: '',
-			queryModality: BooksQueryFields.standard,
 			lastSearchQuery: '',
-			lastQueryModality: BooksQueryFields.standard,
 			page: 0,
 			activeSlide: 0,
-			errorMessage: undefined
+			errorMessage: undefined,
+			queryParams: { queryModality: BooksQueryFields.standard },
+			lastQueryParams: { queryModality: BooksQueryFields.standard }
 		}
+	}
+
+	componentDidMount() {
+		this.searchEngineState()
+	}
+
+	searchEngineState = () => {
+		switch(this.props.userSearchEngine) {
+			case(SearchEngines.GoogleBooks):
+				this.setState({
+					queryParams: { 
+						queryModality: BooksQueryFields.standard,
+						queryOrderBy: BooksQueryOrderBys.Relevance,
+						queryLanguage: BooksQueryLanguages.English,
+					},
+					lastQueryParams: { 
+						queryModality: BooksQueryFields.standard,
+						queryOrderBy: BooksQueryOrderBys.Relevance,
+						queryLanguage: BooksQueryLanguages.English,
+					}
+				})
+				this.advancedSearchCards = [
+					{
+						title: 'Language',
+						items: [
+							{ key: BooksQueryLanguages.English, value: 'English' },
+							{ key: BooksQueryLanguages.Spanish, value: 'Spanish' }
+						],
+						value: this.state.queryParams.queryLanguage!,
+						onValueChange: ({ key }: { key: BooksQueryLanguage }) => 
+							this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryLanguage: key }}), this.handleSearch)
+					},
+					{
+						title: 'Order By',
+						items: [
+							{ key: BooksQueryOrderBys.Relevance, value: 'Relevance' },
+							{ key: BooksQueryOrderBys.Newest, value: 'Newest' }
+						],
+						value: this.state.queryParams.queryOrderBy!,
+						onValueChange: ({ key }: { key: BooksQueryOrderBy }) => 
+							this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryOrderBy: key }}), this.handleSearch)
+					}
+				]
+				break;
+			case(SearchEngines.OpenLibrary):
+			default:
+				break;
+		}
+		this.advancedSearchCards.push(
+			{ 
+				title: 'Specific search', 
+				items: [
+					{ key: BooksQueryFields.standard, value: 'Standard' },
+					{ key: BooksQueryFields.author, value: 'Author' },
+					{ key: BooksQueryFields.title, value: 'Title' },
+					{ key: BooksQueryFields.subject, value: 'Subject' },
+					{ key: BooksQueryFields.isbn, value: 'ISBN' },
+				],
+				value: _.capitalize(this.state.queryParams.queryModality),
+				onValueChange: ({ key }: { key: BooksQueryField }) => 
+					this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryModality: key }}), this.handleSearch)
+			}
+		)
 	}
 
 	handleCancel = () => {
@@ -76,20 +144,22 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 	}
 
 	handleSearch = () => {
-		const { searchQuery, lastSearchQuery, page, queryModality,lastQueryModality } = this.state
+		const { searchQuery, lastSearchQuery, page, queryParams, lastQueryParams } = this.state
+		const { userSearchEngine } = this.props
 
 		if (
 			lastSearchQuery !== searchQuery ||
-			queryModality !== lastQueryModality
+			!_.isEqual(queryParams, lastQueryParams)
 		) {
+			this.setState({ page: 0 })
 			this.props.handleClearSearchBooks()
 		}
 		this.setState({ 
 			lastSearchQuery: searchQuery, 
-			lastQueryModality: queryModality
+			lastQueryParams: queryParams
 		})
 
-		this.props.handleFetchBooksByQuery(searchQuery, page, queryModality)
+		this.props.handleFetchBooksByQuery(searchQuery, page, userSearchEngine, queryParams.queryModality as BooksQueryField, { ...queryParams } as BooksQueryOptions)
 
 	}
 
@@ -161,62 +231,13 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 	renderAdvancedSearchFields() {
 		const { activeSlide } = this.state  
 
-		/* Query Filtering: Language, orderBy (relevance, newest)*/
-		/* Query Modality: author, title, publisher, subject*/
-		const advancedSearchCards = [
-			// { 
-			// 	title: 'Language', 
-			// 	items: {
-			// 		'en': 'English',
-			// 		'es': 'Spanish',
-			// 	},
-			// 	value: this.state.queryLanguage,
-			// 	onValueChange: (queryLanguage: string) => this.setState({ queryLanguage }, this.handleSearch)
-			// },
-			// { 
-			// 	title: 'Order by', 
-			// 	items: {
-			// 		...ORDER_BY_FIELDS
-			// 	},
-			// 	value: this.state.queryOrderBy,
-			// 	onValueChange: (queryOrderBy: 'relevance' | 'newest') => this.setState({ queryOrderBy }, this.handleSearch)
-			// },
-			{ 
-				title: 'Specific search', 
-				items: [
-					{
-						key: BooksQueryFields.standard,
-						value: '-'
-					},
-					{
-						key: BooksQueryFields.author,
-						value: 'Author'
-					},
-					{
-						key: BooksQueryFields.title,
-						value: 'Title'
-					},
-					{
-						key: BooksQueryFields.subject,
-						value: 'Subject'
-					},
-					{
-						key: BooksQueryFields.isbn,
-						value: 'ISBN'
-					},
-				],
-				value: this.state.queryModality,
-				onValueChange: (queryModality: BooksQueryField) => this.setState({ queryModality }, this.handleSearch) 
-			}
-		]
-
 		return(
 			<View style={styles.advancedSearchFields}>
 				<View style={styles.advancedSearchCarousel}>
 					<Carousel 
 						layout={'default'} 
 						containerCustomStyle={styles.advancedSearchCarousel}
-						data={advancedSearchCards}
+						data={this.advancedSearchCards}
 						layoutCardOffset={18} 
 						itemWidth={200}
 						sliderWidth={width}
@@ -227,7 +248,7 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 				</View>
 				<View style={styles.advancedSearchDotsView}>
 					<Pagination
-						dotsLength={advancedSearchCards.length}
+						dotsLength={this.advancedSearchCards.length}
 						activeDotIndex={activeSlide}
 						containerStyle={styles.advancedSearchDotsContainer}
 						dotStyle={styles.advancedSearchDot}
@@ -273,11 +294,12 @@ const mapStateToProps = (state: OwnState): StateProps => ({
 	fetchBooksByQueryStatus: getRequestStatus(state, {
 		actionType: FETCH_BOOKS_SEARCH.NAME
 	}),
-	searchBooks: getSearchBooks(state)
+	searchBooks: getSearchBooks(state),
+	userSearchEngine: getUserSearchEngine(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleFetchBooksByQuery: (query, page, queryField) => dispatch(fetchBooksSearch(query, page, queryField)),
+	handleFetchBooksByQuery: (query, page, engine, queryField, queryOptions) => dispatch(fetchBooksSearch(query, page, engine, queryField, queryOptions)),
 	handleClearSearchBooks: () => dispatch(clearSearchBooks())
 })
 

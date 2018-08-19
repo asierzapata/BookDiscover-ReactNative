@@ -22,7 +22,8 @@ import userApi from '../../api/user/user_api'
 /*                      Interfaces                        */
 /* ====================================================== */
 
-import { Book, BooksQueryFields } from '../../api/book/book_interfaces'
+import { Book, BooksQueryFields, BooksQueryOptions } from '../../api/book/book_interfaces'
+import { SearchEngine } from '../../api/user/user_interfaces';
 
 /* ====================================================== */
 /*                        Actions                         */
@@ -62,11 +63,13 @@ export const FETCH_BOOKS_SEARCH = asyncActionObject('FETCH_BOOKS_SEARCH')
 export function fetchBooksSearch(
 	query: string,
 	page: number,
-	queryField?: BooksQueryFields
+	engine: SearchEngine,
+	queryField?: BooksQueryFields,
+	queryOptions?: BooksQueryOptions,
 ): AsyncAction {
 	return {
 		type: asyncAction(FETCH_BOOKS_SEARCH.NAME),
-		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page, queryField }),
+		AsyncProcess: ({ dispatch }) => bookApi.getBooksByQuery({ query, page, queryField, queryOptions, engine }),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(FETCH_BOOKS_SEARCH.NAME)

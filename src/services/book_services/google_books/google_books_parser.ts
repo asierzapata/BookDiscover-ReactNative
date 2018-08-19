@@ -33,13 +33,13 @@ function parseIndividualBook(book: any): Book {
 		pageCount,
 		categories,
 		language,
-		imageLinks
+		imageLinks,
 	} = book
 
-	let ISBN: string[] = []
+	let ISBN = ''
 
 	_.forEach(industryIdentifiers, (identifier: { identifier: string; type: string }) => {
-		if (identifier.type === 'ISBN_13') ISBN = [ identifier.identifier ]
+		if (identifier.type === 'ISBN_13') ISBN = identifier.identifier
 	})
 
 	// TODO: replace the empty string for a suitable placeholder

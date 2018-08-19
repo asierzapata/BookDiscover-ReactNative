@@ -225,7 +225,7 @@ export class LibraryScreen extends Component<ownProps,ownState> {
                 break;
             case SECTIONS.LIBRARY:
             default:
-                sectionFilter = 'ISBN'
+                sectionFilter = '_id'
                 break;
         }
 
@@ -236,12 +236,14 @@ export class LibraryScreen extends Component<ownProps,ownState> {
             books : 
             _.filter(books, (book: Book) => book.title.search(searchQuery) !== NOT_FOUND)
 
+        console.log(arrayUserBooks)
+
         return (
             <GridView
                 itemDimension={bookWidth}
                 items={books}
                 isLoading={fetchUserBooksStatus.isLoading ? fetchUserBooksStatus.isLoading : false}
-                renderItem={(item: Book) => <BookItem onPress={() => this.handleBookDetail(item)} {...item}/>}
+                renderItem={(item: Book, index: number) => <BookItem onPress={() => this.handleBookDetail(item)} {...item} key={index}/>}
             />
         )
     }

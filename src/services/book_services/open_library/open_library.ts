@@ -10,14 +10,14 @@ import Constants from './open_library_constants'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookModule, BookModuleMethodsInput, LIMIT } from '../book_services_interface'
+import { BookService, BookServiceMethodsInput, LIMIT } from '../book_services_interface'
 import { Book } from '../../../api/book/book_interfaces'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-const api: BookModule = {
+const api: BookService = {
 	searchByISBN,
     searchByStandardQuery,
     searchByAuthor,
@@ -33,42 +33,47 @@ export default api
 /*                        Content                         */
 /* ====================================================== */
 
-function searchByISBN({ ISBN }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+function searchByISBN({ ISBN }: BookServiceMethodsInput, page: number): Promise<Book[]> {
 	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
 	return _searchRequestFactory(ISBN!, queryObject, page)
 }
 
-function searchByStandardQuery({ query }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+function searchByStandardQuery({ query }: BookServiceMethodsInput, page: number): Promise<Book[]> {
 	console.log('>>>>> SEARCH BY STANDARD QUERY', query)
 	const queryObject = Constants.QUERY_PARAMS.QUERY_STANDARD
 	return _searchRequestFactory(query!, queryObject, page)
 }
 
-function searchByAuthor({ author }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+function searchByAuthor({ author }: BookServiceMethodsInput, page: number): Promise<Book[]> {
 	const queryObject = Constants.QUERY_PARAMS.QUERY_AUTHOR
 	return _searchRequestFactory(author!, queryObject, page)
 }
 
-function searchByTitle({ title }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+function searchByTitle({ title }: BookServiceMethodsInput, page: number): Promise<Book[]> {
 	const queryObject = Constants.QUERY_PARAMS.QUERY_TITLE
 	return _searchRequestFactory(title!, queryObject, page)
 }
 
-function searchBySubject({ subject }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+function searchBySubject({ subject }: BookServiceMethodsInput, page: number): Promise<Book[]> {
 	const queryObject = Constants.QUERY_PARAMS.QUERY_SUBJECT
 	return _searchRequestFactory(subject!, queryObject, page)
 }
 
-function searchByPublisher({ publisher }: BookModuleMethodsInput, page: number): Promise<Book[]> {
+function searchByPublisher({ publisher }: BookServiceMethodsInput, page: number): Promise<Book[]> {
 	const queryObject = Constants.QUERY_PARAMS.QUERY_PUBLISHER
 	return _searchRequestFactory(publisher!, queryObject, page)
 }
 
-function getEditionsByISBN({ ISBN }: BookModuleMethodsInput): Promise<string[]> {
+function getEditionsByISBN({ ISBN }: BookServiceMethodsInput): Promise<string[]> {
+	let docs: OpenLibraryBook[]
 	return new Promise(resolve => {
 		const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
-		_searchRequestFactory(ISBN!, queryObject, 0)
-			.then(books => resolve(books[0].ISBN))
+		ApiClient.get(`${Constants.SEARCH_PATH}?${_queryStringWithSeparatorAndPrefix(queryObject, ISBN!)}&limit=${LIMIT}&offset=${0}`, {})
+			.then(response => {
+				const data = response.data as OpenLibrarySearchResponse
+				docs = data.docs
+				resolve(docs[0].isbn)
+			})
 	})
 }
 

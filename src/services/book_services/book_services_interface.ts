@@ -1,16 +1,16 @@
 import { Book } from '../../api/book/book_interfaces'
 
-export interface BookModule {
-    searchByISBN: ({ ISBN }: BookModuleMethodsInput, page: number) => Promise<Book[]>
-    searchByStandardQuery: ({ query }: BookModuleMethodsInput, page: number) => Promise<Book[]>
-    searchByAuthor: ({ author }: BookModuleMethodsInput, page: number) => Promise<Book[]>
-    searchByTitle: ({ title }: BookModuleMethodsInput, page: number) => Promise<Book[]>
-    searchBySubject: ({ subject }: BookModuleMethodsInput, page: number) => Promise<Book[]>
-    searchByPublisher: ({ publisher }: BookModuleMethodsInput, page: number) => Promise<Book[]>
-    getEditionsByISBN: ({ ISBN }: BookModuleMethodsInput) => Promise<string[]>
+export interface BookService {
+    searchByISBN: ({ ISBN }: BookServiceMethodsInput, page: number) => Promise<Book[]>
+    searchByStandardQuery: ({ query }: BookServiceMethodsInput, page: number) => Promise<Book[]>
+    searchByAuthor: ({ author }: BookServiceMethodsInput, page: number) => Promise<Book[]>
+    searchByTitle: ({ title }: BookServiceMethodsInput, page: number) => Promise<Book[]>
+    searchBySubject: ({ subject }: BookServiceMethodsInput, page: number) => Promise<Book[]>
+    searchByPublisher: ({ publisher }: BookServiceMethodsInput, page: number) => Promise<Book[]>
+    getEditionsByISBN: ({ ISBN }: BookServiceMethodsInput) => Promise<string[]>
 }
 
-export interface BookModuleMethodsInput {
+export interface BookServiceMethodsInput {
     ISBN?: string
     query?: string
     author?: string

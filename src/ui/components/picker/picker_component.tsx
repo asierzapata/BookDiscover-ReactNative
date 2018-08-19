@@ -68,10 +68,10 @@ interface OwnState {
 
 interface OwnProps {
 	title: string
-	options: {
+	options: Array<{
 		key: string
 		value: any
-	}[]
+	}>
 	option: string
 	onOptionSelected: ({ value, key }: { value: any, key: any }) => void
 }

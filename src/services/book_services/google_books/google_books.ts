@@ -7,14 +7,14 @@ import parser from './google_books_parser'
 /*                     Interfaces                         */
 /* ====================================================== */
 
-import { BookModule, BookModuleMethodsInput } from '../book_services_interface'
+import { BookService, BookServiceMethodsInput } from '../book_services_interface'
 import { Book } from '../../../api/book/book_interfaces'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
-const api: BookModule = {
+const api: BookService = {
 	searchByISBN,
     searchByStandardQuery,
     searchByAuthor,
@@ -30,7 +30,7 @@ export default api
 /*                        Content                         */
 /* ====================================================== */
 
-function searchByISBN({ ISBN }: BookModuleMethodsInput): Promise<Book[]> {
+function searchByISBN({ ISBN }: BookServiceMethodsInput): Promise<Book[]> {
 	return new Promise((resolve, reject) => {
 		ApiClient.get(`${ApiConstants.SEARCH_PATH}?q=isbn:${ISBN}`, {})
 			.then(response => resolve(parser.parseGoogleReponse(response.data)))
