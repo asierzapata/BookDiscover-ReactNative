@@ -8,6 +8,7 @@ import ApiErrors from '../config/api_errors'
 /* ====================================================== */
 
 import OpenLibrary from '../../services/book_services/open_library/open_library'
+import GoogleBooks from '../../services/book_services/google_books/google_books'
 
 /* ====================================================== */
 /*                     Interfaces                         */
@@ -16,6 +17,8 @@ import OpenLibrary from '../../services/book_services/open_library/open_library'
 import { BookApiObject, BooksQueryField, BooksQueryFields, Book, BooksQueryOptions } from './book_interfaces'
 import { ApiResponse } from '../config/api_interfaces';
 import ApiConstants from '../config/api_constants';
+import { BookService } from '../../services/book_services/book_services_interface';
+import { SearchEngine } from '../user/user_interfaces';
 
 /* ====================================================== */
 /*                   Implementation                       */
@@ -55,26 +58,28 @@ function getBookInfoByISBN({ ISBN }: { ISBN: string }): Promise<ApiResponse> {
 }
 
 function getBooksByQuery(
-	{ query, queryField = BooksQueryFields.standard, queryOptions, page = 0 }: 
-	{ query: string, page: number, queryField?: BooksQueryFields, queryOptions?: BooksQueryOptions }
+	{ query, queryField = BooksQueryFields.standard, queryOptions, engine, page = 0 }: 
+	{ query: string, page: number, queryField?: BooksQueryFields, queryOptions?: BooksQueryOptions, engine: SearchEngine }
 ): Promise<ApiResponse> {
 	return new Promise((resolve, reject) => {
 		let promise: () => Promise<Book[] | string[]> = () => Promise.resolve([])
+		let Service: BookService
+		Service = (queryOptions && !_.isEmpty(queryOptions)) ? GoogleBooks : OpenLibrary
 		switch(queryField) {
 			case BooksQueryFields.standard:
-				promise = () => OpenLibrary.searchByStandardQuery({ query }, page)
+				promise = () => Service.searchByStandardQuery({ query }, page)
 				break;
 			case BooksQueryFields.isbn:
-				promise = () => OpenLibrary.searchByISBN({ ISBN: query }, page)
+				promise = () => Service.searchByISBN({ ISBN: query }, page)
 				break;
 			case BooksQueryFields.author:
-				promise = () => OpenLibrary.searchByAuthor({ author: query }, page)
+				promise = () => Service.searchByAuthor({ author: query }, page)
 				break;
 			case BooksQueryFields.subject:
-				promise = () => OpenLibrary.searchBySubject({ subject: query }, page)
+				promise = () => Service.searchBySubject({ subject: query }, page)
 				break;
 			case BooksQueryFields.title:
-				promise = () => OpenLibrary.searchByTitle({ title: query }, page)
+				promise = () => Service.searchByTitle({ title: query }, page)
 				break;
 			default:
 				reject({
