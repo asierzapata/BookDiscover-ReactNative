@@ -83,7 +83,7 @@ function getEditionsByISBN({ ISBN }: BookServiceMethodsInput): Promise<string[]>
 
 function _searchRequestFactory(value: string, queryObject: { key: string, separator: string }, page: number): Promise<Book[]> {
 	let docs: OpenLibraryBook[]
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		ApiClient.get(`${Constants.SEARCH_PATH}?${_queryStringWithSeparatorAndPrefix(queryObject, value)}&limit=${LIMIT}&offset=${page*LIMIT}`, {})
 			.then(response => {
 				const data = response.data as OpenLibrarySearchResponse
@@ -93,6 +93,7 @@ function _searchRequestFactory(value: string, queryObject: { key: string, separa
 			.then(descriptions => {
 				resolve(parser.parseOpenLibraryReponse(docs, descriptions))
 			})
+			.catch(error => reject(error))
 	})
 }
 

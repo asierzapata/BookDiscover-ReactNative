@@ -21,6 +21,6 @@ interface OpenLibraryBook {
 }
 
 interface OpenLibraryBookResponse {
-    description: string
+    description: any
     title: string
 }

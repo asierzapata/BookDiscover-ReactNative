@@ -79,47 +79,6 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 	}
 
 	searchEngineState = () => {
-		switch(this.props.userSearchEngine) {
-			case(SearchEngines.GoogleBooks):
-				this.setState({
-					queryParams: { 
-						queryModality: BooksQueryFields.standard,
-						queryOrderBy: BooksQueryOrderBys.Relevance,
-						queryLanguage: BooksQueryLanguages.English,
-					},
-					lastQueryParams: { 
-						queryModality: BooksQueryFields.standard,
-						queryOrderBy: BooksQueryOrderBys.Relevance,
-						queryLanguage: BooksQueryLanguages.English,
-					}
-				})
-				this.advancedSearchCards = [
-					{
-						title: 'Language',
-						items: [
-							{ key: BooksQueryLanguages.English, value: 'English' },
-							{ key: BooksQueryLanguages.Spanish, value: 'Spanish' }
-						],
-						value: this.state.queryParams.queryLanguage!,
-						onValueChange: ({ key }: { key: BooksQueryLanguage }) => 
-							this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryLanguage: key }}), this.handleSearch)
-					},
-					{
-						title: 'Order By',
-						items: [
-							{ key: BooksQueryOrderBys.Relevance, value: 'Relevance' },
-							{ key: BooksQueryOrderBys.Newest, value: 'Newest' }
-						],
-						value: this.state.queryParams.queryOrderBy!,
-						onValueChange: ({ key }: { key: BooksQueryOrderBy }) => 
-							this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryOrderBy: key }}), this.handleSearch)
-					}
-				]
-				break;
-			case(SearchEngines.OpenLibrary):
-			default:
-				break;
-		}
 		this.advancedSearchCards.push(
 			{ 
 				title: 'Specific search', 
@@ -135,6 +94,48 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 					this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryModality: key }}), this.handleSearch)
 			}
 		)
+		switch(this.props.userSearchEngine) {
+			case(SearchEngines.GoogleBooks):
+				this.setState({
+					queryParams: { 
+						queryModality: BooksQueryFields.standard,
+						queryOrderBy: BooksQueryOrderBys.Relevance,
+						queryLanguage: BooksQueryLanguages.English,
+					},
+					lastQueryParams: { 
+						queryModality: BooksQueryFields.standard,
+						queryOrderBy: BooksQueryOrderBys.Relevance,
+						queryLanguage: BooksQueryLanguages.English,
+					}
+				}, () => {
+					this.advancedSearchCards.push(
+						{
+							title: 'Language',
+							items: [
+								{ key: BooksQueryLanguages.English, value: 'English' },
+								{ key: BooksQueryLanguages.Spanish, value: 'Spanish' }
+							],
+							value: this.state.queryParams.queryLanguage!,
+							onValueChange: ({ key }: { key: BooksQueryLanguage }) => 
+								this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryLanguage: key }}), this.handleSearch)
+						},
+						{
+							title: 'Order By',
+							items: [
+								{ key: BooksQueryOrderBys.Relevance, value: 'Relevance' },
+								{ key: BooksQueryOrderBys.Newest, value: 'Newest' }
+							],
+							value: this.state.queryParams.queryOrderBy!,
+							onValueChange: ({ key }: { key: BooksQueryOrderBy }) => 
+								this.setState((currentState: OwnState) => ({ queryParams: { ...currentState.queryParams, queryOrderBy: key }}), this.handleSearch)
+						}
+					)
+				})
+				break;
+			case(SearchEngines.OpenLibrary):
+			default:
+				break;
+		}
 	}
 
 	handleCancel = () => {
@@ -159,7 +160,8 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 			lastQueryParams: queryParams
 		})
 
-		this.props.handleFetchBooksByQuery(searchQuery, page, userSearchEngine, queryParams.queryModality as BooksQueryField, { ...queryParams } as BooksQueryOptions)
+		this.props.handleFetchBooksByQuery(searchQuery, page, userSearchEngine, queryParams.queryModality as BooksQueryField, 
+			{ queryLanguage: queryParams.queryLanguage, queryOrderBy: queryParams.queryOrderBy } as BooksQueryOptions)
 
 	}
 
@@ -231,6 +233,8 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 	renderAdvancedSearchFields() {
 		const { activeSlide } = this.state  
 
+		console.log(this.advancedSearchCards)
+
 		return(
 			<View style={styles.advancedSearchFields}>
 				<View style={styles.advancedSearchCarousel}>
@@ -243,7 +247,7 @@ export class SearchScreen extends Component<OwnProps, OwnState> {
 						sliderWidth={width}
 						firstItem={0}
 						onSnapToItem={(index: number) => this.setState({ activeSlide: index }) }
-						renderItem={({ item, index }: { item: any, index: number }) => <AdvancedSearchCard {...item} key={index}/>}
+						renderItem={({ item }: { item: any }) => <AdvancedSearchCard {...item}/>}
 					/>
 				</View>
 				<View style={styles.advancedSearchDotsView}>

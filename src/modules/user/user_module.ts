@@ -41,7 +41,8 @@ export const LOG_IN = asyncActionObject('LOG_IN')
 export function logIn({ email, password }: AuthData): AsyncAction {
 	return {
 		type: asyncAction(LOG_IN.NAME),
-		AsyncProcess: ({ dispatch }) => userApi.logIn({ email, password }),
+		AsyncProcess: ({ dispatch }) => 
+			userApi.logIn({ email, password }).then(() => userApi.getUserInfo()),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(LOG_IN.NAME)
@@ -55,7 +56,9 @@ export function signUp({ email, password }: AuthData): AsyncAction {
 	return {
 		type: asyncAction(SIGN_UP.NAME),
 		AsyncProcess: ({ dispatch }) =>
-			userApi.signUp({ email, password }).then((data: ApiResponse) => userApi.addUser(data.data)),
+			userApi.signUp({ email, password })
+				.then((data: ApiResponse) => userApi.addUser(data.data))
+				.then(() => userApi.getUserInfo()),
 		shouldDoAsyncProcess: state =>
 			!getRequestStatus(state, {
 				actionType: asyncAction(SIGN_UP.NAME)

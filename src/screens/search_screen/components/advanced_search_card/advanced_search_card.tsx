@@ -26,7 +26,8 @@ import styles from './advanced_search_card_styles'
 
 export default class AdvancedSearchCard extends Component<OwnProps,OwnState> {
     render() {
-        const { title, items, value, onValueChange} = this.props
+        const { title, items, value, onValueChange } = this.props
+        console.log(title, items, value, onValueChange)
         return (
             <View style={styles.advancedSearchRow}>
                 <PickerComponent

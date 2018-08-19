@@ -109,10 +109,10 @@ function getBooksByQuery(
 					data
 				})
 			})
-			.catch(() => {
+			.catch((error) => {
 				reject({
 					code: 500,
-					message: ApiErrors.NOT_FOUND
+					message: error.message
 				})
 			})
 	})

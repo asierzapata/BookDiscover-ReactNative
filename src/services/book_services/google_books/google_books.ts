@@ -39,27 +39,28 @@ function searchByISBN({ ISBN }: BookServiceMethodsInput, page: number, queryOpti
 }
 
 function searchByStandardQuery({ query }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
-	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	const queryObject = Constants.QUERY_PARAMS.QUERY_STANDARD
+	console.log(query, queryOptions, page)
 	return _searchRequestFactory(query!, queryObject, queryOptions!, page)
 }
 
 function searchByAuthor({ author }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
-	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	const queryObject = Constants.QUERY_PARAMS.QUERY_AUTHOR
 	return _searchRequestFactory(author!, queryObject, queryOptions!, page)
 }
 
 function searchByTitle({ title }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
-	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	const queryObject = Constants.QUERY_PARAMS.QUERY_TITLE
 	return _searchRequestFactory(title!, queryObject, queryOptions!, page)
 }
 
 function searchBySubject({ subject }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
-	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	const queryObject = Constants.QUERY_PARAMS.QUERY_SUBJECT
 	return _searchRequestFactory(subject!, queryObject, queryOptions!, page)
 }
 
 function searchByPublisher({ publisher }: BookServiceMethodsInput, page: number, queryOptions?: BooksQueryOptions): Promise<Book[]> {
-	const queryObject = Constants.QUERY_PARAMS.QUERY_ISBN
+	const queryObject = Constants.QUERY_PARAMS.QUERY_PUBLISHER
 	return _searchRequestFactory(publisher!, queryObject, queryOptions!, page)
 }
 
@@ -73,6 +74,7 @@ function getEditionsByISBN(): Promise<string[]> {
 
 function _searchRequestFactory(value: string, queryObject: { key: string, separator: string }, queryOptions: BooksQueryOptions, page: number): Promise<Book[]> {
 	return new Promise((resolve, reject) => {
+		console.log(`${Constants.SEARCH_PATH}?q=${_queryStringWithSeparatorAndPrefix(queryObject, value)}&maxResults=${LIMIT}&startIndex=${page*LIMIT}${_queryStringForQueryOptions(queryOptions, '=')}`)
 		ApiClient.get(
 			`${Constants.SEARCH_PATH}?q=${_queryStringWithSeparatorAndPrefix(queryObject, value)}&maxResults=${LIMIT}&startIndex=${page*LIMIT}${_queryStringForQueryOptions(queryOptions, '=')}`
 			, {})

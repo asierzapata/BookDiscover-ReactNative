@@ -38,28 +38,14 @@ function parseIndividualBook(book: OpenLibraryBook, { description }: OpenLibrary
 	    edition_key,
         language
     } = book
-    console.log(        
-        title,
-        cover_i,
-        isbn,
-        author_name,
-        author_key,
-        subject,
-        publisher,
-        first_publish_year,
-        edition_count,
-        key,
-	    edition_key,
-        language,
-        description
-    )
+
     return {
         title,
         authors: [ author_name ],
         publisher: publisher ? publisher : [],
         publishedDate: first_publish_year ? first_publish_year.toString() : 'Undefined',
-        description: description ? description : 'Description not available',
-        ISBN: isbn[0],
+        description: description ? ( description.value ? description.value : description ) : 'Description not available',
+        ISBN: isbn ? isbn[0]: key,
         subject: subject ? subject : [],
         language: language ? language : [],
         work_key: key,

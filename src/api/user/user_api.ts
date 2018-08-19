@@ -273,11 +273,12 @@ function getUserInfo(): Promise<ApiResponse> {
 						})
 					}
 				})
+		} else {
+			reject({
+				code: 404,
+				message: ApiErrors.USER_NOT_LOGGED_IN
+			})
 		}
-		reject({
-			code: 404,
-			message: ApiErrors.USER_NOT_LOGGED_IN
-		})
 	})
 }
 
