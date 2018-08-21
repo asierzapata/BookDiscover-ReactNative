@@ -1,9 +1,15 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, TextInput, KeyboardAvoidingView, Button, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
 import { NavigationScreenProps } from 'react-navigation'
+
+/* ====================================================== */
+/*                     Components                         */
+/* ====================================================== */
+
+import { Text, TextInput, KeyboardAvoidingView, Button, ActivityIndicator } from 'react-native'
+import Input from '../../ui/components/input/input_component'
 
 /* ====================================================== */
 /*                   Actions / Selectors                  */
@@ -37,8 +43,6 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 		errorMessage: undefined
 	}
 
-
-
 	handleSignUp = () => {
 		const { email, password } = this.state
 
@@ -58,21 +62,17 @@ export class AuthSignUpScreen extends Component<ownProps, ownState> {
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<Text>Sign Up</Text>
 				{this.state.errorMessage && <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>}
-				<TextInput
+				<Input
 					placeholder="Email"
 					autoCapitalize="none"
-					keyboardType='email-address'
-					style={styles.textInput}
+					keyboardType="email-address"
 					onChangeText={email => this.setState({ email })}
-					value={this.state.email}
 				/>
-				<TextInput
+				<Input
 					secureTextEntry
 					placeholder="Password"
 					autoCapitalize="none"
-					style={styles.textInput}
 					onChangeText={password => this.setState({ password })}
-					value={this.state.password}
 				/>
 				{!!signUpStatus.error && <Text style={styles.errorText}>{signUpStatus.error}</Text>}
 				{this.props.signUpStatus.isLoading ? (

@@ -24,13 +24,14 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 /*                     Components                         */
 /* ====================================================== */
 
-import { View, TextInput, Button, Text } from 'react-native'
+import { View, Button, Text } from 'react-native'
 import GridView from '../../ui/components/grid_view'
 import ViewWrapper from '../../ui/components/view_wrapper'
 import BookItem from '../../ui/components/book_item'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
-import AdvancedSearchCard from './components/advanced_search_card/advanced_search_card';
-import Icon from '../../ui/components/icon';
+import AdvancedSearchCard from './components/advanced_search_card/advanced_search_card'
+import Icon from '../../ui/components/icon'
+import Input from '../../ui/components/input/input_component'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -46,15 +47,14 @@ import IconConstants from '../../ui/styles/icons'
 
 import { ownProps, ownState, StateProps, DispatchProps } from './search_screen_interfaces'
 import { Book, ORDER_BY_FIELDS, QUERY_MODALITY_FIELDS, BooksQueryFields } from '../../api/book/book_interfaces'
-import routes from '../../router/routes';
-import { BoldTextColor } from '../../ui/styles/colors';
+import routes from '../../router/routes'
+import { BoldTextColor } from '../../ui/styles/colors'
 
 /* ====================================================== */
 /*                   Implementation                       */
 /* ====================================================== */
 
 export class SearchScreen extends Component<ownProps, ownState> {
-
 	constructor(props: ownProps) {
 		super(props)
 		this.state = {
@@ -80,27 +80,37 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 
 	handleSearch = () => {
-		const { searchQuery, lastSearchQuery, page, queryOrderBy, queryLanguage, queryModality, lastQueryLanguage, lastQueryModality, lastQueryOrderBy } = this.state
+		const {
+			searchQuery,
+			lastSearchQuery,
+			page,
+			queryOrderBy,
+			queryLanguage,
+			queryModality,
+			lastQueryLanguage,
+			lastQueryModality,
+			lastQueryOrderBy
+		} = this.state
 
 		if (
-			lastSearchQuery !== searchQuery || 
+			lastSearchQuery !== searchQuery ||
 			queryOrderBy !== lastQueryOrderBy ||
 			queryLanguage !== lastQueryLanguage ||
 			queryModality !== lastQueryModality
 		) {
 			this.props.handleClearSearchBooks()
 		}
-		this.setState({ 
-			lastSearchQuery: searchQuery, 
-			lastQueryLanguage: queryLanguage, 
-			lastQueryModality: queryModality, 
-			lastQueryOrderBy: queryOrderBy 
+		this.setState({
+			lastSearchQuery: searchQuery,
+			lastQueryLanguage: queryLanguage,
+			lastQueryModality: queryModality,
+			lastQueryOrderBy: queryOrderBy
 		})
 
 		const queryOptions = { orderyBy: queryOrderBy, langRestrict: queryLanguage }
 		let queryField = {} as BooksQueryFields
 
-		if(!_.isEmpty(queryModality)) {
+		if (!_.isEmpty(queryModality)) {
 			queryField[queryModality] = searchQuery
 			this.props.handleFetchBooksByQuery('', page, queryOptions, queryField)
 		} else {
@@ -120,9 +130,8 @@ export class SearchScreen extends Component<ownProps, ownState> {
 
 	handleToggleAdvancedSearch = () => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-		this.setState((currentState) => ({openAdvancedSearch: !currentState.openAdvancedSearch}))
-    }
-
+		this.setState(currentState => ({ openAdvancedSearch: !currentState.openAdvancedSearch }))
+	}
 
 	render() {
 		return (
@@ -135,91 +144,89 @@ export class SearchScreen extends Component<ownProps, ownState> {
 	}
 
 	renderSearch() {
-		return(
+		return (
 			<View style={styles.topBar}>
-				<TextInput
-					style={styles.textInput}
-					autoCapitalize='sentences'
-					placeholder='Search'
-					placeholderTextColor='white'
+				<Input
+					autoCapitalize="sentences"
+					placeholder="Search"
+					placeholderTextColor="white"
 					onChangeText={searchQuery => this.setState({ searchQuery })}
 					value={this.state.searchQuery}
 					blurOnSubmit
 					onEndEditing={this.handleSearch}
 					onSubmitEditing={this.handleSearch}
 				/>
-				<Button 
-					title='Cancel' 
-					color={BoldTextColor} 
-					onPress={this.handleCancel} 
-				/>
+				<Button title="Cancel" color={BoldTextColor} onPress={this.handleCancel} />
 			</View>
 		)
 	}
 
 	renderAdvancedSearch() {
-		const { openAdvancedSearch } = this.state  
+		const { openAdvancedSearch } = this.state
 		const icon = openAdvancedSearch ? IconConstants.CARET_UP : IconConstants.CARET_DOWN
 		const viewStyle = openAdvancedSearch ? styles.advancedSearchOpened : styles.advancedSearch
 		return (
 			<View style={viewStyle}>
 				<View style={styles.advancedSearchCollapseHeader}>
-					<Icon name={icon} fontSize={24}/>
-					<Button title='Advanced Search' color={BoldTextColor} onPress={this.handleToggleAdvancedSearch} />
+					<Icon name={icon} fontSize={24} />
+					<Button title="Advanced Search" color={BoldTextColor} onPress={this.handleToggleAdvancedSearch} />
 				</View>
 				{openAdvancedSearch ? this.renderAdvancedSearchFields() : null}
 			</View>
-			
 		)
 	}
 
 	renderAdvancedSearchFields() {
-		const { activeSlide } = this.state  
+		const { activeSlide } = this.state
 
 		/* Query Filtering: Language, orderBy (relevance, newest)*/
 		/* Query Modality: author, title, publisher, subject*/
 		const advancedSearchCards = [
-			{ 
-				title: 'Language', 
+			{
+				title: 'Language',
 				items: {
-					'en': 'English',
-					'es': 'Spanish',
+					en: 'English',
+					es: 'Spanish'
 				},
 				value: this.state.queryLanguage,
 				onValueChange: (queryLanguage: string) => this.setState({ queryLanguage }, this.handleSearch)
 			},
-			{ 
-				title: 'Order by', 
+			{
+				title: 'Order by',
 				items: {
 					...ORDER_BY_FIELDS
 				},
 				value: this.state.queryOrderBy,
-				onValueChange: (queryOrderBy: 'relevance' | 'newest') => this.setState({ queryOrderBy }, this.handleSearch)
+				onValueChange: (queryOrderBy: 'relevance' | 'newest') =>
+					this.setState({ queryOrderBy }, this.handleSearch)
 			},
-			{ 
-				title: 'Specific search', 
+			{
+				title: 'Specific search',
 				items: {
 					'': '-',
 					...QUERY_MODALITY_FIELDS
 				},
 				value: this.state.queryModality,
-				onValueChange: (queryModality: '' | 'author' | 'title' | 'publisher' | 'subject') => this.setState({ queryModality }, this.handleSearch) 
+				onValueChange: (queryModality: '' | 'author' | 'title' | 'publisher' | 'subject') =>
+					this.setState({ queryModality }, this.handleSearch)
 			}
 		]
 
-		return(
+		return (
 			<View style={styles.advancedSearchFields}>
 				<View style={styles.advancedSearchCarousel}>
-					<Carousel 
-						layout={'default'} 
+					<Carousel
+						layout={'default'}
 						containerCustomStyle={styles.advancedSearchCarousel}
 						data={advancedSearchCards}
-						layoutCardOffset={18} 
+						layoutCardOffset={18}
 						itemWidth={200}
 						sliderWidth={width}
 						firstItem={0}
-						onSnapToItem={(index: number) => this.setState({ activeSlide: index }) }
-						renderItem={({ item, index }: { item: any, index: number }) => <AdvancedSearchCard {...item} key={index}/>}
+						onSnapToItem={(index: number) => this.setState({ activeSlide: index })}
+						renderItem={({ item, index }: { item: any; index: number }) => (
+							<AdvancedSearchCard {...item} key={index} />
+						)}
 					/>
 				</View>
 				<View style={styles.advancedSearchDotsView}>
@@ -274,7 +281,8 @@ const mapStateToProps = (state: any): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-	handleFetchBooksByQuery: (query, page, queryOptions, queryField) => dispatch(fetchBooksSearch(query, page, queryOptions, queryField)),
+	handleFetchBooksByQuery: (query, page, queryOptions, queryField) =>
+		dispatch(fetchBooksSearch(query, page, queryOptions, queryField)),
 	handleClearSearchBooks: () => dispatch(clearSearchBooks())
 })
 

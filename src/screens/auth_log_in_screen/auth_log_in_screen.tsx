@@ -1,7 +1,7 @@
 import React from 'react'
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Text, TextInput, Button, KeyboardAvoidingView } from 'react-native'
+import { Text, KeyboardAvoidingView } from 'react-native'
 import _ from 'lodash'
 
 /* ====================================================== */
@@ -18,6 +18,13 @@ import { getRequestStatus } from '../../modules/api_metadata/api_metadata_module
 import { ownProps, ownState, StateProps, DispatchProps } from './auth_log_in_screen_interfaces'
 import { AuthData } from '../../api/user/user_interfaces'
 import { Dispatch } from 'redux'
+
+/* ====================================================== */
+/*                     Components                         */
+/* ====================================================== */
+
+import Input from '../../ui/components/input/input_component'
+import { Button } from '../../ui/components/button/button_component'
 
 /* ====================================================== */
 /*                        Style                           */
@@ -54,24 +61,27 @@ export class AuthSignInScreen extends Component<ownProps, ownState> {
 			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
 				<Text>Sign In</Text>
 				{this.state.errorMessage && <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>}
-				<TextInput
-					style={styles.textInput}
+				<Input
 					autoCapitalize="none"
 					placeholder="Email"
-					keyboardType='email-address'
-					onChangeText={email => this.setState({ email })}
-					value={this.state.email}
+					keyboardType="email-address"
+					onChangeText={(email: string) => this.setState({ email })}
 				/>
-				<TextInput
+				<Input
 					secureTextEntry
-					style={styles.textInput}
 					autoCapitalize="none"
 					placeholder="Password"
-					onChangeText={password => this.setState({ password })}
-					value={this.state.password}
+					onChangeText={(password: string) => this.setState({ password })}
 				/>
 				{!!logInStatus.error && <Text style={styles.errorText}>{logInStatus.error}</Text>}
-				<Button disabled={!!logInStatus.isLoading} title="Submit" onPress={this.handleSignIn} />
+				<Button
+					style={{ marginTop: 10 }}
+					disabled={!!logInStatus.isLoading}
+					secondary
+					onPress={this.handleSignIn}
+				>
+					Submit
+				</Button>
 			</KeyboardAvoidingView>
 		)
 	}

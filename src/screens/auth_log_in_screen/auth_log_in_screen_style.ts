@@ -7,13 +7,6 @@ export default StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	textInput: {
-		height: 40,
-		width: '90%',
-		borderColor: 'gray',
-		borderWidth: 1,
-		marginTop: 8
-	},
 	errorText: {
 		color: SecondaryColor,
 		marginTop: 10
